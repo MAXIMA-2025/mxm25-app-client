@@ -1,9 +1,24 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Load upright variable */
 @font-face {
-  font-family: Fraunces;
-  src: url(../src/assets/fonts/fraunces/Fraunces_72pt-Regular.ttf);
+  font-family: 'Fraunces';
+  src: url('../src/assets/fonts/fraunces/Fraunces-VariableFont_SOFT,WONK,opsz,wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+/* Load italic variable */
+@font-face {
+  font-family: 'Fraunces';
+  src: url('../src/assets/fonts/fraunces/Fraunces-Italic-VariableFont_SOFT,WONK,opsz,wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: italic;
+}
+
+@theme {
+  --font-fraunces: Fraunces, "sans-serif";
 }
 
 @custom-variant dark (&:is(.dark *));
