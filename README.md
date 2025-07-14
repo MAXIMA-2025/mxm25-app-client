@@ -21,6 +21,7 @@ src/
  ├─ lib/                 # Utilities and helper functions
  
  ├─ types/               # Global TypeScript types/interfaces
+
  └─ main.tsx             # App entry point
 
 ✅ Routing
@@ -60,6 +61,11 @@ Example: blog/[id].tsx.
 Assets: Store static files in src/assets/. Organize by type if needed (images/, icons/, fonts/).
 Styles: Use src/styles/ for global styles, resets, variables, or Tailwind config if used.
 Types: Store shared TypeScript types and interfaces in src/types/.
+
+✅ Font Usage
+Use font-fraunces for headers
+Use font-futura for usual text
+Use inter when futura doesn't fit well
 
 ⚙️ Recommended Naming Rules
 Files & Folders: PascalCase for React components, hooks, and pages. Use [param] for dynamic routes.
