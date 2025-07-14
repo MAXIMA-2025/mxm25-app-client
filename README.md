@@ -3,14 +3,23 @@ This project is built with Vite, React, and TypeScript, following a clean and sc
 
 📂 Project Structure
 src/
+ 
  ├─ hooks/               # Custom React hooks
+ 
  ├─ components/
+ 
  │   ├─ ui/              # Reusable, atomic UI components
+ 
  │   └─ [feature]/       # Feature-specific or composite components (built from ui/)
+ 
  ├─ pages/               # App pages, routed automatically (via generouted)
+ 
  ├─ assets/              # Static assets (images, fonts, etc.)
+ 
  ├─ styles/              # Global and modular styles
+ 
  ├─ lib/                 # Utilities and helper functions
+ 
  ├─ types/               # Global TypeScript types/interfaces
  └─ main.tsx             # App entry point
 
