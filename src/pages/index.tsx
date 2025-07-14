@@ -13,6 +13,15 @@ const index = () => {
       >
         Fraunces with SOFT 100 & WONK 1
       </p>
+      <h1 className="font-futura font-bold text-4xl">Futura Bold</h1>
+      <p className="font-futura font-light italic">
+        Futura Light Italic with Variable Font
+      </p>
+      <p
+        className="font-futura font-bold"
+      >
+        Futura
+      </p>
 
     </div>
   )
