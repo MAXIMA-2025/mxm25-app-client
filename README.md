@@ -28,64 +28,111 @@ src/
 Routing is file-based and handled by generouted.
 
 Do not create a custom router.ts. Pages inside src/pages are automatically converted to routes — just like Next.js.
+
 File and folder names inside pages/ define your routes.
+
+
 Example:
+
 src/pages/index.tsx       → `/`
+
 src/pages/about.tsx       → `/about`
+
 src/pages/blog/[id].tsx   → `/blog/:id`
+
 
 ✅ Components
 
 components/ui/ — for atomic, reusable UI elements (buttons, inputs, icons, cards, etc.)
+
 Naming: PascalCase folder and file names.
+
 Example: Button.tsx, Input.tsx, Card.tsx.
 
+
 components/[feature]/ — for feature-specific or composite components.
+
 These are usually built by composing multiple ui components.
+
 Naming: PascalCase folder and file names.
+
 Example: Navbar.tsx, Sidebar.tsx, ProfileCard.tsx.
 
+
 ✅ Hooks
+
 hooks/ — for custom React hooks.
+
 Naming: Prefix files with use.
+
 Example: useAuth.ts, useDebounce.ts, useFetch.ts.
 
+
 ✅ Pages
+
 Located inside src/pages/.
+
 Treated as route entry points.
+
 Naming: kebab-case or PascalCase for folders; files as PascalCase or index.tsx.
+
 Dynamic routes: Use [param] syntax.
+
 Example: blog/[id].tsx.
 
+
 ✅ Other Conventions
+
 Assets: Store static files in src/assets/. Organize by type if needed (images/, icons/, fonts/).
+
 Styles: Use src/styles/ for global styles, resets, variables, or Tailwind config if used.
+
 Types: Store shared TypeScript types and interfaces in src/types/.
 
+
 ✅ Font Usage
+
 Use font-fraunces for headers
+
 Use font-futura for usual text
+
 Use inter when futura doesn't fit well
 
+
 ⚙️ Recommended Naming Rules
+
 Files & Folders: PascalCase for React components, hooks, and pages. Use [param] for dynamic routes.
+
 Variables, functions, props: camelCase.
+
 Environment variables: UPPER_SNAKE_CASE.
 
+
 🧩 Tips
+
 Keep UI components small and reusable.
+
 Keep hooks pure and isolated.
+
 Keep pages focused on layout and page-level data fetching.
+
 Compose larger components inside the components/ root using ui/ parts.
 
+
 📦 Dependencies
+
 This project uses:
+
 Vite — fast dev server and build tool.
+
 React — UI library.
+
 TypeScript — type safety.
+
 generouted — zero-config file-based routing.
 
 🚀 Happy building!
+
 Keep it modular, readable, and maintainable.
 
 
