@@ -41,7 +41,7 @@ declare global {
   }
 }
 
-const MIDTRANS_CLIENT_KEY = 'SB-Mid-client-GPjM1WOgtWUYMlK9'; // Ganti dengan client key Anda
+const MIDTRANS_CLIENT_KEY = 'SB-Mid-client-GPjM1WOgtWUYMlK9'; 
 
 // Updated API function using proxy
 const createSnapToken = async (paymentData: MidtransPaymentRequest) => {
@@ -155,7 +155,7 @@ const Transaction: React.FC = () => {
 
       const snapResponse = await createSnapToken(paymentData);
       
-      // Buka Midtrans Snap popup
+      //Midtrans Snap popup
       window.snap.pay(snapResponse.token, {
         onSuccess: (result) => {
           console.log('Payment Success:', result);
@@ -193,22 +193,13 @@ const Transaction: React.FC = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white">
+    <div className="p-6 rounded-lg shadow-lg w-125 max-w-2xl mx-auto">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">Pembelian Tiket</h1>
         <p className="text-gray-600">Pilih tiket dan lakukan pembayaran melalui QRIS/E-Wallet</p>
       </div>
-      
-      {/* Setup Instructions */}
-      <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-        <h3 className="font-bold text-green-800 mb-2">✅ CORS Fixed:</h3>
-        <p className="text-green-700 text-sm">
-          Menggunakan Vite proxy untuk bypass CORS. Pastikan sudah update vite.config.ts dan 
-          ganti YOUR_SERVER_KEY_HERE & YOUR_CLIENT_KEY_HERE dengan key Anda.
-        </p>
-      </div>
 
-      {/* Rest of the component remains the same */}
+      {/* Komponen pilihan tiket */}
       <div className="mb-6">
         <h3 className="text-xl font-semibold text-gray-800 mb-4">Pilih Tiket</h3>
         <div className="grid gap-4">

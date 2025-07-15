@@ -3,7 +3,7 @@ import Transaction from '../../components/ui/Transaction';
 
 const index = () => {
   return (
-    <div className='container px-4 py-8'>
+    <div className='justify-center items-center min-h-screen mt-10 mb-10'>
       <Transaction />
     </div>
   )
