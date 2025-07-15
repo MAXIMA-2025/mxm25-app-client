@@ -14,8 +14,7 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api\/midtrans/, ''),
         configure: (proxy, options) => {
           proxy.on('proxyReq', (proxyReq, req, res) => {
-            // Add authorization header
-            const serverKey = 'Mid-server-6TacYY2pxrnOUNzKKLQqQCjo'; // Ganti dengan server key Anda
+            const serverKey = 'Mid-server-6TacYY2pxrnOUNzKKLQqQCjo'; 
             const authString = Buffer.from(serverKey + ':').toString('base64');
             proxyReq.setHeader('Authorization', `Basic ${authString}`);
           });
