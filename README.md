@@ -133,7 +133,7 @@ generouted — zero-config file-based routing.
 
 🚀 Happy building!
 
-Keep it modular, readable, and maintainable.
+ Keep it modular, readable, and maintainable.
 
 
 
