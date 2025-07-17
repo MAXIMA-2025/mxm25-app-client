@@ -12,10 +12,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import HeroSection from "@/components/landing/HeroSection";
+import AboutSection from "@/components/landing/AboutSection";
+import FAQSection from "@/components/landing/FAQSection";
 
 const index = () => {
   return (
     <div>
+      <HeroSection />
+      <AboutSection />
+      <FAQSection />
       <Dialog>
         <form>
           <DialogTrigger asChild>
@@ -29,20 +35,7 @@ const index = () => {
                 done.
               </DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4">
-              <div className="grid gap-3">
-                <Label htmlFor="name-1">Name</Label>
-                <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
-              </div>
-              <div className="grid gap-3">
-                <Label htmlFor="username-1">Username</Label>
-                <Input
-                  id="username-1"
-                  name="username"
-                  defaultValue="@peduarte"
-                />
-              </div>
-            </div>
+            
             <DialogFooter>
               <DialogClose asChild>
                 <Button variant="outline">Cancel</Button>
@@ -67,6 +60,7 @@ const index = () => {
         Futura Light Italic with Variable Font
       </p>
       <p className="font-futura font-bold">Futura</p>
+      <p className="font-fraunces text-2xl font-bold"> ini fraunces</p>
     </div>
   );
 };
