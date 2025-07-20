@@ -19,8 +19,8 @@ const Oauth = () => {
           <CardDescription>Access our website easily using your google account</CardDescription>
         </CardHeader>
         <CardContent>
-          <Button>
-            Login
+          <Button className="w-full">
+            Register with G
           </Button>
         </CardContent>
       </Card>
