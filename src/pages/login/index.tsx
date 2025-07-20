@@ -1,4 +1,4 @@
-import Oauth from '@/components/login/oauth'
+import Oauth from '@/components/login/Oauth'
 import React from 'react'
 
 
