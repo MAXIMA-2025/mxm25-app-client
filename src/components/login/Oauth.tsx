@@ -31,6 +31,9 @@ const Oauth = () => {
       alert("Something went wrong. Please try again.");
     }
   };
+  const handleGoogleLogin =() =>{
+    
+  };
 
   return (
     <div>
@@ -43,6 +46,7 @@ const Oauth = () => {
         </CardHeader>
         <CardContent>
           <Button onClick={handleGoogleRegister} className="w-full">Register with G</Button>
+          <Button onClick={handleGoogleLogin} className="w-full">Register with G</Button>
         </CardContent>
       </Card>
     </div>
