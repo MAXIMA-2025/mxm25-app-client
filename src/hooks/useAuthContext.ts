@@ -1,4 +1,4 @@
-import AuthContext from "@/contexts/AuthContext";
+import AuthContext from "../contexts/AuthContext";
 import { useContext } from "react";
 
 // BUAT CEK AUTH PROVIDER UDH DI SET ATAU BELOM
