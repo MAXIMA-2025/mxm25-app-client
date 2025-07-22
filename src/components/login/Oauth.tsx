@@ -35,30 +35,36 @@ const Oauth = () => {
   const api = useApi();
   const [searchParams] = useSearchParams();
 
-  // 1️⃣ Get auth URL
-  const { data: authUrl, isLoading: isLoadingUrl } = useQuery({
+  // ✅ 1️⃣ Get Google Auth URL
+  const {
+    data: authUrl,
+    isLoading: isLoadingUrl,
+    isError: isErrorUrl,
+  } = useQuery({
     queryKey: ["googleAuthUrl"],
     queryFn: async () => {
       const res = await api.get<SuccessResponseModel<GoogleAuthUrlResponse>>(
         "/auth/google"
       );
-      return res.data.authUrl;
+      return res.data.data.authUrl;
     },
-    enabled: !searchParams.get("code"), // Only run if not on callback
+    enabled: !searchParams.get("code"), // only run if not in callback mode
     retry: false,
   });
 
-  // 2️⃣ Handle callback
+  // ✅ 2️⃣ Handle callback
   const {
     mutate,
     data: userData,
-    isPending,
+    isPending: isLoggingIn,
+    isError: isErrorLogin,
+    error: loginError,
   } = useMutation({
     mutationFn: async (code: string) => {
       const res = await api.get<SuccessResponseModel<{ user: GoogleUser }>>(
         `/auth/google/callback?code=${code}`
       );
-      return res.data.user;
+      return res.data.data.user;
     },
   });
 
@@ -76,18 +82,10 @@ const Oauth = () => {
   };
 
   if (isLoadingUrl) return <p>Loading login...</p>;
-  if (isPending) return <p>Logging you in...</p>;
+  if (isErrorUrl) return <p>Failed to get Google login URL.</p>;
 
-  if (userData) {
-    return (
-      <div>
-        <h2>Welcome, {userData.name}!</h2>
-        <p>Email: {userData.email}</p>
-        <p>Role: {userData.role}</p>
-        {/* Do redirect or update auth context here */}
-      </div>
-    );
-  }
+  if (isLoggingIn) return <p>Processing login...</p>;
+  if (isErrorLogin) return <p>Login failed: {String(loginError)}</p>;
 
   return (
     <div>
