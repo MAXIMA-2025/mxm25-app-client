@@ -9,49 +9,85 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "../ui/button";
-import useApi, { type ApiResponse } from "@/hooks/useApi";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import useApi from "@/hooks/useApi";
+import { useQuery, useMutation } from "@tanstack/react-query";
 
-type googleAuth ={
+// ✅ Inline SuccessResponseModel
+type SuccessResponseModel<T = undefined> = {
+  status: string;
+  message: string;
+  data: T;
+};
+
+type GoogleAuthUrlResponse = {
   authUrl: string;
-}
+};
+
+type GoogleUser = {
+  email: string;
+  name: string;
+  role: "external" | "mahasiswa" | "panitia" | "organisator";
+};
 
 const Oauth = () => {
-  const handleGoogleReg = async () =>{
-    const api = useApi();
-    const { data: states, status, isLoading, error } = useQuery({
-      queryKey: ["authUrl"],
-      queryFn: async () => {
-        const resp = await api.get<ApiResponse<googleAuth>>("/auth/google");
-        console.log(resp.data);
-      }
-    });
-  useHandleQueryError({ error, status }); // handle query error
-  if (isLoading) return <p>Loading...</p>; // handle jika sedang loading
-  if (error) return <p>Error: {String(error)}</p>; // error handling tambahan, jika perlu
-  }
-  // const handleGoogleRegister = async () => {
-  //   try {
-  //     const res = await axios.get(`${import.meta.env.VITE_API_URL}/auth/google`, {
-  //       withCredentials: true,
-  //     });
-  //     console.log(res)
-  //     const authUrl = res?.data?.data?.authUrl;
-      
-  //     console.log(authUrl);
-  //     if (authUrl) {
-  //         window.location.href = authUrl;
-  //     } else {
-  //       throw new Error("No auth URL returned");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error starting Google OAuth:", error);
-  //     alert("Something went wrong. Please try again."); 
-  //   }
-  // };
-  const handleGoogleLogin =() =>{
+  const api = useApi();
+  const [searchParams] = useSearchParams();
 
+  // 1️⃣ Get auth URL
+  const { data: authUrl, isLoading: isLoadingUrl } = useQuery({
+    queryKey: ["googleAuthUrl"],
+    queryFn: async () => {
+      const res = await api.get<SuccessResponseModel<GoogleAuthUrlResponse>>(
+        "/auth/google"
+      );
+      return res.data.authUrl;
+    },
+    enabled: !searchParams.get("code"), // Only run if not on callback
+    retry: false,
+  });
+
+  // 2️⃣ Handle callback
+  const {
+    mutate,
+    data: userData,
+    isPending,
+  } = useMutation({
+    mutationFn: async (code: string) => {
+      const res = await api.get<SuccessResponseModel<{ user: GoogleUser }>>(
+        `/auth/google/callback?code=${code}`
+      );
+      return res.data.user;
+    },
+  });
+
+  useEffect(() => {
+    const code = searchParams.get("code");
+    if (code) {
+      mutate(code);
+    }
+  }, [searchParams, mutate]);
+
+  const handleGoogleLogin = () => {
+    if (authUrl) {
+      window.location.href = authUrl;
+    }
   };
+
+  if (isLoadingUrl) return <p>Loading login...</p>;
+  if (isPending) return <p>Logging you in...</p>;
+
+  if (userData) {
+    return (
+      <div>
+        <h2>Welcome, {userData.name}!</h2>
+        <p>Email: {userData.email}</p>
+        <p>Role: {userData.role}</p>
+        {/* Do redirect or update auth context here */}
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -63,8 +99,16 @@ const Oauth = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Button onClick={handleGoogleRegister} variant="test" className="w-full bg-amber-400">Register with G</Button>
-          <Button onClick={handleGoogleLogin} className="w-full">Register with G</Button>
+          <Button
+            onClick={handleGoogleLogin}
+            variant="test"
+            className="w-full bg-amber-400"
+          >
+            Register with G
+          </Button>
+          <Button onClick={handleGoogleLogin} className="w-full">
+            Register with G
+          </Button>
         </CardContent>
       </Card>
     </div>
@@ -72,7 +116,9 @@ const Oauth = () => {
 };
 
 export default Oauth;
-function useHandleQueryError(arg0: { error: Error | null; status: "error" | "success" | "pending"; }) {
+function useHandleQueryError(arg0: {
+  error: Error | null;
+  status: "error" | "success" | "pending";
+}) {
   throw new Error("Function not implemented.");
 }
-
