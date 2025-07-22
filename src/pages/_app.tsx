@@ -3,7 +3,7 @@ import { Outlet } from 'react-router'
 
 const _app = () => {
   return (
-    <section>
+    <section className='flex flex-col h-dvh w-dvw items-center justify-center'>
         <Outlet />
     </section>
   )
