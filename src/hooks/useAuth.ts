@@ -1,9 +1,27 @@
-import { useQuery } from "@tanstack/react-query";
+import {
+  QueryObserverResult,
+  RefetchOptions,
+  useQuery,
+} from "@tanstack/react-query";
 import useApi, { ApiResponse } from "./useApi";
 import useErrorHandler from "./useErrorHandler";
 import useAuthContext from "./useAuthContext";
 
-type UserPanitia = {
+export type Auth<T = UserPanitia | UserOrganisator> = {
+  user: T | undefined;
+  status: "error" | "success" | "pending";
+  isLoading: boolean;
+  error: Error | null;
+  isSuperAdmin: boolean;
+  refetch: (
+    options?: RefetchOptions
+  ) => Promise<
+    QueryObserverResult<ApiResponse<UserPanitia | UserOrganisator>, Error>
+  >;
+};
+
+export type UserPanitia = {
+  uuid: string;
   nama: string;
   nim: string;
   isVerified: boolean;
@@ -16,10 +34,12 @@ type UserPanitia = {
   email: string;
 };
 
-type UserOrganisator = {
+export type UserOrganisator = {
+  uuid: string;
   nim: string;
   nama: string;
   email: string;
+  namaOrganisasi: string;
   isVerified: boolean;
   stateId: number;
   state: {
@@ -33,7 +53,7 @@ const useAuth = () => {
   const api = useApi();
   const { handleError } = useErrorHandler(["authUser"]);
 
-  const { data, isLoading, error, status } = useQuery<
+  const { data, isLoading, error, status, refetch } = useQuery<
     ApiResponse<UserPanitia | UserOrganisator>
   >({
     queryKey: ["authUser"],
@@ -47,17 +67,27 @@ const useAuth = () => {
         throw error;
       }
     },
-    staleTime: 5 * 60 * 1000, // data akan basi setelah 5 mnt
+    staleTime: Infinity, // data akan basi setelah 5 mnt
     retry: 1,
     enabled: !isLoggedOut, // biar pas udah logout dia ga fetch lagi !! anjir gua debug ini berhari2 dan solusinya se simple ini tai emg
+    refetchInterval: (query) => {
+      const user = query.state.data?.data;
+      return user && user.isVerified === false ? 60000 : false;
+    },
   });
 
   // const auth = { data, isLoading, error, status };
-  const auth = {
+  const panitiaData = data as ApiResponse<UserPanitia>;
+  const isSuperAdmin =
+    data?.data.role === "panitia" && panitiaData.data.divisiId === 2;
+
+  const auth: Auth = {
     user: data?.data,
     status,
     isLoading,
     error,
+    isSuperAdmin,
+    refetch,
   };
 
   // useHandleQueryError(auth);

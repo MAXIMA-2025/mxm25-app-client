@@ -11,7 +11,7 @@ export type ApiResponse<T = undefined> = {
 };
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
   withCredentials: true,
 });
 
@@ -27,7 +27,8 @@ const refreshToken = async () => {
 const setupInterceptors = (
   queryClient: QueryClient,
   handleError: (error: unknown) => void,
-  isLoggedOut: boolean
+  isLoggedOut: boolean,
+  setIsLoggedOut: (val: boolean) => void
 ) => {
   api.interceptors.response.use(
     (response) => response,
@@ -59,6 +60,7 @@ const setupInterceptors = (
           return;
         } catch (error) {
           queryClient.removeQueries({ queryKey: ["authUser"] });
+          setIsLoggedOut(true);
           handleError(error);
           return Promise.reject(error);
         }
@@ -73,15 +75,15 @@ const setupInterceptors = (
 const useApi = () => {
   const queryClient = useQueryClient();
   const { handleError } = useErrorHandler();
-  const { isLoggedOut } = useAuthContext();
+  const { isLoggedOut, setIsLoggedOut } = useAuthContext();
   const isInterceptorSet = useRef(false);
 
   useEffect(() => {
     if (!isInterceptorSet.current) {
-      setupInterceptors(queryClient, handleError, isLoggedOut);
+      setupInterceptors(queryClient, handleError, isLoggedOut, setIsLoggedOut);
       isInterceptorSet.current = true;
     }
-  }, [queryClient, handleError, isLoggedOut]);
+  }, [queryClient, handleError, isLoggedOut, setIsLoggedOut]);
 
   return api;
 };
