@@ -1,28 +1,25 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, TextField, Card, CardContent, Typography } from "@mui/material";
-import logo from '../../assets/LOGO MAXIMA 1.png';
+import { Card, CardContent } from "../../components/ui/card";
+import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
+import { Loader2 } from "lucide-react";
+import logo from "../../assets/LOGO MAXIMA 1.png";
 
-const titleStyle: React.CSSProperties = { 
-  fontFamily: 'Title Hero, sans-serif',
-  fontWeight: 'bold',
-  fontStyle: 'normal',
-  fontSize: '48px',
-  lineHeight: '1',
-  letterSpacing: '-0.03em',
-  textAlign: 'center',
-  margin: 0,
+// TYPE untuk data form
+type DataMahasiswa = {
+  studentEmail: string;
+  prodi: string;
+  angkatan: string;
+  nim: string;
+  noWa: string;
+  idLine: string;
 };
 
-const subtitleStyle: React.CSSProperties = {
-  ...titleStyle,
-  fontSize: '32px',
-  marginBottom: '2rem',
-};
-
-const RegisterFormPage = () => {
+const RegisterFormPage: React.FC = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+
+  const [formData, setFormData] = useState<DataMahasiswa>({
     studentEmail: '',
     prodi: '',
     angkatan: '',
@@ -31,7 +28,11 @@ const RegisterFormPage = () => {
     idLine: ''
   });
 
-  const handleInputChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleInputChange = (field: keyof DataMahasiswa) => (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setFormData(prev => ({
       ...prev,
       [field]: event.target.value
@@ -39,199 +40,74 @@ const RegisterFormPage = () => {
   };
 
   const handleLogin = () => {
-    // login handler logic placeholder
+    setIsLoading(true);
+    setTimeout(() => {
+      console.log(formData);
+      setIsLoading(false);
+    }, 2000);
   };
 
   return (
-    <div
-      className="min-h-screen w-screen flex flex-col items-center justify-center px-4"
-      style={{ fontFamily: 'Title Hero, sans-serif', color: '#000' }}
-    >
-      {/* Logo */}
-      <img
-        src={logo}
-        alt="MAXIMA Logo"
-        className="w-60 h-60 object-contain"
-      />
+    <div className="min-h-screen w-screen flex flex-col items-center justify-center px-4 text-black font-title">
+      <img src={logo} alt="MAXIMA Logo" className="w-60 h-60 object-contain" />
 
-      {/* Title */}
-      <h1 style={titleStyle}>MAXIMA 2025</h1>
-      <h2 style={subtitleStyle}>Daftar Akunmu</h2>
+      <h1 className="text-5xl font-bold leading-none tracking-tight font-title">MAXIMA 2025</h1>
+      <h2 className="text-3xl font-bold mb-8 font-title">Daftar Akunmu</h2>
 
-      <Card 
-        sx={{
-          width: '100%',
-          maxWidth: '380px',
-          borderRadius: '16px',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-          backgroundColor: 'white',
-          mb: 1
-        }}
-      >
-        <CardContent sx={{ p: 3 }}>
-          <Typography variant="h6" align="center" gutterBottom fontWeight="bold" color="black" style={{ fontFamily: 'Title Hero, sans-serif' }}>
-            Data
-          </Typography>
+      {isLoading ? (
+        <Loader2 className="animate-spin text-black mt-4" />
+      ) : (
+        <Card className="w-full max-w-md rounded-2xl shadow-md bg-white mb-4">
+          <CardContent className="p-6 space-y-4">
+            <h3 className="text-xl font-bold text-center font-title">Data Mahasiswa</h3>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', color: '#000' }}>
-            <div>
-              <Typography fontSize={12} color="#000" mb={0.5} style={{ fontFamily: 'Title Hero, sans-serif' }}>Student Email</Typography>
-              <TextField
-                placeholder="Student Email"
-                value={formData.studentEmail}
-                onChange={handleInputChange('studentEmail')}
-                fullWidth
-                size="small"
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '8px',
-                    backgroundColor: '#f8f9fa',
-                    fontFamily: 'Inter, sans-serif',
-                    fontSize: '14px',
-                    color: '#000'
-                  }
-                }}
-              />
+            <div className="space-y-2">
+              <label className="text-sm font-title">Email Student</label>
+              <Input placeholder="Email Student" value={formData.studentEmail} onChange={handleInputChange('studentEmail')} />
             </div>
 
-            <div>
-              <Typography fontSize={12} color="#000" mb={0.5} style={{ fontFamily: 'Title Hero, sans-serif' }}>Prodi</Typography>
-              <TextField
-                placeholder="Prodi"
-                value={formData.prodi}
-                onChange={handleInputChange('prodi')}
-                fullWidth
-                size="small"
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '8px',
-                    backgroundColor: '#f8f9fa',
-                    fontFamily: 'Inter, sans-serif',
-                    fontSize: '14px',
-                    color: '#000'
-                  }
-                }}
-              />
+            <div className="space-y-2">
+              <label className="text-sm font-title">Prodi</label>
+              <Input placeholder="Prodi" value={formData.prodi} onChange={handleInputChange('prodi')} />
             </div>
 
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <div style={{ flex: 1 }}>
-                <Typography fontSize={12} color="#000" mb={0.5} style={{ fontFamily: 'Title Hero, sans-serif' }}>Angkatan</Typography>
-                <TextField
-                  placeholder="Angkatan"
-                  value={formData.angkatan}
-                  onChange={handleInputChange('angkatan')}
-                  size="small"
-                  fullWidth
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      borderRadius: '8px',
-                      backgroundColor: '#f8f9fa',
-                      fontFamily: 'Inter, sans-serif',
-                      fontSize: '14px',
-                      color: '#000'
-                    }
-                  }}
-                />
+            <div className="flex gap-4">
+              <div className="flex-1 space-y-2">
+                <label className="text-sm font-title">NIM</label>
+                <Input placeholder="NIM" value={formData.nim} onChange={handleInputChange('nim')} />
               </div>
-              <div style={{ flex: 1 }}>
-                <Typography fontSize={12} color="#000" mb={0.5} style={{ fontFamily: 'Title Hero, sans-serif' }}>NIM</Typography>
-                <TextField
-                  placeholder="NIM"
-                  value={formData.nim}
-                  onChange={handleInputChange('nim')}
-                  size="small"
-                  fullWidth
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      borderRadius: '8px',
-                      backgroundColor: '#f8f9fa',
-                      fontFamily: 'Inter, sans-serif',
-                      fontSize: '14px',
-                      color: '#000'
-                    }
-                  }}
-                />
+              <div className="flex-1 space-y-2">
+                <label className="text-sm font-title">Angkatan</label>
+                <Input placeholder="Angkatan" value={formData.angkatan} onChange={handleInputChange('angkatan')} />
               </div>
             </div>
 
-            <div>
-              <Typography fontSize={12} color="#000" mb={0.5} style={{ fontFamily: 'Title Hero, sans-serif' }}>NO WA</Typography>
-              <TextField
-                placeholder="NO WA"
-                value={formData.noWa}
-                onChange={handleInputChange('noWa')}
-                fullWidth
-                size="small"
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '8px',
-                    backgroundColor: '#f8f9fa',
-                    fontFamily: 'Inter, sans-serif',
-                    fontSize: '14px',
-                    color: '#000'
-                  }
-                }}
-              />
+            <div className="space-y-2">
+              <label className="text-sm font-title">No WA</label>
+              <Input placeholder="No WA" value={formData.noWa} onChange={handleInputChange('noWa')} />
             </div>
 
-            <div>
-              <Typography fontSize={12} color="#000" mb={0.5} style={{ fontFamily: 'Title Hero, sans-serif' }}>ID LINE</Typography>
-              <TextField
-                placeholder="ID LINE"
-                value={formData.idLine}
-                onChange={handleInputChange('idLine')}
-                fullWidth
-                size="small"
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '8px',
-                    backgroundColor: '#f8f9fa',
-                    fontFamily: 'Inter, sans-serif',
-                    fontSize: '14px',
-                    color: '#000'
-                  }
-                }}
-              />
+            <div className="space-y-2">
+              <label className="text-sm font-title">ID Line</label>
+              <Input placeholder="ID Line" value={formData.idLine} onChange={handleInputChange('idLine')} />
             </div>
 
-            {/* Login Button */}
-            <div className="flex flex-col items-center">
-              <Button
-                onClick={handleLogin}
-                sx={{
-                  mt: 2,
-                  px: 16.5,
-                  py: 1,
-                  fontWeight: 'bold',
-                  fontSize: '14px',
-                  fontFamily: 'Title Hero, sans-serif',
-                  letterSpacing: '-0.03em',
-                  background: 'linear-gradient(to bottom, #B2203B, #5B0712)',
-                  color: 'white',
-                  borderRadius: '8px',
-                  '&:hover': {
-                    background: 'linear-gradient(to bottom, #a01c34, #4a0510)',
-                  },
-                }}
-              >
-                REGISTER
-              </Button>
+            <Button
+              onClick={handleLogin}
+              className="w-full bg-gradient-to-b from-[#B2203B] to-[#5B0712] hover:from-[#a01c34] hover:to-[#4a0510] text-white font-bold font-title"
+            >
+              REGISTER
+            </Button>
 
-              {/* Register Redirect */}
-              <p className="text-sm text-gray-600 mt-2" style={{ textAlign: 'center' }}>
-                Sudah punya akun?{' '}
-                <span
-                  onClick={() => navigate('/login/login-form')}
-                  className="text-red-700 cursor-pointer underline"
-                >
-                  Login di sini
-                </span>
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+            <p className="text-sm text-gray-600 text-center">
+              Sudah punya akun?{' '}
+              <span onClick={() => navigate('/login/login-form')} className="text-red-700 cursor-pointer underline">
+                Login di sini
+              </span>
+            </p>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
