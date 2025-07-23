@@ -18,39 +18,45 @@ jobs:
       - name: Run tests
         run: echo "Running tests..." && sleep 3
 
-      - name: Send status to Discord
-        if: always()
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          STATUS: ${{ job.status }}
-        run: |
-          if [ "$STATUS" == "success" ]; then
-            COLOR=3066993 # green
-          elif [ "$STATUS" == "failure" ]; then
-            COLOR=15158332 # red
-          else
-            COLOR=8359053 # yellow/other
-          fi
+- name: Send status to Discord
+  if: always()
+  env:
+    DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+    STATUS: ${{ job.status }}
+    COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+  run: |
+    if [ "$STATUS" == "success" ]; then
+      COLOR=3066993 # green
+    elif [ "$STATUS" == "failure" ]; then
+      COLOR=15158332 # red
+    else
+      COLOR=8359053 # yellow/other
+    fi
 
-          curl -H "Content-Type: application/json" \
-          -X POST \
-          -d '{
-            "embeds": [{
-              "title": "🔔 GitHub Actions Status",
-              "description": "Workflow **'"$GITHUB_WORKFLOW"'** for `'"$GITHUB_REPOSITORY"'` on branch `'"$GITHUB_REF_NAME"'` **'"$STATUS"'**",
-              "url": "'"$GITHUB_SERVER_URL"'/'"$GITHUB_REPOSITORY"'/actions/runs/'"$GITHUB_RUN_ID"'",
-              "color": '"$COLOR"',
-              "fields": [
-                {
-                  "name": "Commit",
-                  "value": "'"$GITHUB_SHA"'"
-                },
-                {
-                  "name": "Actor",
-                  "value": "'"$GITHUB_ACTOR"'"
-                }
-              ],
-              "timestamp": "'"$(date --utc +%Y-%m-%dT%H:%M:%SZ)"'"
-            }]
-          }' \
-          $DISCORD_WEBHOOK
+    curl -H "Content-Type: application/json" \
+    -X POST \
+    -d '{
+      "embeds": [{
+        "title": "🔔 GitHub Actions Status",
+        "description": "Workflow **'"$GITHUB_WORKFLOW"'** for `'"$GITHUB_REPOSITORY"'` on branch `'"$GITHUB_REF_NAME"'` **'"$STATUS"'**",
+        "url": "'"$GITHUB_SERVER_URL"'/'"$GITHUB_REPOSITORY"'/actions/runs/'"$GITHUB_RUN_ID"'",
+        "color": '"$COLOR"',
+        "fields": [
+          {
+            "name": "Commit",
+            "value": "'"$GITHUB_SHA"'"
+          },
+          {
+            "name": "Message",
+            "value": "'"${COMMIT_MESSAGE//\"/\\\"}"'"
+          },
+          {
+            "name": "Actor",
+            "value": "'"$GITHUB_ACTOR"'"
+          }
+        ],
+        "timestamp": "'"$(date --utc +%Y-%m-%dT%H:%M:%SZ)"'"
+      }]
+    }' \
+    $DISCORD_WEBHOOK
+
