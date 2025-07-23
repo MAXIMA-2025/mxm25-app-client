@@ -1,7 +1,7 @@
 import React from 'react'
 import { Outlet } from 'react-router'
 
-const _app = () => {
+const app = () => {
   return (
     <section>
         <Outlet />
@@ -9,4 +9,4 @@ const _app = () => {
   )
 }
 
-export default _app
+export default app
