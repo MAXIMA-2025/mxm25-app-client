@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import useApi from "@/hooks/useApi";
 import { useMutation } from "@tanstack/react-query";
 
+// deklarasi global snap
 declare global {
   interface Window {
     snap: any;
@@ -15,7 +16,7 @@ type MidtransResponse = {
   ticketId: string;
 };
 
-const index: React.FC = () => {
+const Transaction: React.FC = () => {
   const api = useApi();
 
   // state form
@@ -49,8 +50,11 @@ const index: React.FC = () => {
         },
       };
 
+      // UBAH PATH INI:
+      // Dari: "/eksternal/token"
+      // Ke: "/ticket/eksternal/token"
       const resp = await api.post<MidtransResponse>(
-        "/eksternal/token", 
+        "/ticket/eksternal/token", // ← PATH DIPERBAIKI
         payload
       );
       return resp.data;
@@ -58,7 +62,10 @@ const index: React.FC = () => {
     onSuccess: (data) => {
       window.snap.pay(data.token, {
         onSuccess: () => {
-          window.location.href = `/eksternal/paid/${data.ticketId}`;
+          // JUGA UPDATE PATH REDIRECT INI:
+          // Dari: `/eksternal/paid/${data.ticketId}`
+          // Ke: `/api/ticket/eksternal/paid/${data.ticketId}`
+          window.location.href = `/api/ticket/eksternal/paid/${data.ticketId}`;
         },
         onPending: (result: any) => {
           alert("Transaksi belum selesai. Status pending.");
@@ -148,4 +155,4 @@ const index: React.FC = () => {
   );
 };
 
-export default index;
+export default Transaction;
