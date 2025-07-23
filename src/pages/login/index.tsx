@@ -1,8 +1,14 @@
+import Oauth from '@/components/login/Oauth'
 import React from 'react'
+
 
 const index = () => {
   return (
-    <div>index</div>
+    <div>
+      <div className='flex '>
+        <Oauth />
+      </div>
+    </div>
   )
 }
 
