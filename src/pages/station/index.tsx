@@ -50,7 +50,7 @@ const index: React.FC = () => {
       };
 
       const resp = await api.post<MidtransResponse>(
-        "/eksternal/token", 
+        "ticket/eksternal/token", 
         payload
       );
       return resp.data;
@@ -58,7 +58,7 @@ const index: React.FC = () => {
     onSuccess: (data) => {
       window.snap.pay(data.token, {
         onSuccess: () => {
-          window.location.href = `/eksternal/paid/${data.ticketId}`;
+          window.location.href = `ticket/eksternal/paid/${data.ticketId}`;
         },
         onPending: (result: any) => {
           alert("Transaksi belum selesai. Status pending.");
