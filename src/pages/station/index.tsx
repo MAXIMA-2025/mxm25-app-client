@@ -2,6 +2,9 @@
 import React, { useState } from "react";
 import useApi from "@/hooks/useApi";
 import { useMutation } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import Bg_desktop from "@/assets/bg_station/station_bg_desktop.png";
+import Bg_mobile from "@/assets/bg_station/station_bg_mobile.png";
 
 declare global {
   interface Window {
@@ -50,7 +53,7 @@ const index: React.FC = () => {
       };
 
       const resp = await api.post<MidtransResponse>(
-        "ticket/eksternal/token", 
+        "ticket/eksternal/token",
         payload
       );
       return resp.data;
@@ -85,65 +88,73 @@ const index: React.FC = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto mt-10 p-6 border rounded shadow">
-      <h2 className="text-2xl font-semibold mb-6">Form Pembayaran Tiket</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
+    <div className="min-h-screen min-w-screen flex flex-col items-center justify-center" style={{ backgroundImage: `url(${Bg_desktop})`, backgroundSize: 'cover' }}>
+      <div className="w-80 lg:w-120 md:w-120 mx-auto mt-10 p-6 border bg-white rounded shadow text-center">
+        <h2 className="text-3xl font-bold mb-6">FORM TRANSAKSI TIKET</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            {/* Nama pemilik tiket bisa diubah nantinya, tidak selalu diambil dari nama pemilik akun email eksternal user */}
+            <input
+              type="text"
+              name="namaDepan"
+              placeholder="Nama Depan"
+              value={form.namaDepan}
+              onChange={handleChange}
+              required
+              className="p-2 border rounded"
+            />
+            <input
+              type="text"
+              name="namaBelakang"
+              placeholder="Nama Belakang"
+              value={form.namaBelakang}
+              onChange={handleChange}
+              required
+              className="p-2 border rounded"
+            />
+          </div>
+          {/* Untuk Email wajib ambil dari akun email eksternal user, dan tidak bisa diubah-ubah */}
           <input
-            type="text"
-            name="namaDepan"
-            placeholder="Nama Depan"
-            value={form.namaDepan}
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={form.email}
             onChange={handleChange}
             required
-            className="p-2 border rounded"
+            className="w-full p-2 border rounded"
           />
+          {/* Nomor telepon masih bisa diubah-ubah */}
           <input
-            type="text"
-            name="namaBelakang"
-            placeholder="Nama Belakang"
-            value={form.namaBelakang}
+            type="tel"
+            name="noTelp"
+            placeholder="No. Telepon"
+            value={form.noTelp}
             onChange={handleChange}
             required
-            className="p-2 border rounded"
+            className="w-full p-2 border rounded"
           />
-        </div>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          required
-          className="w-full p-2 border rounded"
-        />
-        <input
-          type="tel"
-          name="noTelp"
-          placeholder="No. Telepon"
-          value={form.noTelp}
-          onChange={handleChange}
-          required
-          className="w-full p-2 border rounded"
-        />
-        <input
-          type="number"
-          name="jumlahTiket"
-          placeholder="Jumlah Tiket"
-          min={1}
-          value={form.jumlahTiket}
-          onChange={handleChange}
-          required
-          className="w-full p-2 border rounded"
-        />
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded disabled:opacity-50"
-          disabled={mutation.isPending}
-        >
-          {mutation.isPending ? "Memproses..." : "Bayar Sekarang"}
-        </button>
-      </form>
+          {/* Jumlah tiket masih bisa diubah-ubah atau dibeli lebih dari 1 */}
+          <input
+            type="number"
+            name="jumlahTiket"
+            placeholder="Jumlah Tiket"
+            min={1}
+            value={form.jumlahTiket}
+            onChange={handleChange}
+            required
+            className="w-full p-2 border rounded"
+          />
+          <Button
+            type="submit"
+            className="text-white font-bold py-4 px-6 rounded-full 
+  bg-gradient-to-b from-[#A71E43] via-[#5A081E] to-[#A71E43]
+  shadow-md transition duration-300"
+            disabled={mutation.isPending}
+          >
+            {mutation.isPending ? "MEMPROSES..." : "BAYAR SEKARANG"}
+          </Button>
+        </form>
+      </div>
     </div>
   );
 };
