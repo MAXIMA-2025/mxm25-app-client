@@ -10,6 +10,7 @@ export type Path =
   | `/login/YesMaba`
   | `/login/login-form`
   | `/login/register-form`
+  | `/login/sso`
   | `/main`
   | `/maxlearn`
   | `/state`
