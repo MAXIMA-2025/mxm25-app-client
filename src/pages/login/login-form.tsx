@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import logo from "../../assets/LOGO MAXIMA 1.png";
@@ -21,14 +21,31 @@ const subtitleStyle: React.CSSProperties = {
 };
 
 const LoginFormPage = () => {
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const isRedirecting = useRef(false); // Prevent double clicks
 
   const handleSSOLogin = () => {
-    const redirectURL = `${import.meta.env.VITE_CLIENT_URL}/sso`;
-    const ssoURL = `https://sso.umn.ac.id/cas/login?service=${encodeURIComponent(
-      redirectURL
-    )}`;
-    window.location.href = ssoURL;
+    // Prevent double execution
+    if (isRedirecting.current || loading) return;
+
+    isRedirecting.current = true;
+    setLoading(true);
+
+    try {
+      const redirectURL = `${import.meta.env.VITE_CLIENT_URL}/sso`;
+      const ssoURL = `https://sso.umn.ac.id/cas/login?service=${encodeURIComponent(
+        redirectURL
+      )}`;
+
+      // Add small delay to ensure state is updated
+      setTimeout(() => {
+        window.location.href = ssoURL;
+      }, 100);
+    } catch (error) {
+      console.error("Error redirecting to SSO:", error);
+      setLoading(false);
+      isRedirecting.current = false;
+    }
   };
 
   return (
@@ -53,6 +70,7 @@ const LoginFormPage = () => {
       {/* SSO Button */}
       <Button
         onClick={handleSSOLogin}
+        disabled={loading}
         sx={{
           mt: 3,
           px: 10,
@@ -65,11 +83,17 @@ const LoginFormPage = () => {
           color: "white",
           borderRadius: "8px",
           "&:hover": {
-            background: "linear-gradient(to bottom, #a01c34, #4a0510)",
+            background: loading
+              ? "linear-gradient(to bottom, #B2203B, #5B0712)"
+              : "linear-gradient(to bottom, #a01c34, #4a0510)",
+          },
+          "&:disabled": {
+            background: "linear-gradient(to bottom, #888, #666)",
+            color: "white",
           },
         }}
       >
-        Login dengan SSO UMN
+        {loading ? "Mengalihkan ke SSO..." : "Login dengan SSO UMN"}
       </Button>
     </div>
   );
