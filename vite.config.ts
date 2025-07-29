@@ -13,24 +13,4 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  server: {
-    proxy: {
-      "/api/midtrans": {
-        target: "https://app.sandbox.midtrans.com",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/midtrans/, ""),
-        configure: (proxy, options) => {
-          proxy.on("proxyReq", (proxyReq, req, res) => {
-            const serverKey = "Mid-server-6TacYY2pxrnOUNzKKLQqQCjo";
-            const authString = Buffer.from(serverKey + ":").toString("base64");
-            proxyReq.setHeader("Authorization", `Basic ${authString}`);
-          });
-        },
-      },
-      "/api": {
-        target: "http://localhost:5000",
-        changeOrigin: true,
-      },
-    },
-  },
 });

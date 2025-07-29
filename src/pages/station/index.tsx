@@ -1,7 +1,17 @@
-//Transaction .tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useApi from "@/hooks/useApi";
+import useAuth from "@/hooks/useAuth"; // 🔥 Tambahkan ini
 import { useMutation } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import Bg_desktop from "@/assets/asset_station/station_bg_desktop.webp";
+import axios from "axios";
+
+// Notes:
+// 1. System login sudah terintegrasi dengan station, jadi tidak perlu lagi mengisi nama dan email.
+// 2. Form ini akan mengambil data nama dan email dari akun yang sedang login.
+// 3. No HP dan jumlah tiket bisa diubah sesuai kebutuhan.
+// 4. *PENTING*: untuk melakukan pengetesan pembayaran, pastikan sudah terintegerasi dengan sistem login yang benar sehingga data nama dan email bisa diambil dari akun yang sedang login.
+//Jika belum terintegerasi, maka form tidak bisa memproses transaksi karena data nama dan email tidak lengkap.
 
 declare global {
   interface Window {
@@ -17,15 +27,26 @@ type MidtransResponse = {
 
 const index: React.FC = () => {
   const api = useApi();
+  // const { user, isLoading } = useAuth();
 
-  // state form
+  // Awalnya bisa diisi dengan nama default, nanti akan diupdate dengan data user. Jadi saat sudah diintegerasi dengan sistem login,
+  //  set semua field di form ini menjadi kosong, kecuali jumlahTiket harus di 1.
   const [form, setForm] = useState({
-    namaDepan: "",
-    namaBelakang: "",
-    email: "",
-    noTelp: "",
+    nama: "John Doe",
+    email: "john@example.com",
+    noTelp: "08123456789",
     jumlahTiket: 1,
   });
+
+  // useEffect(() => {
+  //   if (user) {
+  //     setForm((prev) => ({
+  //       ...prev,
+  //       nama: user.nama ?? "",
+  //       email: user.email ?? "",
+  //     }));
+  //   }
+  // }, [user]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -39,26 +60,35 @@ const index: React.FC = () => {
 
   const mutation = useMutation({
     mutationFn: async () => {
+      // if (!form.nama || !form.email || !form.noTelp || !form.jumlahTiket) {
+      //   throw new Error("Data tidak lengkap");
+      // }
+
       const payload = {
         jumlahTiket: form.jumlahTiket,
         customerDetails: {
-          namaDepan: form.namaDepan,
-          namaBelakang: form.namaBelakang,
+          nama: form.nama,
           email: form.email,
           noTelp: form.noTelp,
         },
       };
 
       const resp = await api.post<MidtransResponse>(
-        "/eksternal/token", 
+        "ticket/eksternal/token",
         payload
       );
       return resp.data;
     },
     onSuccess: (data) => {
       window.snap.pay(data.token, {
-        onSuccess: () => {
-          window.location.href = `/eksternal/paid/${data.ticketId}`;
+        onSuccess: async () => {
+          try {
+            const ticketId = data.ticketId;
+            await axios.get(`/eksternal/paid/${ticketId}`); 
+          } catch (err) {
+            console.error("Gagal memanggil callback paid:", err);
+            alert("Pembayaran berhasil tapi gagal update status tiket.");
+          }
         },
         onPending: (result: any) => {
           alert("Transaksi belum selesai. Status pending.");
@@ -81,69 +111,100 @@ const index: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // if (!user || isLoading) {
+    //   alert("Gagal memuat data pengguna. Silakan login ulang.");
+    //   return;
+    // }
+
     mutation.mutate();
   };
 
+  // if (isLoading) {
+  //   return <div className="text-center mt-10">Memuat data pengguna...</div>;
+  // }
+
+  // Non-aktifin komen di bawah jika ingin menampilkan pesan error saat user tidak ada yang login (non aktifkan saat sudah terhubung dengan login system)
+  // if (!user) {
+  //   return (
+  //     <div className="text-center mt-10 text-red-600">
+  //       Gagal memuat data pengguna. Silakan login ulang.
+  //     </div>
+  //   );
+  // }
+
   return (
-    <div className="max-w-lg mx-auto mt-10 p-6 border rounded shadow">
-      <h2 className="text-2xl font-semibold mb-6">Form Pembayaran Tiket</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
+    <div
+      className="min-h-screen min-w-screen flex flex-col items-center justify-center"
+      style={{
+        backgroundImage: `url(${Bg_desktop})`,
+        backgroundSize: "cover",
+      }}
+    >
+      <div className="w-80 lg:w-120 md:w-120 mx-auto mt-10 p-6 border bg-white rounded shadow text-center">
+        <h2 className="text-3xl font-bold mb-6">FORM TRANSAKSI TIKET</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid">
+            {/* Nama user bisa diubah, tapi awalnya diisi dari data login */}
+            <input
+              type="text"
+              name="nama"
+              placeholder="Nama"
+              value={form.nama}
+              onChange={handleChange}
+              readOnly
+              required
+              className="p-2 border rounded bg-gray-100 cursor-not-allowed"
+            />
+          </div>
+
+          {/* Email wajib ambil dari akun user, dan tidak bisa diubah */}
           <input
-            type="text"
-            name="namaDepan"
-            placeholder="Nama Depan"
-            value={form.namaDepan}
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            readOnly
+            // 🔒 Tidak bisa diubah
+            required
+            className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed"
+          />
+
+          {/* No HP bebas diubah */}
+          <input
+            type="tel"
+            name="noTelp"
+            placeholder="No. Telepon"
+            value={form.noTelp}
             onChange={handleChange}
             required
-            className="p-2 border rounded"
+            className="w-full p-2 border rounded"
           />
+
+          {/* Jumlah tiket bisa diubah */}
           <input
-            type="text"
-            name="namaBelakang"
-            placeholder="Nama Belakang"
-            value={form.namaBelakang}
+            type="number"
+            name="jumlahTiket"
+            placeholder="Jumlah Tiket"
+            min={1}
+            value={form.jumlahTiket}
             onChange={handleChange}
             required
-            className="p-2 border rounded"
+            className="w-full p-2 border rounded"
           />
-        </div>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          required
-          className="w-full p-2 border rounded"
-        />
-        <input
-          type="tel"
-          name="noTelp"
-          placeholder="No. Telepon"
-          value={form.noTelp}
-          onChange={handleChange}
-          required
-          className="w-full p-2 border rounded"
-        />
-        <input
-          type="number"
-          name="jumlahTiket"
-          placeholder="Jumlah Tiket"
-          min={1}
-          value={form.jumlahTiket}
-          onChange={handleChange}
-          required
-          className="w-full p-2 border rounded"
-        />
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded disabled:opacity-50"
-          disabled={mutation.isPending}
-        >
-          {mutation.isPending ? "Memproses..." : "Bayar Sekarang"}
-        </button>
-      </form>
+
+          <Button
+            type="submit"
+            className="text-white font-bold py-4 px-6 rounded-full 
+              bg-gradient-to-b from-[#A71E43] via-[#5A081E] to-[#A71E43]
+              shadow-md transition duration-300"
+            disabled={mutation.isPending} // 🔒 Cegah submit saat loading
+          >
+            {mutation.isPending ? "MEMPROSES..." : "BAYAR SEKARANG"}
+          </Button>
+        </form>
+      </div>
     </div>
   );
 };
