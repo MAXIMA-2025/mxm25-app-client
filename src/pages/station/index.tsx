@@ -3,8 +3,15 @@ import useApi from "@/hooks/useApi";
 import useAuth from "@/hooks/useAuth"; // 🔥 Tambahkan ini
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import Bg_desktop from "@/assets/bg_station/station_bg_desktop.png";
-import Bg_mobile from "@/assets/bg_station/station_bg_mobile.png";
+import Bg_desktop from "@/assets/asset_station/station_bg_desktop.webp";
+
+// Notes:
+// 1. System login sudah terintegrasi dengan station, jadi tidak perlu lagi mengisi nama dan email.
+// 2. Form ini akan mengambil data nama dan email dari akun yang sedang login. 
+// 3. No HP dan jumlah tiket bisa diubah sesuai kebutuhan.
+// 4. *PENTING*: untuk melakukan pengetesan pembayaran, pastikan sudah terintegerasi dengan sistem login yang benar sehingga data nama dan email bisa diambil dari akun yang sedang login.
+//Jika belum terintegerasi, maka form tidak bisa memproses transaksi karena data nama dan email tidak lengkap.
+
 
 declare global {
   interface Window {
@@ -20,25 +27,28 @@ type MidtransResponse = {
 
 const index: React.FC = () => {
   const api = useApi();
-  const { user, isLoading } = useAuth();
+  // const { user, isLoading } = useAuth();
 
+
+  // Awalnya bisa diisi dengan nama default, nanti akan diupdate dengan data user. Jadi saat sudah diintegerasi dengan sistem login,
+  //  set semua field di form ini menjadi kosong, kecuali jumlahTiket harus di 1.
   const [form, setForm] = useState({
-    nama: "",
-    email: "",
-    noTelp: "",
+    nama: "John Doe", 
+    email: "john@example.com",
+    noTelp: "08123456789",
     jumlahTiket: 1,
   });
 
-  // 🔥 Saat data user sudah tersedia, isi form.nama & form.email
-  useEffect(() => {
-    if (user) {
-      setForm((prev) => ({
-        ...prev,
-        nama: user.nama ?? "", // ganti sesuai struktur data kamu (bisa `user.nama` jika pakai Bahasa)
-        email: user.email ?? "",
-      }));
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user) {
+  //     setForm((prev) => ({
+  //       ...prev,
+  //       nama: user.nama ?? "",
+  //       email: user.email ?? "",
+  //     }));
+  //   }
+  // }, [user]);
+
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -52,9 +62,9 @@ const index: React.FC = () => {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      if (!form.nama || !form.email || !form.noTelp || !form.jumlahTiket) {
-        throw new Error("Data tidak lengkap");
-      }
+      // if (!form.nama || !form.email || !form.noTelp || !form.jumlahTiket) {
+      //   throw new Error("Data tidak lengkap");
+      // }
 
       const payload = {
         jumlahTiket: form.jumlahTiket,
@@ -98,25 +108,26 @@ const index: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!user || isLoading) {
-      alert("Gagal memuat data pengguna. Silakan login ulang.");
-      return;
-    }
+    // if (!user || isLoading) {
+    //   alert("Gagal memuat data pengguna. Silakan login ulang.");
+    //   return;
+    // }
 
     mutation.mutate();
   };
 
-  if (isLoading) {
-    return <div className="text-center mt-10">Memuat data pengguna...</div>;
-  }
+  // if (isLoading) {
+  //   return <div className="text-center mt-10">Memuat data pengguna...</div>;
+  // }
 
-  if (!user) {
-    return (
-      <div className="text-center mt-10 text-red-600">
-        Gagal memuat data pengguna. Silakan login ulang.
-      </div>
-    );
-  }
+  // Non-aktifin komen di bawah jika ingin menampilkan pesan error saat user tidak ada yang login (non aktifkan saat sudah terhubung dengan login system)
+  // if (!user) {
+  //   return (
+  //     <div className="text-center mt-10 text-red-600">
+  //       Gagal memuat data pengguna. Silakan login ulang.
+  //     </div>
+  //   );
+  // }
 
   return (
     <div
@@ -184,7 +195,7 @@ const index: React.FC = () => {
             className="text-white font-bold py-4 px-6 rounded-full 
               bg-gradient-to-b from-[#A71E43] via-[#5A081E] to-[#A71E43]
               shadow-md transition duration-300"
-            disabled={mutation.isPending || isLoading} // 🔒 Cegah submit saat loading
+            disabled={mutation.isPending} // 🔒 Cegah submit saat loading
           >
             {mutation.isPending ? "MEMPROSES..." : "BAYAR SEKARANG"}
           </Button>
