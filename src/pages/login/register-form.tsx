@@ -1,237 +1,463 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, TextField, Card, CardContent, Typography } from "@mui/material";
-import logo from '../../assets/LOGO MAXIMA 1.png';
+import axios from "axios";
+import { Card, CardContent } from "../../components/ui/card";
+import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
+import { Loader2 } from "lucide-react";
+import logo from "../../assets/LOGO MAXIMA 1.png";
 
-const titleStyle: React.CSSProperties = { 
-  fontFamily: 'Title Hero, sans-serif',
-  fontWeight: 'bold',
-  fontStyle: 'normal',
-  fontSize: '48px',
-  lineHeight: '1',
-  letterSpacing: '-0.03em',
-  textAlign: 'center',
-  margin: 0,
+// Base URL untuk API - menggunakan Vite env variable
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
+// TYPE untuk data form
+type DataMahasiswa = {
+  nama: string;
+  nim: string;
+  email: string;
+  angkatan: string;
+  prodi: string;
+  whatsapp: string;
+  lineId: string;
 };
 
-const subtitleStyle: React.CSSProperties = {
-  ...titleStyle,
-  fontSize: '32px',
-  marginBottom: '2rem',
+// TYPE untuk response API
+type ApiResponse = {
+  message: string;
+  data?: any;
+  errors?: string[];
 };
 
-const RegisterFormPage = () => {
+// TYPE untuk error state
+type ErrorState = {
+  message: string;
+  fields?: { [key: string]: string };
+};
+
+const RegisterFormPage: React.FC = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    studentEmail: '',
-    prodi: '',
-    angkatan: '',
-    nim: '',
-    noWa: '',
-    idLine: ''
+
+  const [formData, setFormData] = useState<DataMahasiswa>({
+    nama: "",
+    nim: "",
+    email: "",
+    angkatan: "",
+    prodi: "",
+    whatsapp: "",
+    lineId: "",
   });
 
-  const handleInputChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: event.target.value
-    }));
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<ErrorState | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
+  const handleInputChange =
+    (field: keyof DataMahasiswa) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setFormData((prev) => ({
+        ...prev,
+        [field]: event.target.value,
+      }));
+
+      // Clear error when user starts typing
+      if (error) {
+        setError(null);
+      }
+      if (success) {
+        setSuccess(null);
+      }
+    };
+
+  const validateForm = (): boolean => {
+    const requiredFields: (keyof DataMahasiswa)[] = [
+      "nama",
+      "nim",
+      "email",
+      "angkatan",
+      "prodi",
+      "whatsapp",
+      "lineId",
+    ];
+
+    for (const field of requiredFields) {
+      if (!formData[field].trim()) {
+        setError({
+          message: `Field ${field} harus diisi!`,
+          fields: { [field]: `${field} tidak boleh kosong` },
+        });
+        return false;
+      }
+    }
+
+    // Validate NIM format (must be 00000 + 6 digits)
+    const nimPattern = /^00000\d{6}$/;
+    if (!nimPattern.test(formData.nim)) {
+      setError({
+        message: "Format NIM tidak valid!",
+        fields: {
+          nim: "NIM harus format 00000XXXXXX (11 karakter, dimulai dengan 00000)",
+        },
+      });
+      return false;
+    }
+
+    // Validate email format and domain
+    const emailPattern = /^[^\s@]+@student\.umn\.ac\.id$/;
+    if (!emailPattern.test(formData.email)) {
+      setError({
+        message: "Format email tidak valid!",
+        fields: { email: "Email harus menggunakan domain @student.umn.ac.id" },
+      });
+      return false;
+    }
+
+    // Validate prodi
+    const validProdi = [
+      "Informatika",
+      "Sistem Informasi",
+      "Teknik Komputer",
+      "Teknik Elektro",
+      "Teknik Fisika",
+      "Film & Animasi",
+      "Arsitektur",
+      "DKV",
+      "Strategic Communication",
+      "Jurnalistik",
+      "Akuntansi",
+      "Manajemen",
+      "D3 Perhotelan",
+    ];
+    if (!validProdi.includes(formData.prodi)) {
+      setError({
+        message: "Prodi tidak valid!",
+        fields: {
+          prodi: `Prodi harus salah satu dari: ${validProdi.join(", ")}`,
+        },
+      });
+      return false;
+    }
+
+    // Validate WhatsApp format
+    const whatsappPattern = /^(\+62|62|0)8[1-9][0-9]{6,10}$/;
+    if (!whatsappPattern.test(formData.whatsapp)) {
+      setError({
+        message: "Format WhatsApp tidak valid!",
+        fields: {
+          whatsapp: "WhatsApp harus format Indonesia (contoh: 081234567890)",
+        },
+      });
+      return false;
+    }
+
+    // Validate angkatan (must be 2025)
+    if (formData.angkatan !== "2025") {
+      setError({
+        message: "Angkatan tidak valid!",
+        fields: { angkatan: "Angkatan harus 2025" },
+      });
+      return false;
+    }
+
+    return true;
   };
 
-  const handleLogin = () => {
-    // login handler logic placeholder
+  const handleRegister = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    const requestData = {
+      role: "mahasiswa",
+      data: {
+        nim: formData.nim,
+        nama: formData.nama,
+        email: formData.email,
+        angkatan: parseInt(formData.angkatan),
+        prodi: formData.prodi,
+        whatsapp: formData.whatsapp,
+        lineId: formData.lineId,
+      },
+    };
+
+    // Array of possible endpoints to try
+    const possibleEndpoints = [
+      `${API_BASE_URL}/auth/onboarding`, // Current attempt
+      `${API_BASE_URL}/onboarding`, // Without /auth
+      `${API_BASE_URL.replace("/api", "")}/auth/onboarding`, // Without /api prefix
+      `${API_BASE_URL.replace("/api", "")}/onboarding`, // Direct route
+    ];
+
+    for (let i = 0; i < possibleEndpoints.length; i++) {
+      try {
+        console.log(`Trying endpoint ${i + 1}:`, possibleEndpoints[i]);
+        console.log("Request data:", requestData);
+
+        const response = await axios.post<ApiResponse>(
+          possibleEndpoints[i],
+          requestData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        // If we get here, the request was successful
+        console.log("Success with endpoint:", possibleEndpoints[i]);
+
+        if (response.status === 200) {
+          setSuccess(response.data.message);
+
+          // Redirect to login after 2 seconds
+          setTimeout(() => {
+            navigate("/login/login-form");
+          }, 2000);
+
+          setIsLoading(false);
+          return; // Exit the function successfully
+        }
+      } catch (err: any) {
+        console.error(
+          `Endpoint ${i + 1} failed:`,
+          possibleEndpoints[i],
+          err.response?.status
+        );
+
+        // If this is not a 404 error, handle it normally
+        if (err.response && err.response.status !== 404) {
+          console.error("Non-404 error encountered:", err);
+
+          const { status, data } = err.response;
+
+          switch (status) {
+            case 400:
+              setError({
+                message: data.message || "Data tidak valid!",
+              });
+              break;
+
+            case 409:
+              setError({
+                message: data.message || "Email sudah terdaftar!",
+              });
+              break;
+
+            case 422:
+              setError({
+                message: data.message || "Kesalahan validasi!",
+                fields: data.errors
+                  ? data.errors.reduce((acc: any, error: any) => {
+                      acc[error.field] = error.message;
+                      return acc;
+                    }, {})
+                  : undefined,
+              });
+              break;
+
+            case 500:
+              setError({
+                message: "Terjadi kesalahan server. Silakan coba lagi.",
+              });
+              break;
+
+            default:
+              setError({
+                message: `Error ${status}: ${
+                  data.message || "Terjadi kesalahan tidak terduga."
+                }`,
+              });
+          }
+
+          setIsLoading(false);
+          return; // Exit after handling non-404 error
+        }
+
+        // If it's a 404, continue to the next endpoint
+        if (i === possibleEndpoints.length - 1) {
+          // This was the last endpoint and it failed
+          setError({
+            message:
+              "Tidak dapat menemukan endpoint yang benar. Silakan hubungi administrator.",
+          });
+        }
+      }
+    }
+
+    setIsLoading(false);
   };
 
   return (
-    <div
-      className="min-h-screen w-screen flex flex-col items-center justify-center px-4"
-      style={{ fontFamily: 'Title Hero, sans-serif', color: '#000' }}
-    >
-      {/* Logo */}
-      <img
-        src={logo}
-        alt="MAXIMA Logo"
-        className="w-60 h-60 object-contain"
-      />
+    <div className="min-h-screen w-screen flex flex-col items-center justify-center px-4 text-black font-title">
+      <img src={logo} alt="MAXIMA Logo" className="w-60 h-60 object-contain" />
 
-      {/* Title */}
-      <h1 style={titleStyle}>MAXIMA 2025</h1>
-      <h2 style={subtitleStyle}>Daftar Akunmu</h2>
+      <h1 className="text-5xl font-bold leading-none tracking-tight font-title">
+        MAXIMA 2025
+      </h1>
+      <h2 className="text-3xl font-bold mb-8 font-title">Daftar Akunmu</h2>
 
-      <Card 
-        sx={{
-          width: '100%',
-          maxWidth: '380px',
-          borderRadius: '16px',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-          backgroundColor: 'white',
-          mb: 1
-        }}
-      >
-        <CardContent sx={{ p: 3 }}>
-          <Typography variant="h6" align="center" gutterBottom fontWeight="bold" color="black" style={{ fontFamily: 'Title Hero, sans-serif' }}>
-            Data
-          </Typography>
+      {/* Success Message */}
+      {success && (
+        <div className="w-full max-w-md mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+          {success}
+        </div>
+      )}
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', color: '#000' }}>
-            <div>
-              <Typography fontSize={12} color="#000" mb={0.5} style={{ fontFamily: 'Title Hero, sans-serif' }}>Student Email</Typography>
-              <TextField
-                placeholder="Student Email"
-                value={formData.studentEmail}
-                onChange={handleInputChange('studentEmail')}
-                fullWidth
-                size="small"
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '8px',
-                    backgroundColor: '#f8f9fa',
-                    fontFamily: 'Inter, sans-serif',
-                    fontSize: '14px',
-                    color: '#000'
-                  }
-                }}
+      {/* Error Message */}
+      {error && (
+        <div className="w-full max-w-md mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+          <p className="font-semibold">{error.message}</p>
+          {error.fields && (
+            <ul className="mt-2 text-sm">
+              {Object.entries(error.fields).map(([field, message]) => (
+                <li key={field}>• {message}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+
+      {isLoading ? (
+        <div className="flex flex-col items-center">
+          <Loader2 className="animate-spin text-black mt-4 mb-2" size={32} />
+          <p className="text-sm text-gray-600">Mendaftarkan akun...</p>
+        </div>
+      ) : (
+        <Card className="w-full max-w-md rounded-2xl shadow-md bg-white mb-4">
+          <CardContent className="p-6 space-y-4">
+            <h3 className="text-xl font-bold text-center font-title">
+              Data Mahasiswa
+            </h3>
+
+            <div className="space-y-2">
+              <label className="text-sm font-title">Nama Lengkap</label>
+              <Input
+                placeholder="Nama Lengkap"
+                value={formData.nama}
+                onChange={handleInputChange("nama")}
+                className={error?.fields?.nama ? "border-red-500" : ""}
               />
             </div>
 
-            <div>
-              <Typography fontSize={12} color="#000" mb={0.5} style={{ fontFamily: 'Title Hero, sans-serif' }}>Prodi</Typography>
-              <TextField
-                placeholder="Prodi"
+            <div className="space-y-2">
+              <label className="text-sm font-title">Email Student</label>
+              <Input
+                placeholder="example@student.umn.ac.id"
+                type="email"
+                value={formData.email}
+                onChange={handleInputChange("email")}
+                className={error?.fields?.email ? "border-red-500" : ""}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-title">Prodi</label>
+              <select
                 value={formData.prodi}
-                onChange={handleInputChange('prodi')}
-                fullWidth
-                size="small"
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '8px',
-                    backgroundColor: '#f8f9fa',
-                    fontFamily: 'Inter, sans-serif',
-                    fontSize: '14px',
-                    color: '#000'
-                  }
-                }}
-              />
-            </div>
-
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <div style={{ flex: 1 }}>
-                <Typography fontSize={12} color="#000" mb={0.5} style={{ fontFamily: 'Title Hero, sans-serif' }}>Angkatan</Typography>
-                <TextField
-                  placeholder="Angkatan"
-                  value={formData.angkatan}
-                  onChange={handleInputChange('angkatan')}
-                  size="small"
-                  fullWidth
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      borderRadius: '8px',
-                      backgroundColor: '#f8f9fa',
-                      fontFamily: 'Inter, sans-serif',
-                      fontSize: '14px',
-                      color: '#000'
-                    }
-                  }}
-                />
-              </div>
-              <div style={{ flex: 1 }}>
-                <Typography fontSize={12} color="#000" mb={0.5} style={{ fontFamily: 'Title Hero, sans-serif' }}>NIM</Typography>
-                <TextField
-                  placeholder="NIM"
-                  value={formData.nim}
-                  onChange={handleInputChange('nim')}
-                  size="small"
-                  fullWidth
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      borderRadius: '8px',
-                      backgroundColor: '#f8f9fa',
-                      fontFamily: 'Inter, sans-serif',
-                      fontSize: '14px',
-                      color: '#000'
-                    }
-                  }}
-                />
-              </div>
-            </div>
-
-            <div>
-              <Typography fontSize={12} color="#000" mb={0.5} style={{ fontFamily: 'Title Hero, sans-serif' }}>NO WA</Typography>
-              <TextField
-                placeholder="NO WA"
-                value={formData.noWa}
-                onChange={handleInputChange('noWa')}
-                fullWidth
-                size="small"
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '8px',
-                    backgroundColor: '#f8f9fa',
-                    fontFamily: 'Inter, sans-serif',
-                    fontSize: '14px',
-                    color: '#000'
-                  }
-                }}
-              />
-            </div>
-
-            <div>
-              <Typography fontSize={12} color="#000" mb={0.5} style={{ fontFamily: 'Title Hero, sans-serif' }}>ID LINE</Typography>
-              <TextField
-                placeholder="ID LINE"
-                value={formData.idLine}
-                onChange={handleInputChange('idLine')}
-                fullWidth
-                size="small"
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '8px',
-                    backgroundColor: '#f8f9fa',
-                    fontFamily: 'Inter, sans-serif',
-                    fontSize: '14px',
-                    color: '#000'
-                  }
-                }}
-              />
-            </div>
-
-            {/* Login Button */}
-            <div className="flex flex-col items-center">
-              <Button
-                onClick={handleLogin}
-                sx={{
-                  mt: 2,
-                  px: 16.5,
-                  py: 1,
-                  fontWeight: 'bold',
-                  fontSize: '14px',
-                  fontFamily: 'Title Hero, sans-serif',
-                  letterSpacing: '-0.03em',
-                  background: 'linear-gradient(to bottom, #B2203B, #5B0712)',
-                  color: 'white',
-                  borderRadius: '8px',
-                  '&:hover': {
-                    background: 'linear-gradient(to bottom, #a01c34, #4a0510)',
-                  },
-                }}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, prodi: e.target.value }))
+                }
+                className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                  error?.fields?.prodi ? "border-red-500" : ""
+                }`}
               >
-                REGISTER
-              </Button>
-
-              {/* Register Redirect */}
-              <p className="text-sm text-gray-600 mt-2" style={{ textAlign: 'center' }}>
-                Sudah punya akun?{' '}
-                <span
-                  onClick={() => navigate('/login/login-form')}
-                  className="text-red-700 cursor-pointer underline"
-                >
-                  Login di sini
-                </span>
-              </p>
+                <option value="">Pilih Program Studi</option>
+                <option value="Informatika">Informatika</option>
+                <option value="Sistem Informasi">Sistem Informasi</option>
+                <option value="Teknik Komputer">Teknik Komputer</option>
+                <option value="Teknik Elektro">Teknik Elektro</option>
+                <option value="Teknik Fisika">Teknik Fisika</option>
+                <option value="Film & Animasi">Film & Animasi</option>
+                <option value="Arsitektur">Arsitektur</option>
+                <option value="DKV">DKV</option>
+                <option value="Strategic Communication">
+                  Strategic Communication
+                </option>
+                <option value="Jurnalistik">Jurnalistik</option>
+                <option value="Akuntansi">Akuntansi</option>
+                <option value="Manajemen">Manajemen</option>
+                <option value="D3 Perhotelan">D3 Perhotelan</option>
+              </select>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+
+            <div className="flex gap-4">
+              <div className="flex-1 space-y-2">
+                <label className="text-sm font-title">NIM</label>
+                <Input
+                  placeholder="00000123456"
+                  value={formData.nim}
+                  onChange={handleInputChange("nim")}
+                  className={error?.fields?.nim ? "border-red-500" : ""}
+                  maxLength={11}
+                />
+                <p className="text-xs text-gray-500">
+                  Format: 00000XXXXXX (11 digit)
+                </p>
+              </div>
+              <div className="flex-1 space-y-2">
+                <label className="text-sm font-title">Angkatan</label>
+                <Input
+                  placeholder="2025"
+                  type="number"
+                  value={formData.angkatan}
+                  onChange={handleInputChange("angkatan")}
+                  className={error?.fields?.angkatan ? "border-red-500" : ""}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-title">No WhatsApp</label>
+              <Input
+                placeholder="081234567890"
+                value={formData.whatsapp}
+                onChange={handleInputChange("whatsapp")}
+                className={error?.fields?.whatsapp ? "border-red-500" : ""}
+              />
+              <p className="text-xs text-gray-500">Format: 08XXXXXXXXX</p>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-title">ID Line</label>
+              <Input
+                placeholder="johndoe_line"
+                value={formData.lineId}
+                onChange={handleInputChange("lineId")}
+                className={error?.fields?.lineId ? "border-red-500" : ""}
+              />
+            </div>
+
+            <Button
+              onClick={handleRegister}
+              disabled={isLoading}
+              className="w-full bg-gradient-to-b from-[#B2203B] to-[#5B0712] hover:from-[#a01c34] hover:to-[#4a0510] text-white font-bold font-title disabled:opacity-50"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  MENDAFTAR...
+                </>
+              ) : (
+                "REGISTER"
+              )}
+            </Button>
+
+            <p className="text-sm text-gray-600 text-center">
+              Sudah punya akun?{" "}
+              <span
+                onClick={() => navigate("/login/login-form")}
+                className="text-red-700 cursor-pointer underline"
+              >
+                Login di sini
+              </span>
+            </p>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
