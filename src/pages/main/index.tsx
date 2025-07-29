@@ -21,16 +21,16 @@ const EventCard = () => {
         backgroundAttachment: "fixed",
       }}
     >
-      <Card className=" w-100 sm:w-120 md:w-full lg:w-full xl:w-full max-w-md sm:max-w-l sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-2xl mx-auto bg-white/10 backdrop-blur-lg border border-white/20 shadow-2xl rounded-2xl overflow-hidden bg-gradient-to-l from-red-600/15 to-transparent">
+      <Card className=" w-100 sm:w-120 md:w-full lg:w-full xl:w-full max-w-md sm:max-w-l sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-2xl mx-auto bg-[#f2ca45] border-7 border-[#90171a] rounded-2xl overflow-hidden">
         <div className="flex flex-row lg:flex-row">
           {/* Left Content Section */}
           <div className="flex-1 p-4 sm:p-6 md:p-8">
             <CardHeader className="p-0 space-y-2 sm:space-y-3">
               <div>
-                <CardTitle className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-white mb-1 sm:mb-2 leading-tight">
+                <CardTitle className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-[#2B2B2B] mb-1 sm:mb-2 leading-tight">
                   Station: Malam Puncak
                 </CardTitle>
-                <CardDescription className="text-white/90 text-sm sm:text-base lg:text-lg leading-relaxed">
+                <CardDescription className="text-[#2B2B2B] text-sm sm:text-base lg:text-lg leading-relaxed">
                   Tanggal & Waktu pelaksanaan Station:
                 </CardDescription>
               </div>
@@ -38,7 +38,7 @@ const EventCard = () => {
 
             <CardContent className="p-0 mt-2 sm:mt-3 lg:mt-4">
               <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-4">
-                <div className="flex items-center space-x-2 sm:space-x-3 text-white">
+                <div className="flex items-center space-x-2 sm:space-x-3 text-[#2B2B2B]">
                   <div className="bg-white/20 p-1 sm:p-2 rounded-lg backdrop-blur-sm flex-shrink-0">
                     <Calendar size={16} className="sm:w-4 sm:h-4" />
                   </div>
@@ -47,7 +47,7 @@ const EventCard = () => {
                   </span>
                 </div>
 
-                <div className="flex items-center space-x-2 sm:space-x-3 text-white">
+                <div className="flex items-center space-x-2 sm:space-x-3 text-[#2B2B2B]">
                   <div className="bg-white/20 p-1 sm:p-2 rounded-lg backdrop-blur-sm flex-shrink-0">
                     <Clock size={16} className="sm:w-4 sm:h-4" />
                   </div>
