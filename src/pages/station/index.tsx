@@ -4,14 +4,14 @@ import useAuth from "@/hooks/useAuth"; // 🔥 Tambahkan ini
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import Bg_desktop from "@/assets/asset_station/station_bg_desktop.webp";
+import axios from "axios";
 
 // Notes:
 // 1. System login sudah terintegrasi dengan station, jadi tidak perlu lagi mengisi nama dan email.
-// 2. Form ini akan mengambil data nama dan email dari akun yang sedang login. 
+// 2. Form ini akan mengambil data nama dan email dari akun yang sedang login.
 // 3. No HP dan jumlah tiket bisa diubah sesuai kebutuhan.
 // 4. *PENTING*: untuk melakukan pengetesan pembayaran, pastikan sudah terintegerasi dengan sistem login yang benar sehingga data nama dan email bisa diambil dari akun yang sedang login.
 //Jika belum terintegerasi, maka form tidak bisa memproses transaksi karena data nama dan email tidak lengkap.
-
 
 declare global {
   interface Window {
@@ -29,11 +29,10 @@ const index: React.FC = () => {
   const api = useApi();
   // const { user, isLoading } = useAuth();
 
-
   // Awalnya bisa diisi dengan nama default, nanti akan diupdate dengan data user. Jadi saat sudah diintegerasi dengan sistem login,
   //  set semua field di form ini menjadi kosong, kecuali jumlahTiket harus di 1.
   const [form, setForm] = useState({
-    nama: "John Doe", 
+    nama: "John Doe",
     email: "john@example.com",
     noTelp: "08123456789",
     jumlahTiket: 1,
@@ -48,7 +47,6 @@ const index: React.FC = () => {
   //     }));
   //   }
   // }, [user]);
-
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -83,8 +81,14 @@ const index: React.FC = () => {
     },
     onSuccess: (data) => {
       window.snap.pay(data.token, {
-        onSuccess: () => {
-          window.location.href = `ticket/eksternal/paid/${data.ticketId}`;
+        onSuccess: async () => {
+          try {
+            const ticketId = data.ticketId;
+            await axios.get(`/eksternal/paid/${ticketId}`); 
+          } catch (err) {
+            console.error("Gagal memanggil callback paid:", err);
+            alert("Pembayaran berhasil tapi gagal update status tiket.");
+          }
         },
         onPending: (result: any) => {
           alert("Transaksi belum selesai. Status pending.");
