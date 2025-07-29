@@ -3,9 +3,9 @@ import { Outlet } from 'react-router'
 
 const _app = () => {
   return (
-    <div>
+    <section>
         <Outlet />
-    </div>
+    </section>
   )
 }
 
