@@ -20,15 +20,15 @@ const subtitleStyle: React.CSSProperties = {
   marginBottom: '1rem',
 };
 
-const LoginPage = () => {
+const YesMabaPage = () => {
   const navigate = useNavigate();
 
   const handleYesClick = () => {
-    navigate('/login/YesMaba');
+    navigate('/login/register-form');
   };
 
   const handleNoClick = () => {
-    navigate('/login/register-form');
+    navigate('/login/login-form');
   };
 
   return (
@@ -46,7 +46,7 @@ const LoginPage = () => {
       {/* Title */}
       <h1 style={titleStyle}>MAXIMA 2025</h1>
       <h2 style={subtitleStyle}>
-        Are you maba 2025?
+        WELCOME, MABA!
       </h2>
 
       {/* Buttons */}
@@ -68,7 +68,7 @@ const LoginPage = () => {
             },
           }}
         >
-          YES
+          REGISTER
         </Button>
         <Button
           onClick={handleNoClick}
@@ -88,11 +88,11 @@ const LoginPage = () => {
             },
           }}
         >
-          NO, Sign in with Google
+          LOGIN
         </Button>
       </div>
     </div>
   );
 };
 
-export default LoginPage;
+export default YesMabaPage;
