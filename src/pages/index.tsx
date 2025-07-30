@@ -20,7 +20,7 @@ const index = () => {
   return (
     <div className="flex flex-col">
       <HeroSection />
-      <AboutSection />
+      {/* <AboutSection /> */}
     </div>
   );
 };
