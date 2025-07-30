@@ -4,8 +4,7 @@
 /* Load upright variable */
 @font-face {
   font-family: 'Fraunces';
-  src: url('../src/assets/fonts/fraunces/Fraunces-VariableFont_SOFT,WONK,opsz,wght.ttf') format('truetype');
-  font-weight: 100 900;
+  src: url('../src/assets/fonts/fraunces/Fraunces-VariableFont_SOFT,WONK,opsz,wght.ttf') format('truetype');  font-weight: 100 900;
   font-style: normal;
 }
 
@@ -344,3 +343,17 @@ button:focus-visible {
     @apply bg-background text-foreground;
   }
 }
+
+.tombol{
+  padding: 6px 12px;
+  border-radius: 4px;
+  background-color: #5A081E;
+  color: white;
+  border: 0;
+  transition: 0.2s;
+}
+
+.tombol:hover{
+  background-color: #5A081E;
+}
+
