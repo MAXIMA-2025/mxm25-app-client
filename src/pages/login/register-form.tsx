@@ -5,7 +5,7 @@ import { Card, CardContent } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
 import { Loader2 } from "lucide-react";
-import logo from "../../assets/LOGO MAXIMA 1.png";
+import logo from '../../assets/images/logo.png';
 
 // Base URL untuk API - menggunakan Vite env variable
 const API_BASE_URL =

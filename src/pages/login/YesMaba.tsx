@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import logo from '../../assets/LOGO MAXIMA 1.png';
+import logo from '../../assets/images/logo.png';
 
 const titleStyle: React.CSSProperties = {
   fontFamily: 'Title Hero, sans-serif',
