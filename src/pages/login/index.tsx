@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Button from '@mui/material/Button';
+import { Button } from '@/components/ui/button';
 import logo from '../../assets/LOGO MAXIMA 1.png';
 
 const titleStyle: React.CSSProperties = {
@@ -53,40 +53,13 @@ const LoginPage = () => {
       <div className="flex flex-row gap-4 w-full max-w-md justify-center">
         <Button
           onClick={handleYesClick}
-          sx={{
-            flex: 1,
-            py: 0.5,
-            fontWeight: 'bold',
-            fontSize: '14px',
-            fontFamily: 'Title Hero, sans-serif',
-            letterSpacing: '-0.03em',
-            background: 'linear-gradient(to bottom, #B2203B, #5B0712)',
-            color: 'white',
-            borderRadius: '8px',
-            '&:hover': {
-              background: 'linear-gradient(to bottom, #a01c34, #4a0510)',
-            },
-          }}
+          variant="clay"
         >
           YES
         </Button>
         <Button
           onClick={handleNoClick}
-          sx={{
-            flex: 1,
-            py: 0.5,
-            fontWeight: 'bold',
-            fontSize: '14px',
-            fontFamily: 'Title Hero, sans-serif',
-            letterSpacing: '-0.03em',
-            background: 'linear-gradient(to bottom, #B2203B, #5B0712)',
-            color: 'white',
-            borderRadius: '8px',
-            whiteSpace: 'nowrap',
-            '&:hover': {
-              background: 'linear-gradient(to bottom, #a01c34, #4a0510)',
-            },
-          }}
+          variant="secondary"
         >
           NO, Sign in with Google
         </Button>
