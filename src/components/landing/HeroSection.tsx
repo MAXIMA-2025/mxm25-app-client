@@ -40,7 +40,7 @@ const HeroSection = () => {
             </p>
           </div>
           <Button className="w-[64%] md:w-[50%] mt-2" variant="clay" asChild>
-            <Link to="/login">Jelajahi Bersama!</Link>
+            <Link to="/login" className="w-full">Jelajahi Bersama!</Link>
           </Button>
         </div>
         <img className="w-34 z-1 md:w-40" src={Logo} />
