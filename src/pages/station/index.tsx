@@ -84,7 +84,7 @@ const index: React.FC = () => {
         onSuccess: async () => {
           try {
             const ticketId = data.ticketId;
-            await axios.get(`/eksternal/paid/${ticketId}`); 
+            await api.get(`/ticket/eksternal/paid/${ticketId}`);
           } catch (err) {
             console.error("Gagal memanggil callback paid:", err);
             alert("Pembayaran berhasil tapi gagal update status tiket.");
