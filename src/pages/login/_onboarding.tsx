@@ -14,9 +14,6 @@ import { Loader2 } from "lucide-react";
 import backgroundImg from "../../assets/images/hero/BACKGROUND.webp";
 import { toast } from "sonner";
 
-// Base URL untuk API - menggunakan Vite env variable
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 // TYPE untuk data form
 type DataMahasiswa = {

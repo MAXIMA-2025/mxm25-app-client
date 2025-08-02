@@ -8,7 +8,7 @@ export type Path =
   | `/app`
   | `/login`
   | `/login/mahasiswa`
-  | `/login/onboarding`
+  | `/login/oauth`
   | `/login/sso`
   | `/main`
   | `/maxlearn`

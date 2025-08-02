@@ -20,7 +20,8 @@ const LoginPage = () => {
     try {
       const res = await axios.get(`${import.meta.env.VITE_API_URL}/auth/google`);
       const url = res.data?.data?.authUrl;
-      // window.location.href = url; // Redirect to Google OAuth
+      console.log(url);
+      window.location.href = url; // Redirect to Google OAuth
     } catch (error) {
       toast.error("Failed to generate Google auth URL");
     }
