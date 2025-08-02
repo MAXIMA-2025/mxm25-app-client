@@ -4,6 +4,7 @@ import "./index.css";
 import { Routes } from "@generouted/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { Toaster } from "sonner";
 
 // import App from './App.tsx'
 
@@ -14,6 +15,7 @@ createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Routes />
+        <Toaster />
       </AuthProvider>
     </QueryClientProvider>
   </StrictMode>

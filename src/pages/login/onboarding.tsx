@@ -13,6 +13,8 @@ import { Button } from "../../components/ui/button";
 import { Loader2 } from "lucide-react";
 import logo from "../../assets/images/logo.png";
 import backgroundImg from "../../assets/images/hero/BACKGROUND.webp";
+import Toaster from "../../components/ui/sonner"
+import { toast } from "react-toastify";
 
 // Base URL untuk API - menggunakan Vite env variable
 const API_BASE_URL =
@@ -309,14 +311,14 @@ const Onboarding: React.FC = () => {
     >
       {/* <img src={logo} alt="MAXIMA Logo" className="size-40 object-contain" /> */}
       {/* Success Message */}
-      {success && (
-        <div className="w-full max-w-md mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
-          {success}
-        </div>
-      )}
+      {success && toast.success(success)}
 
       {/* Error Message */}
-      {error && (
+
+      {error &&
+        toast.error(error.message)
+      }
+      {/* {error && (
         <div className="w-full max-w-md mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
           <p className="font-semibold">{error.message}</p>
           {error.fields && (
@@ -327,8 +329,7 @@ const Onboarding: React.FC = () => {
             </ul>
           )}
         </div>
-      )}
-
+      )} */}
       {isLoading ? (
         <div className="flex flex-col items-center">
           <Loader2 className="animate-spin text-black mt-4 mb-2" size={32} />
