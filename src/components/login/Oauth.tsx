@@ -99,7 +99,6 @@ const Oauth = () => {
         <CardContent>
           <Button
             onClick={handleGoogleLogin}
-            variant="test"
             className="w-full bg-amber-400"
           >
             Register with G
@@ -114,9 +113,3 @@ const Oauth = () => {
 };
 
 export default Oauth;
-function useHandleQueryError(arg0: {
-  error: Error | null;
-  status: "error" | "success" | "pending";
-}) {
-  throw new Error("Function not implemented.");
-}

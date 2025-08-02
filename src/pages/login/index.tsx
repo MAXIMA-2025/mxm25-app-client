@@ -5,23 +5,9 @@ import logo from "../../assets/images/logo.png";
 import Google from "../../assets/images/google-icon-logo-svgrepo-com.svg";
 import { Card, CardFooter, CardTitle } from "@/components/ui/card";
 import backgroundImg from "../../assets/images/hero/BACKGROUND.webp";
+import axios from "axios";
+import {toast} from "sonner";
 
-const titleStyle: React.CSSProperties = {
-  fontFamily: "Title Hero, sans-serif",
-  fontWeight: "bold",
-  fontStyle: "normal",
-  fontSize: "48px",
-  lineHeight: "1",
-  letterSpacing: "-0.03em",
-  textAlign: "center",
-  margin: 0,
-};
-
-const subtitleStyle: React.CSSProperties = {
-  ...titleStyle,
-  fontSize: "48px",
-  marginBottom: "1rem",
-};
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -30,8 +16,14 @@ const LoginPage = () => {
     navigate("/login/mahasiswa");
   };
 
-  const handleNoClick = () => {
-    navigate("/login/register-form");
+  const handleGoogleClick = async () => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/auth/google`);
+      const url = res.data?.data?.authUrl;
+      // window.location.href = url; // Redirect to Google OAuth
+    } catch (error) {
+      toast.error("Failed to generate Google auth URL");
+    }
   };
 
   return (
@@ -60,7 +52,7 @@ const LoginPage = () => {
             YES
           </Button>
           <Button
-            onClick={handleNoClick}
+            onClick={handleGoogleClick}
             variant="outline"
             className="w-full md:w-1/2"
           >
