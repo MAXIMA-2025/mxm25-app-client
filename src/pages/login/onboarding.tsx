@@ -13,8 +13,7 @@ import { Button } from "../../components/ui/button";
 import { Loader2 } from "lucide-react";
 import logo from "../../assets/images/logo.png";
 import backgroundImg from "../../assets/images/hero/BACKGROUND.webp";
-import Toaster from "../../components/ui/sonner"
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 // Base URL untuk API - menggunakan Vite env variable
 const API_BASE_URL =
