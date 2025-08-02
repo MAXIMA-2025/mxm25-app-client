@@ -21,6 +21,7 @@ const Sso = () => {
     const runSso = async () => {
       const searchParams = new URLSearchParams(location.search);
       const ticket = searchParams.get("ticket");
+      console.log(ticket);
 
       // Jika ticket tidak ada, error
       if (!ticket) {

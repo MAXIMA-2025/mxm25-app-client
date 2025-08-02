@@ -1,4 +1,3 @@
-import {useRef,useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import logo from '../../assets/images/logo.png';
@@ -26,40 +25,39 @@ const subtitleStyle: React.CSSProperties = {
 const Mahasiswa = () => {
   const navigate = useNavigate();
 
-    const [loading, setLoading] = useState(false);
-    const isRedirecting = useRef(false); // Prevent double clicks
+    // const [loading, setLoading] = useState(false);
+    // const isRedirecting = useRef(false); // Prevent double clicks
   
     const handleSSOLogin = () => {
-      // Prevent double execution
-      if (isRedirecting.current || loading) return;
+    const ssoURL = `https://sso.umn.ac.id/cas/login?service=${import.meta.env.VITE_CLIENT_URL + "/sso"}`;
+    window.location.href = ssoURL;
+      // // Prevent double execution
+      // if (isRedirecting.current || loading) return;
   
-      isRedirecting.current = true;
-      setLoading(true);
+      // isRedirecting.current = true;
+      // setLoading(true);
   
-      try {
-        const redirectURL = `${import.meta.env.VITE_CLIENT_URL}/sso`;
-        const ssoURL = `https://sso.umn.ac.id/cas/login?service=${encodeURIComponent(
-          redirectURL
-        )}`;
+      // try {
+      //   const redirectURL = `${import.meta.env.VITE_CLIENT_URL}/sso`;
+      //   const ssoURL = `https://sso.umn.ac.id/cas/login?service=${encodeURIComponent(
+      //     redirectURL
+      //   )}`;
   
-        // Add small delay to ensure state is updated
-        setTimeout(() => {
-          window.location.href = ssoURL;
-        }, 100);
-      } catch (error) {
-        console.error("Error redirecting to SSO:", error);
-        setLoading(false);
-        isRedirecting.current = false;
-      }
+      //   // Add small delay to ensure state is updated
+      //   setTimeout(() => {
+      //     window.location.href = ssoURL;
+      //   }, 100);
+      // } catch (error) {
+      //   console.error("Error redirecting to SSO:", error);
+      //   setLoading(false);
+      //   isRedirecting.current = false;
+      // }
     };
 
   const handleYesClick = () => {
     navigate('/login/onboarding');
   };
 
-  const handleNoClick = () => {
-    navigate('/login/login-form');
-  };
 
   return (
         <section
