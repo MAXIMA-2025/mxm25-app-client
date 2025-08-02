@@ -37,7 +37,7 @@ const Mahasiswa = () => {
     setLoading(true);
 
     try {
-      const redirectURL = `${import.meta.env.VITE_CLIENT_URL}/sso`;
+      const redirectURL = `${import.meta.env.VITE_CLIENT_URL}/login/sso`;
       const ssoURL = `https://sso.umn.ac.id/cas/login?service=${encodeURIComponent(
         redirectURL
       )}`;

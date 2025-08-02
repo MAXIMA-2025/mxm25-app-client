@@ -21,7 +21,6 @@ const Sso = () => {
     const runSso = async () => {
       const searchParams = new URLSearchParams(location.search);
       const ticket = searchParams.get("ticket");
-      console.log(ticket);
 
       if (isLoggedOut) {
         navigate("/login/onboarding");
