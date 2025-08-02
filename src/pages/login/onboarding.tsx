@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -298,7 +298,17 @@ const Onboarding: React.FC = () => {
 
     setIsLoading(false);
   };
+  useEffect(() => {
+    if (success) {
+      toast.success(success);
+    }
+  }, [success]);
 
+  useEffect(() => {
+    if (error) {
+      toast.error(error.message);
+    }
+  }, [error]);
   return (
     <section
       className="min-h-screen w-screen bg-white flex flex-col gap-4 items-center justify-center px-4"
@@ -308,27 +318,6 @@ const Onboarding: React.FC = () => {
         backgroundPosition: "center",
       }}
     >
-      {/* <img src={logo} alt="MAXIMA Logo" className="size-40 object-contain" /> */}
-      {/* Success Message */}
-      {success && toast.success(success)}
-
-      {/* Error Message */}
-
-      {error &&
-        toast.error(error.message)
-      }
-      {/* {error && (
-        <div className="w-full max-w-md mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-          <p className="font-semibold">{error.message}</p>
-          {error.fields && (
-            <ul className="mt-2 text-sm">
-              {Object.entries(error.fields).map(([field, message]) => (
-                <li key={field}>• {message}</li>
-              ))}
-            </ul>
-          )}
-        </div>
-      )} */}
       {isLoading ? (
         <div className="flex flex-col items-center">
           <Loader2 className="animate-spin text-black mt-4 mb-2" size={32} />
@@ -422,26 +411,26 @@ const Onboarding: React.FC = () => {
 
             <div className="flex gap-4">
               <div className="flex-1 space-y-2">
-              <label className="text-sm font-title">No WhatsApp</label>
-              <Input
-                placeholder="081234567890"
-                value={formData.whatsapp}
-                onChange={handleInputChange("whatsapp")}
-                className={error?.fields?.whatsapp ? "border-red-500" : ""}
-              />
-              {/* <p className="text-xs text-gray-500">Format: 08XXXXXXXXX</p> */}
+                <label className="text-sm font-title">No WhatsApp</label>
+                <Input
+                  placeholder="081234567890"
+                  value={formData.whatsapp}
+                  onChange={handleInputChange("whatsapp")}
+                  className={error?.fields?.whatsapp ? "border-red-500" : ""}
+                />
+                {/* <p className="text-xs text-gray-500">Format: 08XXXXXXXXX</p> */}
               </div>
               <div className="flex-1 space-y-2">
-              <label className="text-sm font-title">ID Line</label>
-              <Input
-                placeholder="johndoe_line"
-                value={formData.lineId}
-                onChange={handleInputChange("lineId")}
-                className={error?.fields?.lineId ? "border-red-500" : ""}
-              />
+                <label className="text-sm font-title">ID Line</label>
+                <Input
+                  placeholder="johndoe_line"
+                  value={formData.lineId}
+                  onChange={handleInputChange("lineId")}
+                  className={error?.fields?.lineId ? "border-red-500" : ""}
+                />
               </div>
             </div>
-                
+
             <Button
               onClick={handleRegister}
               disabled={isLoading}
