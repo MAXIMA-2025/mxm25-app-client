@@ -29,7 +29,7 @@ const Mahasiswa = () => {
     // const isRedirecting = useRef(false); // Prevent double clicks
   
     const handleSSOLogin = () => {
-    const ssoURL = `https://sso.umn.ac.id/cas/login?service=${import.meta.env.VITE_CLIENT_URL + "/sso"}`;
+    const ssoURL = `https://sso.umn.ac.id/cas/login?service=${import.meta.env.VITE_CLIENT_URL + "/login/sso"}`;
     window.location.href = ssoURL;
       // // Prevent double execution
       // if (isRedirecting.current || loading) return;
