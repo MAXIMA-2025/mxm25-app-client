@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import logo from "../../assets/images/logo.png";
 import Google from "../../assets/images/google-icon-logo-svgrepo-com.svg";
 import { Card, CardFooter, CardTitle } from "@/components/ui/card";
-import { CardHeader } from "@mui/material";
+import backgroundImg from "../../assets/images/hero/BACKGROUND.webp";
 
 const titleStyle: React.CSSProperties = {
   fontFamily: "Title Hero, sans-serif",
@@ -27,7 +27,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const handleYesClick = () => {
-    navigate("/login/YesMaba");
+    navigate("/login/mahasiswa");
   };
 
   const handleNoClick = () => {
@@ -37,24 +37,35 @@ const LoginPage = () => {
   return (
     <section
       className="min-h-screen w-screen bg-white flex flex-col gap-4 items-center justify-center px-4"
-      style={{ fontFamily: "Title Hero, sans-serif" }}
+      style={{
+        backgroundImage: `url(${backgroundImg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
       {/* Logo */}
       <img src={logo} alt="MAXIMA Logo" className="size-40 object-contain" />
       <Card className="flex flex-col items-center">
-        <CardTitle className="px-4 font-futura text-xl font-medium text-center">
-            Apakah anda merupakan Mahasiswa Baru UMN 2025?
+        <CardTitle className="px-4 font-futura text-xl font-semibold text-center">
+          Apakah anda merupakan Mahasiswa Baru UMN 2025?
         </CardTitle>
 
         {/* Buttons */}
         <CardFooter className="flex flex-col md:flex-row gap-4 w-full justify-center">
-          <Button onClick={handleYesClick} variant="clay" className="w-full md:w-1/2">
+          <Button
+            onClick={handleYesClick}
+            variant="clay"
+            className="w-full md:w-1/2"
+          >
             YES
           </Button>
-          <Button onClick={handleNoClick} variant="outline" className="w-full md:w-1/2">
+          <Button
+            onClick={handleNoClick}
+            variant="outline"
+            className="w-full md:w-1/2"
+          >
             NO, <img className="size-5" src={Google} /> Sign in with Google
           </Button>
-
         </CardFooter>
       </Card>
     </section>

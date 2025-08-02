@@ -6,8 +6,13 @@ import HeroBackground from "../../assets/images/hero/BACKGROUND.webp";
 import HeroForegroundLeft from "../../assets/images/hero/FOREGROUND1.webp";
 import HeroForegroundRight from "../../assets/images/hero/FOREGROUND2.webp";
 import { Link } from "react-router";
+import { useNavigate } from "react-router";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+  const handleClick = () =>{
+    navigate("/login");
+  };
   return (
     <section className="w-dvw h-dvh flex justify-center items-center overflow-hidden relative">
       <img
@@ -39,8 +44,8 @@ const HeroSection = () => {
               Yuk, kita menjelajah bersama-sama!
             </p>
           </div>
-          <Button className="w-[64%] md:w-[50%] mt-2" variant="clay" asChild>
-            <Link to="/login" className="w-full">Jelajahi Bersama!</Link>
+          <Button className="w-[64%] md:w-[50%] mt-2" variant="clay" onClick={handleClick}>
+            Jelajahi Bersama!
           </Button>
         </div>
         <img className="w-34 z-1 md:w-40" src={Logo} />
