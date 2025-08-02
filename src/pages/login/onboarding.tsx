@@ -175,129 +175,106 @@ const Onboarding: React.FC = () => {
       return;
     }
 
-    setIsLoading(true);
     setError(null);
     setSuccess(null);
 
-    const requestData = {
-      role: "mahasiswa",
-      data: {
-        nim: formData.nim,
-        nama: formData.nama,
-        email: formData.email,
-        angkatan: parseInt(formData.angkatan),
-        prodi: formData.prodi,
-        whatsapp: formData.whatsapp,
-        lineId: formData.lineId,
-      },
-    };
+    toast.promise(
+      new Promise<void>(async (resolve, reject) => {
+        setIsLoading(true);
 
-    // Array of possible endpoints to try
-    const possibleEndpoints = [
-      `${API_BASE_URL}/auth/onboarding`, // Current attempt
-      `${API_BASE_URL}/onboarding`, // Without /auth
-      `${API_BASE_URL.replace("/api", "")}/auth/onboarding`, // Without /api prefix
-      `${API_BASE_URL.replace("/api", "")}/onboarding`, // Direct route
-    ];
+        const requestData = {
+          role: "mahasiswa",
+          data: {
+            nim: formData.nim,
+            nama: formData.nama,
+            email: formData.email,
+            angkatan: parseInt(formData.angkatan),
+            prodi: formData.prodi,
+            whatsapp: formData.whatsapp,
+            lineId: formData.lineId,
+          },
+        };
 
-    for (let i = 0; i < possibleEndpoints.length; i++) {
-      try {
-        console.log(`Trying endpoint ${i + 1}:`, possibleEndpoints[i]);
-        console.log("Request data:", requestData);
+        const possibleEndpoints = [
+          `${API_BASE_URL}/auth/onboarding`,
+          `${API_BASE_URL}/onboarding`,
+          `${API_BASE_URL.replace("/api", "")}/auth/onboarding`,
+          `${API_BASE_URL.replace("/api", "")}/onboarding`,
+        ];
 
-        const response = await axios.post<ApiResponse>(
-          possibleEndpoints[i],
-          requestData,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
+        for (let i = 0; i < possibleEndpoints.length; i++) {
+          try {
+            const response = await axios.post<ApiResponse>(
+              possibleEndpoints[i],
+              requestData,
+              { headers: { "Content-Type": "application/json" } }
+            );
+
+            if (response.status === 200) {
+              setSuccess(response.data.message);
+              setTimeout(() => {
+                navigate("/login/login-form");
+              }, 2000);
+              setIsLoading(false);
+              return resolve();
+            }
+          } catch (err: any) {
+            if (err.response && err.response.status !== 404) {
+              const { status, data } = err.response;
+              let message = "Terjadi kesalahan.";
+
+              switch (status) {
+                case 400:
+                  message = data.message || "Data tidak valid!";
+                  break;
+                case 409:
+                  message = data.message || "Email sudah terdaftar!";
+                  break;
+                case 422:
+                  message = data.message || "Kesalahan validasi!";
+                  setError({
+                    message,
+                    fields: data.errors
+                      ? data.errors.reduce((acc: any, error: any) => {
+                          acc[error.field] = error.message;
+                          return acc;
+                        }, {})
+                      : undefined,
+                  });
+                  break;
+                case 500:
+                  message = "Terjadi kesalahan server. Silakan coba lagi.";
+                  break;
+                default:
+                  message = `Error ${status}: ${
+                    data.message || "Kesalahan tidak terduga."
+                  }`;
+              }
+
+              setError({ message });
+              setIsLoading(false);
+              return reject(new Error(message));
+            }
+
+            if (i === possibleEndpoints.length - 1) {
+              const msg =
+                "Tidak dapat menemukan endpoint yang benar. Silakan hubungi administrator.";
+              setError({ message: msg });
+              return reject(new Error(msg));
+            }
           }
-        );
-
-        // If we get here, the request was successful
-        console.log("Success with endpoint:", possibleEndpoints[i]);
-
-        if (response.status === 200) {
-          setSuccess(response.data.message);
-
-          // Redirect to login after 2 seconds
-          setTimeout(() => {
-            navigate("/login/login-form");
-          }, 2000);
-
-          setIsLoading(false);
-          return; // Exit the function successfully
-        }
-      } catch (err: any) {
-        console.error(
-          `Endpoint ${i + 1} failed:`,
-          possibleEndpoints[i],
-          err.response?.status
-        );
-
-        // If this is not a 404 error, handle it normally
-        if (err.response && err.response.status !== 404) {
-          console.error("Non-404 error encountered:", err);
-
-          const { status, data } = err.response;
-
-          switch (status) {
-            case 400:
-              setError({
-                message: data.message || "Data tidak valid!",
-              });
-              break;
-
-            case 409:
-              setError({
-                message: data.message || "Email sudah terdaftar!",
-              });
-              break;
-
-            case 422:
-              setError({
-                message: data.message || "Kesalahan validasi!",
-                fields: data.errors
-                  ? data.errors.reduce((acc: any, error: any) => {
-                      acc[error.field] = error.message;
-                      return acc;
-                    }, {})
-                  : undefined,
-              });
-              break;
-
-            case 500:
-              setError({
-                message: "Terjadi kesalahan server. Silakan coba lagi.",
-              });
-              break;
-
-            default:
-              setError({
-                message: `Error ${status}: ${
-                  data.message || "Terjadi kesalahan tidak terduga."
-                }`,
-              });
-          }
-
-          setIsLoading(false);
-          return; // Exit after handling non-404 error
         }
 
-        // If it's a 404, continue to the next endpoint
-        if (i === possibleEndpoints.length - 1) {
-          // This was the last endpoint and it failed
-          setError({
-            message:
-              "Tidak dapat menemukan endpoint yang benar. Silakan hubungi administrator.",
-          });
-        }
+        setIsLoading(false);
+      }),
+      {
+        loading: "Mendaftarkan akun...",
+        success: "Berhasil mendaftar!",
+        error: (err) => err.message || "Gagal mendaftar.",
       }
-    }
-
-    setIsLoading(false);
+    );
   };
+
   useEffect(() => {
     if (success) {
       toast.success(success);
@@ -309,6 +286,7 @@ const Onboarding: React.FC = () => {
       toast.error(error.message);
     }
   }, [error]);
+
   return (
     <section
       className="min-h-screen w-screen bg-white flex flex-col gap-4 items-center justify-center px-4"
@@ -318,86 +296,80 @@ const Onboarding: React.FC = () => {
         backgroundPosition: "center",
       }}
     >
-      {isLoading ? (
-        <div className="flex flex-col items-center">
-          <Loader2 className="animate-spin text-black mt-4 mb-2" size={32} />
-          <p className="text-sm text-gray-600">Mendaftarkan akun...</p>
-        </div>
-      ) : (
-        <Card className="font-futura">
-          <CardHeader>
-            <CardTitle>Data Mahasiswa</CardTitle>
-            <CardDescription>
-              Isi data kamu untuk memasuki website MAXIMA 2025!
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <div className="space-y-2">
-              <label className="text-sm font-title">Nama Lengkap</label>
+      <Card className="font-futura">
+        <CardHeader>
+          <CardTitle>Data Mahasiswa</CardTitle>
+          <CardDescription>
+            Isi data kamu untuk memasuki website MAXIMA 2025!
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <div className="space-y-2">
+            <label className="text-sm font-title">Nama Lengkap</label>
+            <Input
+              placeholder="Nama Lengkap"
+              value={formData.nama}
+              onChange={handleInputChange("nama")}
+              className={error?.fields?.nama ? "border-red-500" : ""}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-title">Email Student</label>
+            <Input
+              placeholder="example@student.umn.ac.id"
+              type="email"
+              value={formData.email}
+              onChange={handleInputChange("email")}
+              className={error?.fields?.email ? "border-red-500" : ""}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-title">Prodi</label>
+            <select
+              value={formData.prodi}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, prodi: e.target.value }))
+              }
+              className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                error?.fields?.prodi ? "border-red-500" : ""
+              }`}
+            >
+              <option value="">Pilih Program Studi</option>
+              <option value="Informatika">Informatika</option>
+              <option value="Sistem Informasi">Sistem Informasi</option>
+              <option value="Teknik Komputer">Teknik Komputer</option>
+              <option value="Teknik Elektro">Teknik Elektro</option>
+              <option value="Teknik Fisika">Teknik Fisika</option>
+              <option value="Film & Animasi">Film & Animasi</option>
+              <option value="Arsitektur">Arsitektur</option>
+              <option value="DKV">DKV</option>
+              <option value="Strategic Communication">
+                Strategic Communication
+              </option>
+              <option value="Jurnalistik">Jurnalistik</option>
+              <option value="Akuntansi">Akuntansi</option>
+              <option value="Manajemen">Manajemen</option>
+              <option value="D3 Perhotelan">D3 Perhotelan</option>
+            </select>
+          </div>
+
+          <div className="flex gap-4">
+            <div className="flex-1 space-y-2">
+              <label className="text-sm font-title">NIM</label>
               <Input
-                placeholder="Nama Lengkap"
-                value={formData.nama}
-                onChange={handleInputChange("nama")}
-                className={error?.fields?.nama ? "border-red-500" : ""}
+                placeholder="00000123456"
+                value={formData.nim}
+                onChange={handleInputChange("nim")}
+                className={error?.fields?.nim ? "border-red-500" : ""}
+                maxLength={11}
               />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-title">Email Student</label>
-              <Input
-                placeholder="example@student.umn.ac.id"
-                type="email"
-                value={formData.email}
-                onChange={handleInputChange("email")}
-                className={error?.fields?.email ? "border-red-500" : ""}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-title">Prodi</label>
-              <select
-                value={formData.prodi}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, prodi: e.target.value }))
-                }
-                className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
-                  error?.fields?.prodi ? "border-red-500" : ""
-                }`}
-              >
-                <option value="">Pilih Program Studi</option>
-                <option value="Informatika">Informatika</option>
-                <option value="Sistem Informasi">Sistem Informasi</option>
-                <option value="Teknik Komputer">Teknik Komputer</option>
-                <option value="Teknik Elektro">Teknik Elektro</option>
-                <option value="Teknik Fisika">Teknik Fisika</option>
-                <option value="Film & Animasi">Film & Animasi</option>
-                <option value="Arsitektur">Arsitektur</option>
-                <option value="DKV">DKV</option>
-                <option value="Strategic Communication">
-                  Strategic Communication
-                </option>
-                <option value="Jurnalistik">Jurnalistik</option>
-                <option value="Akuntansi">Akuntansi</option>
-                <option value="Manajemen">Manajemen</option>
-                <option value="D3 Perhotelan">D3 Perhotelan</option>
-              </select>
-            </div>
-
-            <div className="flex gap-4">
-              <div className="flex-1 space-y-2">
-                <label className="text-sm font-title">NIM</label>
-                <Input
-                  placeholder="00000123456"
-                  value={formData.nim}
-                  onChange={handleInputChange("nim")}
-                  className={error?.fields?.nim ? "border-red-500" : ""}
-                  maxLength={11}
-                />
-                {/* <p className="text-xs text-gray-500">
+              {/* <p className="text-xs text-gray-500">
                   Format: 00000XXXXXX (11 digit)
                 </p> */}
-              </div>
-              {/* <div className="flex-1 space-y-2">
+            </div>
+            {/* <div className="flex-1 space-y-2">
                 <label className="text-sm font-title">Angkatan</label>
                 <Input
                   placeholder="2025"
@@ -407,57 +379,56 @@ const Onboarding: React.FC = () => {
                   className={error?.fields?.angkatan ? "border-red-500" : ""}
                 />
               </div> */}
-            </div>
+          </div>
 
-            <div className="flex gap-4">
-              <div className="flex-1 space-y-2">
-                <label className="text-sm font-title">No WhatsApp</label>
-                <Input
-                  placeholder="081234567890"
-                  value={formData.whatsapp}
-                  onChange={handleInputChange("whatsapp")}
-                  className={error?.fields?.whatsapp ? "border-red-500" : ""}
-                />
-                {/* <p className="text-xs text-gray-500">Format: 08XXXXXXXXX</p> */}
-              </div>
-              <div className="flex-1 space-y-2">
-                <label className="text-sm font-title">ID Line</label>
-                <Input
-                  placeholder="johndoe_line"
-                  value={formData.lineId}
-                  onChange={handleInputChange("lineId")}
-                  className={error?.fields?.lineId ? "border-red-500" : ""}
-                />
-              </div>
+          <div className="flex gap-4">
+            <div className="flex-1 space-y-2">
+              <label className="text-sm font-title">No WhatsApp</label>
+              <Input
+                placeholder="081234567890"
+                value={formData.whatsapp}
+                onChange={handleInputChange("whatsapp")}
+                className={error?.fields?.whatsapp ? "border-red-500" : ""}
+              />
+              {/* <p className="text-xs text-gray-500">Format: 08XXXXXXXXX</p> */}
             </div>
+            <div className="flex-1 space-y-2">
+              <label className="text-sm font-title">ID Line</label>
+              <Input
+                placeholder="johndoe_line"
+                value={formData.lineId}
+                onChange={handleInputChange("lineId")}
+                className={error?.fields?.lineId ? "border-red-500" : ""}
+              />
+            </div>
+          </div>
 
-            <Button
-              onClick={handleRegister}
-              disabled={isLoading}
-              className="w-full mt-2 bg-gradient-to-b from-[#B2203B] to-[#5B0712] hover:from-[#a01c34] hover:to-[#4a0510] text-white font-bold font-title disabled:opacity-50"
+          <Button
+            onClick={handleRegister}
+            disabled={isLoading}
+            className="w-full mt-2 bg-gradient-to-b from-[#B2203B] to-[#5B0712] hover:from-[#a01c34] hover:to-[#4a0510] text-white font-bold font-title disabled:opacity-50"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                MENDAFTAR...
+              </>
+            ) : (
+              "REGISTER"
+            )}
+          </Button>
+
+          <p className="text-sm text-gray-600 text-center">
+            Sudah punya akun?{" "}
+            <span
+              onClick={() => navigate("/login/sso")}
+              className="text-red-700 cursor-pointer underline"
             >
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  MENDAFTAR...
-                </>
-              ) : (
-                "REGISTER"
-              )}
-            </Button>
-
-            <p className="text-sm text-gray-600 text-center">
-              Sudah punya akun?{" "}
-              <span
-                onClick={() => navigate("/login/sso")}
-                className="text-red-700 cursor-pointer underline"
-              >
-                Login di sini
-              </span>
-            </p>
-          </CardContent>
-        </Card>
-      )}
+              Login di sini
+            </span>
+          </p>
+        </CardContent>
+      </Card>
     </section>
   );
 };
