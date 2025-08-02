@@ -54,7 +54,7 @@ const Mahasiswa = () => {
     };
 
   const handleYesClick = () => {
-    navigate('/login/register-form');
+    navigate('/login/onboarding');
   };
 
   const handleNoClick = () => {

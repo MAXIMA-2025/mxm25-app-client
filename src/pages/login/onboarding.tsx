@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Card, CardContent } from "../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardTitle,
+  CardHeader,
+  CardDescription,
+} from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
 import { Loader2 } from "lucide-react";
-import logo from '../../assets/images/logo.png';
+import logo from "../../assets/images/logo.png";
+import backgroundImg from "../../assets/images/hero/BACKGROUND.webp";
 
 // Base URL untuk API - menggunakan Vite env variable
 const API_BASE_URL =
@@ -35,14 +42,14 @@ type ErrorState = {
   fields?: { [key: string]: string };
 };
 
-const RegisterFormPage: React.FC = () => {
+const Onboarding: React.FC = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState<DataMahasiswa>({
     nama: "",
     nim: "",
     email: "",
-    angkatan: "",
+    angkatan: "2025",
     prodi: "",
     whatsapp: "",
     lineId: "",
@@ -292,14 +299,15 @@ const RegisterFormPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-screen flex flex-col items-center justify-center px-4 text-black font-title">
-      <img src={logo} alt="MAXIMA Logo" className="w-60 h-60 object-contain" />
-
-      <h1 className="text-5xl font-bold leading-none tracking-tight font-title">
-        MAXIMA 2025
-      </h1>
-      <h2 className="text-3xl font-bold mb-8 font-title">Daftar Akunmu</h2>
-
+    <section
+      className="min-h-screen w-screen bg-white flex flex-col gap-4 items-center justify-center px-4"
+      style={{
+        backgroundImage: `url(${backgroundImg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      {/* <img src={logo} alt="MAXIMA Logo" className="size-40 object-contain" /> */}
       {/* Success Message */}
       {success && (
         <div className="w-full max-w-md mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
@@ -327,12 +335,14 @@ const RegisterFormPage: React.FC = () => {
           <p className="text-sm text-gray-600">Mendaftarkan akun...</p>
         </div>
       ) : (
-        <Card className="w-full max-w-md rounded-2xl shadow-md bg-white mb-4">
-          <CardContent className="p-6 space-y-4">
-            <h3 className="text-xl font-bold text-center font-title">
-              Data Mahasiswa
-            </h3>
-
+        <Card className="font-futura">
+          <CardHeader>
+            <CardTitle>Data Mahasiswa</CardTitle>
+            <CardDescription>
+              Isi data kamu untuk memasuki website MAXIMA 2025!
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
             <div className="space-y-2">
               <label className="text-sm font-title">Nama Lengkap</label>
               <Input
@@ -394,11 +404,11 @@ const RegisterFormPage: React.FC = () => {
                   className={error?.fields?.nim ? "border-red-500" : ""}
                   maxLength={11}
                 />
-                <p className="text-xs text-gray-500">
+                {/* <p className="text-xs text-gray-500">
                   Format: 00000XXXXXX (11 digit)
-                </p>
+                </p> */}
               </div>
-              <div className="flex-1 space-y-2">
+              {/* <div className="flex-1 space-y-2">
                 <label className="text-sm font-title">Angkatan</label>
                 <Input
                   placeholder="2025"
@@ -407,10 +417,11 @@ const RegisterFormPage: React.FC = () => {
                   onChange={handleInputChange("angkatan")}
                   className={error?.fields?.angkatan ? "border-red-500" : ""}
                 />
-              </div>
+              </div> */}
             </div>
 
-            <div className="space-y-2">
+            <div className="flex gap-4">
+              <div className="flex-1 space-y-2">
               <label className="text-sm font-title">No WhatsApp</label>
               <Input
                 placeholder="081234567890"
@@ -418,10 +429,9 @@ const RegisterFormPage: React.FC = () => {
                 onChange={handleInputChange("whatsapp")}
                 className={error?.fields?.whatsapp ? "border-red-500" : ""}
               />
-              <p className="text-xs text-gray-500">Format: 08XXXXXXXXX</p>
-            </div>
-
-            <div className="space-y-2">
+              {/* <p className="text-xs text-gray-500">Format: 08XXXXXXXXX</p> */}
+              </div>
+              <div className="flex-1 space-y-2">
               <label className="text-sm font-title">ID Line</label>
               <Input
                 placeholder="johndoe_line"
@@ -429,12 +439,13 @@ const RegisterFormPage: React.FC = () => {
                 onChange={handleInputChange("lineId")}
                 className={error?.fields?.lineId ? "border-red-500" : ""}
               />
+              </div>
             </div>
-
+                
             <Button
               onClick={handleRegister}
               disabled={isLoading}
-              className="w-full bg-gradient-to-b from-[#B2203B] to-[#5B0712] hover:from-[#a01c34] hover:to-[#4a0510] text-white font-bold font-title disabled:opacity-50"
+              className="w-full mt-2 bg-gradient-to-b from-[#B2203B] to-[#5B0712] hover:from-[#a01c34] hover:to-[#4a0510] text-white font-bold font-title disabled:opacity-50"
             >
               {isLoading ? (
                 <>
@@ -449,7 +460,7 @@ const RegisterFormPage: React.FC = () => {
             <p className="text-sm text-gray-600 text-center">
               Sudah punya akun?{" "}
               <span
-                onClick={() => navigate("/login/login-form")}
+                onClick={() => navigate("/login/sso")}
                 className="text-red-700 cursor-pointer underline"
               >
                 Login di sini
@@ -458,8 +469,8 @@ const RegisterFormPage: React.FC = () => {
           </CardContent>
         </Card>
       )}
-    </div>
+    </section>
   );
 };
 
-export default RegisterFormPage;
+export default Onboarding;

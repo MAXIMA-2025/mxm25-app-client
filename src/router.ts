@@ -9,7 +9,7 @@ export type Path =
   | `/login`
   | `/login/login-form`
   | `/login/mahasiswa`
-  | `/login/register-form`
+  | `/login/onboarding`
   | `/login/sso`
   | `/main`
   | `/maxlearn`
