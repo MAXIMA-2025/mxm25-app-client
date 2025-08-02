@@ -11,7 +11,6 @@ import {
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
 import { Loader2 } from "lucide-react";
-import logo from "../../assets/images/logo.png";
 import backgroundImg from "../../assets/images/hero/BACKGROUND.webp";
 import { toast } from "sonner";
 
@@ -40,6 +39,7 @@ type ApiResponse = {
 // TYPE untuk error state
 type ErrorState = {
   message: string;
+  status?: string;
   fields?: { [key: string]: string };
 };
 
@@ -195,74 +195,29 @@ const Onboarding: React.FC = () => {
           },
         };
 
-        const possibleEndpoints = [
-          `${API_BASE_URL}/auth/onboarding`,
-          `${API_BASE_URL}/onboarding`,
-          `${API_BASE_URL.replace("/api", "")}/auth/onboarding`,
-          `${API_BASE_URL.replace("/api", "")}/onboarding`,
-        ];
+        try {
+          const response = await axios.post<ApiResponse>(
+            `${import.meta.env.VITE_API_URL}/auth/onboarding`,
+            requestData,
+            { headers: { "Content-Type": "application/json" } }
+          );
 
-        for (let i = 0; i < possibleEndpoints.length; i++) {
-          try {
-            const response = await axios.post<ApiResponse>(
-              possibleEndpoints[i],
-              requestData,
-              { headers: { "Content-Type": "application/json" } }
-            );
-
-            if (response.status === 200) {
-              setSuccess(response.data.message);
-              setTimeout(() => {
-                navigate("/login/login-form");
-              }, 2000);
-              setIsLoading(false);
-              return resolve();
-            }
-          } catch (err: any) {
-            if (err.response && err.response.status !== 404) {
-              const { status, data } = err.response;
-              let message = "Terjadi kesalahan.";
-
-              switch (status) {
-                case 400:
-                  message = data.message || "Data tidak valid!";
-                  break;
-                case 409:
-                  message = data.message || "Email sudah terdaftar!";
-                  break;
-                case 422:
-                  message = data.message || "Kesalahan validasi!";
-                  setError({
-                    message,
-                    fields: data.errors
-                      ? data.errors.reduce((acc: any, error: any) => {
-                          acc[error.field] = error.message;
-                          return acc;
-                        }, {})
-                      : undefined,
-                  });
-                  break;
-                case 500:
-                  message = "Terjadi kesalahan server. Silakan coba lagi.";
-                  break;
-                default:
-                  message = `Error ${status}: ${
-                    data.message || "Kesalahan tidak terduga."
-                  }`;
-              }
-
-              setError({ message });
-              setIsLoading(false);
-              return reject(new Error(message));
-            }
-
-            if (i === possibleEndpoints.length - 1) {
-              const msg =
-                "Tidak dapat menemukan endpoint yang benar. Silakan hubungi administrator.";
-              setError({ message: msg });
-              return reject(new Error(msg));
-            }
+          if (response.status === 200) {
+            setSuccess(response.data.message);
+            setTimeout(() => {
+              navigate("/login/sso");
+            }, 2000);
+            setIsLoading(false);
+            return resolve();
           }
+        } catch (err: any) {
+          const { data, statusText } = err.response;
+          let message = data.message;
+          console.log(err.response);
+
+          setError({ message, status: statusText });
+          setIsLoading(false);
+          return reject(new Error(message));
         }
 
         setIsLoading(false);
@@ -283,7 +238,21 @@ const Onboarding: React.FC = () => {
 
   useEffect(() => {
     if (error) {
-      toast.error(error.message);
+      if (error.fields) {
+        const fieldErrors =
+          error.fields &&
+          Object.entries(error.fields)
+            .map(([field, message]) => `${message}`)
+            .join("\n");
+        toast.error(error.message, {
+          description: fieldErrors,
+        });
+      }
+      if (error.status) {
+        toast.error(error.message, {
+          description: error.status,
+        });
+      }
     }
   }, [error]);
 
@@ -296,7 +265,7 @@ const Onboarding: React.FC = () => {
         backgroundPosition: "center",
       }}
     >
-      <Card className="font-futura">
+      <Card className="font-futura mx-2 my-6">
         <CardHeader>
           <CardTitle>Data Mahasiswa</CardTitle>
           <CardDescription>
