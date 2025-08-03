@@ -23,7 +23,7 @@ const Sso = () => {
       const ticket = searchParams.get("ticket");
 
       if (isLoggedOut) {
-        navigate("/login/onboarding");
+        navigate("/login");
         return;
       }
 
