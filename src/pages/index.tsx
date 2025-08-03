@@ -1,30 +1,28 @@
-import React from 'react'
+import React from "react";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import HeroSection from "@/components/landing/HeroSection";
+import AboutSection from "@/components/landing/AboutSection";
+import FAQSection from "@/components/landing/FAQSection";
 
 const index = () => {
   return (
-    <div>
-      <h1 className="font-fraunces font-bold text-4xl">Fraunces Bold</h1>
-      <p className="font-fraunces font-light italic">
-        Fraunces Light Italic with Variable Font
-      </p>
-      <p
-        className="font-fraunces"
-        style={{ fontVariationSettings: "'SOFT' 100, 'WONK' 1" }}
-      >
-        Fraunces with SOFT 100 & WONK 1
-      </p>
-      <h1 className="font-futura font-bold text-4xl">Futura Bold</h1>
-      <p className="font-futura font-light italic">
-        Futura Light Italic with Variable Font
-      </p>
-      <p
-        className="font-futura font-bold"
-      >
-        Futura
-      </p>
-
+    <div className="flex flex-col">
+      <HeroSection />
+      {/* <AboutSection /> */}
     </div>
-  )
-}
+  );
+};
 
-export default index
+export default index;

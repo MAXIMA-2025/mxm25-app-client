@@ -5,7 +5,11 @@ import { components, hooks, utils } from '@generouted/react-router/client'
 
 export type Path =
   | `/`
+  | `/app`
   | `/login`
+  | `/login/mahasiswa`
+  | `/login/oauth`
+  | `/login/sso`
   | `/main`
   | `/maxlearn`
   | `/state`
