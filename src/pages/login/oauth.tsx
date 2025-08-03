@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
+import Loading from "@/components/loading";
 
 const Oauth = () => {
   const nav = useNavigate();
@@ -38,6 +39,9 @@ const Oauth = () => {
 
     handleGoogleCallback();
   }, [nav]);
+  return (
+    <Loading/>
+  );
 };
 
 export default Oauth;

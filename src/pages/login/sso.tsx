@@ -5,6 +5,7 @@ import axios from "axios";
 import { useLocation } from "react-router";
 import { toast } from "sonner";
 import useErrorHandler from "@/hooks/useErrorHandler";
+import Loading from "@/components/loading";
 
 const Sso = () => {
   const { setIsLoggedOut, isLoggedOut } = useAuthContext();
@@ -58,6 +59,9 @@ const Sso = () => {
 
     runSso();
   }, [location.search]); // Remove isLoggedOut from dependency
+    return (
+    <Loading/>
+  );
 };
 
 export default Sso;
