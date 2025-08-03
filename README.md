@@ -1,6 +1,5 @@
 📘 Project README
 This project is built with Vite, React, and TypeScript, following a clean and scalable file architecture inspired by modern frameworks like Next.js.
-test
 
 📂 Project Structure
 src/
