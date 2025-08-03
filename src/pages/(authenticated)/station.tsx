@@ -110,7 +110,7 @@ const Index: React.FC = () => {
         onSuccess: async () => {
           try {
             const ticketId = data.ticketId;
-            await axios.get(`/eksternal/paid/${ticketId}`);
+            await api.get(`/ticket/eksternal/paid/${ticketId}`);
             alert("Pembayaran berhasil");
             nav("/main");
           } catch (err) {
