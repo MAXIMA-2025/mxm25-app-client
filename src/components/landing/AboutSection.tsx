@@ -2,8 +2,11 @@ import React from 'react'
 
 const AboutSection = () => {
   return (
-    <div>AboutSection</div>
+    <section>
+      test
+    </section>
   )
 }
+
 
 export default AboutSection
