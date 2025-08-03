@@ -3,11 +3,12 @@ import { useNavigate } from "@/router";
 import { useEffect, useRef } from "react";
 import axios from "axios";
 import { useLocation } from "react-router";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import useErrorHandler from "@/hooks/useErrorHandler";
+import Loading from "@/components/loading";
 
 const Sso = () => {
-  const { setIsLoggedOut } = useAuthContext();
+  const { setIsLoggedOut, isLoggedOut } = useAuthContext();
   const location = useLocation();
   const navigate = useNavigate();
   const { handleError } = useErrorHandler();
@@ -22,6 +23,11 @@ const Sso = () => {
       const searchParams = new URLSearchParams(location.search);
       const ticket = searchParams.get("ticket");
 
+      if (isLoggedOut) {
+        navigate("/login");
+        return;
+      }
+
       // Jika ticket tidak ada, error
       if (!ticket) {
         toast.error("SSO Ticket tidak ditemukan.");
@@ -30,11 +36,14 @@ const Sso = () => {
       }
 
       try {
-        const issuer = `${import.meta.env.VITE_CLIENT_URL}/sso`;
 
         await axios.post(
           `${import.meta.env.VITE_API_URL}/auth/sso`,
-          { ticket, issuer },
+          { ticket, issuer:encodeURIComponent(
+            import.meta.env.VITE_CLIENT_URL+"/login/sso"
+          ),
+
+           },
           { withCredentials: true }
         );
 
@@ -42,26 +51,16 @@ const Sso = () => {
         navigate("/main");
       } catch (err) {
         handleError(err);
+        console.error(err);
         toast.error("Gagal login melalui SSO. Silakan coba lagi.");
-        navigate("/login");
+        navigate("/login/mahasiswa");
       }
     };
 
     runSso();
   }, [location.search]); // Remove isLoggedOut from dependency
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        fontFamily: "Title Hero, sans-serif",
-      }}
-    >
-      <div>Processing SSO login...</div>
-    </div>
+    return (
+    <Loading/>
   );
 };
 
