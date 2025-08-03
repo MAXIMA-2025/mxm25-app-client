@@ -58,13 +58,18 @@ const EventCard = () => {
               </div>
 
               {/* CTA Button */}
-              <button className="group bg-gradient-to-r from-red-600 to-red-800 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold text-sm sm:text-base flex items-center justify-center space-x-1 sm:space-x-2 hover:from-red-700 hover:to-red-900 hover:shadow-xl transition-all duration-300 transform hover:scale-105 shadow-lg w-full sm:w-auto">
-                <span>Daftar sekarang</span>
-                <ArrowRight
-                  size={14}
-                  className="sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform"
-                />
+              <div className="flex gap-2 sm:gap- lg:gap-2">
+                <button className="group bg-gradient-to-r from-red-600 to-red-800 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold text-sm sm:text-base flex items-center justify-center space-x-1 sm:space-x-2 hover:from-red-700 hover:to-red-900 hover:shadow-xl transition-all duration-300 transform hover:scale-105 shadow-lg w-full sm:w-auto">
+                  <span>Beli sekarang</span>
+                  <ArrowRight
+                    size={14}
+                    className="sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform"
+                  />
+                </button>
+                <button disabled className="opacity-50 group bg-gradient-to-r from-red-600 to-red-800 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold text-sm sm:text-base flex items-center justify-center space-x-1 sm:space-x-2 hover:from-red-700 hover:to-red-900 hover:shadow-xl transition-all duration-300 transform shadow-lg w-full sm:w-auto">
+                <span>Lihat tiket</span>
               </button>
+              </div>
             </CardContent>
           </div>
 
@@ -101,8 +106,6 @@ const EventCard = () => {
                 🎶
               </div>
             </div>
-
-            
 
             {/* Additional decorative elements for larger screens */}
             <div className="hidden lg:block absolute top-1/4 left-2 w-3 h-3 bg-white/20 rounded-full animate-pulse"></div>
