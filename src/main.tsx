@@ -12,7 +12,7 @@ import { Toaster } from "sonner";
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
+  // <StrictMode>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Routes />
@@ -20,5 +20,5 @@ createRoot(document.getElementById("root")!).render(
         <ReactQueryDevtools initialIsOpen={false} />
       </AuthProvider>
     </QueryClientProvider>
-  </StrictMode>
+  // </StrictMode>
 );
