@@ -12,13 +12,12 @@ import artis from "@/assets/asset_home/artis_station.webp";
 
 const StationMain = () => {
   return (
-        <div
-      className="min-h-screen w-full flex items-center justify-center px-2 py-6 sm:px-4 md:px-8 bg-cover bg-center"
+    <section
+      className="min-h-dvh w-full flex items-center justify-center px-2 py-6 sm:px-4 md:px-8 bg-cover bg-center"
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundAttachment: "fixed",
       }}
     >
       <Card className=" w-100 sm:w-120 md:w-full lg:w-full xl:w-full max-w-md sm:max-w-l sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-2xl mx-auto bg-[#f2ca45] border-7 border-[#90171a] rounded-2xl overflow-hidden">
@@ -110,7 +109,7 @@ const StationMain = () => {
           </div>
         </div>
       </Card>
-    </div>
+    </section>
   )
 }
 
