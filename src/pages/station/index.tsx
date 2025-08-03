@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import useApi from "@/hooks/useApi";
+import useApi, { ApiResponse } from "@/hooks/useApi";
 import useAuth from "@/hooks/useAuth"; // 🔥 Tambahkan ini
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import Bg_desktop from "@/assets/asset_station/station_bg_desktop.webp";
 import axios from "axios";
+import { useNavigate } from "@/router";
 
 // Notes:
 // 1. System login sudah terintegrasi dengan station, jadi tidak perlu lagi mengisi nama dan email.
@@ -25,8 +26,9 @@ type MidtransResponse = {
   ticketId: string;
 };
 
-const index: React.FC = () => {
+const Index: React.FC = () => {
   const api = useApi();
+  const nav = useNavigate();
   // const { user, isLoading } = useAuth();
 
   // Awalnya bisa diisi dengan nama default, nanti akan diupdate dengan data user. Jadi saat sudah diintegerasi dengan sistem login,
@@ -47,6 +49,30 @@ const index: React.FC = () => {
   //     }));
   //   }
   // }, [user]);
+
+  useEffect(() => {
+    // You can also change below url value to any script url you wish to load,
+    // for example this is snap.js for Sandbox Env (Note: remove `.sandbox` from url if you want to use production version)
+    const midtransScriptUrl = import.meta.env.PROD
+      ? "https://app.midtrans.com/snap/snap.js"
+      : "https://app.sandbox.midtrans.com/snap/snap.js";
+
+    const scriptTag = document.createElement("script");
+    scriptTag.src = midtransScriptUrl;
+
+    // Optional: set script attribute, for example snap.js have data-client-key attribute
+    // (change the value according to your client-key)
+    const myMidtransClientKey = import.meta.env.PROD
+      ? import.meta.env.VITE_MIDTRANS_CLIENT_KEY
+      : import.meta.env.VITE_MIDTRANS_SANDBOX_CLIENT_KEY;
+    scriptTag.setAttribute("data-client-key", myMidtransClientKey);
+
+    document.body.appendChild(scriptTag);
+
+    return () => {
+      document.body.removeChild(scriptTag);
+    };
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -73,18 +99,20 @@ const index: React.FC = () => {
         },
       };
 
-      const resp = await api.post<MidtransResponse>(
+      const resp = await api.post<ApiResponse<MidtransResponse>>(
         "ticket/eksternal/token",
         payload
       );
-      return resp.data;
+      return resp.data.data;
     },
     onSuccess: (data) => {
       window.snap.pay(data.token, {
         onSuccess: async () => {
           try {
             const ticketId = data.ticketId;
-            await axios.get(`/eksternal/paid/${ticketId}`); 
+            await axios.get(`/eksternal/paid/${ticketId}`);
+            alert("Pembayaran berhasil");
+            nav("/main");
           } catch (err) {
             console.error("Gagal memanggil callback paid:", err);
             alert("Pembayaran berhasil tapi gagal update status tiket.");
@@ -209,4 +237,4 @@ const index: React.FC = () => {
   );
 };
 
-export default index;
+export default Index;
