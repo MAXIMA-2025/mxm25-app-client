@@ -6,6 +6,21 @@ import { Button } from "@/components/ui/button";
 import Bg_desktop from "@/assets/asset_station/station_bg_desktop.webp";
 import axios from "axios";
 import { useNavigate } from "@/router";
+import { z } from "zod";
+import { toast } from "sonner";
+
+
+// Simple Indo phone validation (starts with 08 or +628, 9–15 digits)
+const phoneRegex = /^(?:\+62|62|08)[0-9]{8,13}$/;
+
+const formSchema = z.object({
+  nama: z.string().min(1, "Nama wajib diisi"),
+  email: z.string().email("Email tidak valid"),
+  noTelp: z.string().regex(phoneRegex, "Nomor telepon tidak valid"),
+  jumlahTiket: z.number().min(1, "Minimal 1 tiket"),
+});
+
+
 
 // Notes:
 // 1. System login sudah terintegrasi dengan station, jadi tidak perlu lagi mengisi nama dan email.
@@ -33,14 +48,6 @@ const Index: React.FC = () => {
 
   // Awalnya bisa diisi dengan nama default, nanti akan diupdate dengan data user. Jadi saat sudah diintegerasi dengan sistem login,
   //  set semua field di form ini menjadi kosong, kecuali jumlahTiket harus di 1.
-useEffect(() => {
-  const timer = setTimeout(() => {
-    console.log("10 seconds passed");
-    // or some state update here
-  }, 3000);
-
-  return () => clearTimeout(timer); // optional cleanup
-}, []);
 
   const auth = useAuth();
   const email = (auth as Auth<UserEksternal>).user?.email;
@@ -66,20 +73,10 @@ useEffect(() => {
     jumlahTiket: 1,
   });
 
-  // useEffect(() => {
-  //   if (user) {
-  //     setForm((prev) => ({
-  //       ...prev,
-  //       nama: user.nama ?? "",
-  //       email: user.email ?? "",
-  //     }));
-  //   }
-  // }, [user]);
-
   useEffect(() => {
     // You can also change below url value to any script url you wish to load,
     // for example this is snap.js for Sandbox Env (Note: remove `.sandbox` from url if you want to use production version)
-    const midtransScriptUrl = import.meta.env.VITE_NODE_ENV
+    const midtransScriptUrl = import.meta.env.VITE_NODE_ENV === "production"
       ? "https://app.midtrans.com/snap/snap.js"
       : "https://app.sandbox.midtrans.com/snap/snap.js";
 
@@ -163,16 +160,23 @@ useEffect(() => {
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
 
-    // if (!user || isLoading) {
-    //   alert("Gagal memuat data pengguna. Silakan login ulang.");
-    //   return;
-    // }
+  const parsed = formSchema.safeParse(form);
 
-    mutation.mutate();
-  };
+  if (!parsed.success) {
+    const msg = parsed.error.issues.map((err) => `• ${err.message}`).join("\n");
+    toast.error("Formulir tidak valid", {
+      description: msg,
+      duration: 5000,
+    });
+    return;
+  }
+
+  mutation.mutate();
+};
+
 
   // if (isLoading) {
   //   return <div className="text-center mt-10">Memuat data pengguna...</div>;
