@@ -188,7 +188,7 @@ useEffect(() => {
   // }
 
   return (
-    <div
+    <section
       className="min-h-screen min-w-screen flex flex-col items-center justify-center"
       style={{
         backgroundImage: `url(${Bg_desktop})`,
@@ -250,16 +250,15 @@ useEffect(() => {
 
           <Button
             type="submit"
-            className="text-white font-bold py-4 px-6 rounded-full 
-              bg-gradient-to-b from-[#A71E43] via-[#5A081E] to-[#A71E43]
-              shadow-md transition duration-300"
+            className="px-4"
+            variant="clay"
             disabled={mutation.isPending} // 🔒 Cegah submit saat loading
           >
             {mutation.isPending ? "MEMPROSES..." : "BAYAR SEKARANG"}
           </Button>
         </form>
       </div>
-    </div>
+    </section>
   );
 };
 
