@@ -25,17 +25,17 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
         backgroundPosition: "center",
       }}
     >
-      <Card className=" w-100 sm:w-120 md:w-full lg:w-full xl:w-full max-w-md sm:max-w-l sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-2xl mx-auto bg-[#f2ca45] border-7 border-[#90171a] rounded-2xl overflow-hidden">
+      <Card className="font-futura w-100 sm:w-120 md:w-full lg:w-full xl:w-full max-w-md sm:max-w-l sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-2xl mx-auto bg-[#f2ca45] border-7 border-[#90171a] rounded-2xl overflow-hidden">
         <div className="flex flex-row lg:flex-row">
           {/* Left Content Section */}
           <div className="flex-1 p-4 sm:p-6 md:p-8">
             <CardHeader className="p-0 space-y-2 sm:space-y-3">
               <div>
                 <CardTitle className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-[#2B2B2B] mb-1 sm:mb-2 leading-tight">
-                  Station: Malam Puncak
+                  STATION
                 </CardTitle>
                 <CardDescription className="text-[#2B2B2B] text-sm sm:text-base lg:text-lg leading-relaxed">
-                  Tanggal & Waktu pelaksanaan Station:
+                  Start to Inspire your Passion!
                 </CardDescription>
               </div>
             </CardHeader>
@@ -62,7 +62,7 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
               </div>
 
               {/* CTA Button */}
-              <button className="group bg-gradient-to-r from-red-600 to-red-800 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold text-sm sm:text-base flex items-center justify-center space-x-1 sm:space-x-2 hover:from-red-700 hover:to-red-900 hover:shadow-xl transition-all duration-300 transform hover:scale-105 shadow-lg w-full sm:w-auto">
+              <button className="group bg-gradient-to-r from-red-600 to-red-800 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium text-sm sm:text-base flex items-center justify-center space-x-1 sm:space-x-2 hover:from-red-700 hover:to-red-900 hover:shadow-xl transition-all duration-300 transform hover:scale-105 shadow-lg w-full sm:w-auto">
                 <span>Daftar sekarang</span>
                 <ArrowRight
                   size={14}
