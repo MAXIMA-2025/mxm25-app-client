@@ -1,14 +1,29 @@
-import React from 'react'
+import React from "react";
 import backgroundImg from "../../assets/images/main/WELCOME-01.webp";
-import { Button } from '../ui/button';
-import Logo from '../../assets/images/logo.png'
-import { useNavigate } from 'react-router';
-import { ArrowDown } from 'lucide-react';
+import { Button } from "../ui/button";
+import Logo from "../../assets/images/logo.png";
+import { ArrowDown } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { Card } from "../ui/card";
+import Front1 from "@/assets/images/main/carousel/FRONT1.webp";
+import Front2 from "@/assets/images/main/carousel/FRONT2.webp";
+import Front3 from "@/assets/images/main/carousel/DSC_0091 (1).jpg";
+import Front4 from "@/assets/images/main/carousel/DSC_0331 (1).jpg";
+import artis from "@/assets/images/main/FEEDS.webp";
 
-const HeroMain = () => {
-  const navigate = useNavigate();
-  const handleClick = () =>{
-    
+interface HeroMainProps {
+  scrollToRef: React.RefObject<HTMLElement>;
+}
+
+const HeroMain: React.FC<HeroMainProps> = ({ scrollToRef }) => {
+  const handleClick = () => {
+    scrollToRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   return (
     <section
@@ -19,15 +34,15 @@ const HeroMain = () => {
         backgroundPosition: "center",
       }}
     >
-            <div className="flex flex-col-reverse justify-center items-center md:flex-row">
-        <div className="flex  text-shadow-lg flex-col gap-2 z-1 p-5 items-center text-center md:text-start md:items-start">
-          <div className='flex flex-col gap-0'>
-          <h1 className="font-fraunces text-blue-900 font-semibold text-md md:text-lg">
-            MAXIMA <span className='text-primary'>- 2025 -</span>
-          </h1>
-          <h1 className="font-fraunces font-semibold text-3xl md:text-4xl">
-            Beli tiket konser STATION <br/> sekarang juga!
-          </h1>
+      <div className="flex flex-col-reverse gap-2 justify-center items-start md:flex-row">
+        <div className="text-nowrap flex text-shadow-lg flex-col gap-2 z-1 p-5 items-center text-center md:text-start md:items-start">
+          <div className="flex flex-col gap-0">
+            <h1 className="font-fraunces text-blue-900 font-semibold text-md md:text-lg">
+              MAXIMA <span className="text-primary">- 2025 -</span>
+            </h1>
+            <h1 className="font-fraunces font-semibold text-3xl md:text-4xl">
+              Beli tiket konser STATION <br /> sekarang juga!
+            </h1>
           </div>
           <div className="font-futura font-medium text-lg ">
             <p className="text-center md:text-start">
@@ -37,14 +52,87 @@ const HeroMain = () => {
               dengan STATION MAXIMA 2025, starring JAZ!
             </p>
           </div>
-          <Button className="w-[64%] md:w-[50%] mt-2" variant="clay" onClick={handleClick}>
-            Cek STATION <ArrowDown/>
+          <Button
+            className="w-[64%] md:w-[50%] mt-2"
+            variant="clay"
+            onClick={handleClick}
+          >
+            Cek STATION <ArrowDown />
           </Button>
         </div>
-        <img className="w-34 z-1 md:w-40" src={Logo} />
+        {/* <div className="relative w-[200px] h-56 aspect-[3/4] md:aspect-auto mt-8">
+          <img
+            src={Front2}
+            className="absolute w-full left-[4%] top-2 -rotate-2 border-4 md:border-6 rounded-xl border-white shadow-2xl transition-transform hover:-rotate-1"
+          />
+          <img
+            src={Front1}
+            className="absolute left-[0%] top-26 -rotate-4 border-4 md:border-6 rounded-xl border-white shadow-2xl transition-transform hover:rotate-1"
+          />
+          <img
+            src={Front3}
+            className="absolute w-[90%] left-[100%] -top-2 rotate-4 border-4 md:border-6 rounded-xl border-white shadow-2xl transition-transform hover:rotate-1"
+          />
+          <img
+            src={artis}
+            className="absolute w-full left-[40%] top-0 rotate-1 border-4 md:border-6 rounded-xl border-white shadow-2xl transition-transform hover:rotate-2"
+          />
+        </div> */}
+
+        {/* <Card className="w-[18%] p-2">
+    <Carousel className="w-full">
+      <CarouselContent>
+        <CarouselItem>
+          <div className="flex items-center justify-center p-1">
+            <img
+              src={Front4}
+              alt="Image"
+              width={340}
+              height={225}
+              className="aspect-video object-cover rounded-md"
+            />
+          </div>
+        </CarouselItem>
+        <CarouselItem>
+          <div className="flex items-center justify-center p-1">
+            <img
+              src={Front2}
+              alt="Image"
+              width={340}
+              height={225}
+              className="aspect-video object-cover rounded-md"
+            />
+          </div>
+        </CarouselItem>
+        <CarouselItem>
+          <div className="flex items-center justify-center p-1">
+            <img
+              src={Front1}
+              alt="Image"
+              width={340}
+              height={225}
+              className="aspect-video object-cover rounded-md"
+            />
+          </div>
+        </CarouselItem>
+        <CarouselItem>
+          <div className="flex items-center justify-center p-1">
+            <img
+              src={Front3}
+              alt="Image"
+              width={340}
+              height={225}
+              className="aspect-video object-cover rounded-md"
+            />
+          </div>
+        </CarouselItem>
+      </CarouselContent>
+    </Carousel>
+        </Card> */}
+        {/* <img className="w-34 z-1 md:w-40" src={Logo} /> */}
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default HeroMain
+export default HeroMain;

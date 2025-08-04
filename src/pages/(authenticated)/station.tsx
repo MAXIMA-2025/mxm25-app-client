@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useApi, { ApiResponse } from "@/hooks/useApi";
-import useAuth from "@/hooks/useAuth"; // 🔥 Tambahkan ini
+import useAuth, { type Auth, type UserEksternal } from "@/hooks/useAuth"; // 🔥 Tambahkan ini
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import Bg_desktop from "@/assets/asset_station/station_bg_desktop.webp";
@@ -33,10 +33,36 @@ const Index: React.FC = () => {
 
   // Awalnya bisa diisi dengan nama default, nanti akan diupdate dengan data user. Jadi saat sudah diintegerasi dengan sistem login,
   //  set semua field di form ini menjadi kosong, kecuali jumlahTiket harus di 1.
+useEffect(() => {
+  const timer = setTimeout(() => {
+    console.log("10 seconds passed");
+    // or some state update here
+  }, 3000);
+
+  return () => clearTimeout(timer); // optional cleanup
+}, []);
+
+  const auth = useAuth();
+  const email = (auth as Auth<UserEksternal>).user?.email;
+  const firstName = (auth as Auth<UserEksternal>).user?.firstName;
+  const lastName = (auth as Auth<UserEksternal>).user?.lastName;
+  console.log(email, firstName, lastName)
+
+  useEffect(() => {
+  if (email && firstName && lastName) {
+    setForm((prev) => ({
+      ...prev,
+      nama: `${firstName} ${lastName}`,
+      email: email,
+    }));
+  }
+}, [email, firstName, lastName]);
+
+
   const [form, setForm] = useState({
-    nama: "Tjhang Lie Mie",
-    email: "amiangelwandyalvin@gmail.com",
-    noTelp: "082132171169",
+    nama:  "",
+    email: "",
+    noTelp: "",
     jumlahTiket: 1,
   });
 
@@ -162,7 +188,7 @@ const Index: React.FC = () => {
   // }
 
   return (
-    <div
+    <section
       className="min-h-screen min-w-screen flex flex-col items-center justify-center"
       style={{
         backgroundImage: `url(${Bg_desktop})`,
@@ -224,16 +250,15 @@ const Index: React.FC = () => {
 
           <Button
             type="submit"
-            className="text-white font-bold py-4 px-6 rounded-full 
-              bg-gradient-to-b from-[#A71E43] via-[#5A081E] to-[#A71E43]
-              shadow-md transition duration-300"
+            className="px-4"
+            variant="clay"
             disabled={mutation.isPending} // 🔒 Cegah submit saat loading
           >
             {mutation.isPending ? "MEMPROSES..." : "BAYAR SEKARANG"}
           </Button>
         </form>
       </div>
-    </div>
+    </section>
   );
 };
 

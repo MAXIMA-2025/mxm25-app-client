@@ -21,7 +21,7 @@ export const useConfirm = <T extends object>() => {
 
   const promiseRef = useRef<{
     resolve: (value: T | null | PromiseLike<T | null>) => void;
-    reject: (reason?: any) => void;
+    reject: (reason?: T | null | unknown | PromiseLike<T | null>) => void;
   } | null>(null);
 
   const requestConfirmation = (

@@ -2,7 +2,7 @@ import { useNavigate } from "@/router";
 import { useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useEffect, useRef } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 interface ApiErrorResponse {
   status: string;
@@ -34,23 +34,23 @@ const useErrorHandler = (queryKey?: string[]) => {
       switch (statusCode) {
         case 401:
           queryClient.removeQueries({ queryKey: queryKey || ["authUser"] });
-          nav("/onboarding");
+          nav("/login");
           toast.error("Sesi habis. Silakan login ulang.", {
-            toastId: "unauthorized",
+            description: "unauthorized",
           });
           resetErrorToast(hasShownErrorRef);
           return;
 
         case 403:
-          nav("/dashboard/dashboard");
-          toast.error(errorMessage, { toastId: "forbidden" });
+          nav("/login");
+          toast.error(errorMessage, { description: "forbidden" });
           resetErrorToast(hasShownErrorRef);
           return;
 
         case 422:
           errorMessage =
             apiError.response?.data.errorDetails?.[0] || errorMessage;
-          toast.error(errorMessage, { toastId: "validationError" });
+          toast.error(errorMessage, { description: "validationError" });
           resetErrorToast(hasShownErrorRef);
           return;
       }
@@ -58,7 +58,7 @@ const useErrorHandler = (queryKey?: string[]) => {
       errorMessage = error.message;
     }
 
-    toast.error(errorMessage, { toastId: "internalServerError" });
+    toast.error(errorMessage, { description: "internalServerError" });
     console.error("ErrorHandler Log: ", error);
     resetErrorToast(hasShownErrorRef);
   };
