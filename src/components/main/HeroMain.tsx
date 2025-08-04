@@ -2,13 +2,15 @@ import React from 'react'
 import backgroundImg from "../../assets/images/main/WELCOME-01.webp";
 import { Button } from '../ui/button';
 import Logo from '../../assets/images/logo.png'
-import { useNavigate } from 'react-router';
 import { ArrowDown } from 'lucide-react';
 
-const HeroMain = () => {
-  const navigate = useNavigate();
+interface HeroMainProps {
+  scrollToRef: React.RefObject<HTMLElement>;
+}
+
+const HeroMain: React.FC<HeroMainProps> = ({ scrollToRef }) => {
   const handleClick = () =>{
-    
+    scrollToRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
   return (
     <section

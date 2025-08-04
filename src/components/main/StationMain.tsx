@@ -10,9 +10,14 @@ import { Calendar, Clock, ArrowRight } from "lucide-react";
 import backgroundImage from "@/assets/asset_home/HOME.webp";
 import artis from "@/assets/asset_home/artis_station.webp";
 
-const StationMain = () => {
+interface StationMainProps {
+  sectionRef: React.RefObject<HTMLElement>;
+}
+
+const StationMain = ({ sectionRef }: StationMainProps) => {
   return (
     <section
+      ref={sectionRef}
       className="min-h-dvh w-full flex items-center justify-center px-2 py-6 sm:px-4 md:px-8 bg-cover bg-center"
       style={{
         backgroundImage: `url(${backgroundImage})`,
