@@ -34,9 +34,9 @@ const Index: React.FC = () => {
   // Awalnya bisa diisi dengan nama default, nanti akan diupdate dengan data user. Jadi saat sudah diintegerasi dengan sistem login,
   //  set semua field di form ini menjadi kosong, kecuali jumlahTiket harus di 1.
   const [form, setForm] = useState({
-    nama: "Tjhang Lie Mie",
-    email: "amiangelwandyalvin@gmail.com",
-    noTelp: "082132171169",
+    nama: "Rafael Po",
+    email: "3k.raffs@gmail.com",
+    noTelp: "087753036926",
     jumlahTiket: 1,
   });
 
