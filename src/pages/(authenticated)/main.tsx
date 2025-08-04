@@ -6,7 +6,6 @@ const Main = () => {
   const stationRef = useRef<HTMLElement>(null!);
   return (
     <div className="w-full h-dvh">
-      <div className="w-full h-full fixed bg-gradient-to-b from-transparent via-transparent to-black opacity-35"/>
       <HeroMain scrollToRef={stationRef}/>
       <StationMain sectionRef={stationRef} />
     </div>

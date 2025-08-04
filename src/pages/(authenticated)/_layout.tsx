@@ -12,16 +12,17 @@ const _layout = () => {
   const { isLoggedOut } = useAuthContext();
 
   useEffect(() => {
+    console.log(isLoggedOut)
     if (isLoggedOut) {
       toast.error("Silahkan login terlebih dahulu");
-      nav("/");
+      nav("/login");
     }
-    if (auth.user && !auth.user?.isVerified) {
-      toast.error(
-        "Silahkan tunggu verifikasi akun Anda dari panitia MAXIMA 2025"
-      );
-      nav("/mahasiswa");
-    }
+    // if (auth.user && !auth.user?.isVerified) {
+    //   toast.error(
+    //     "Silahkan tunggu verifikasi akun Anda dari panitia MAXIMA 2025"
+    //   );
+    //   nav("/login/mahasiswa");
+    // }
   }, [nav, isLoggedOut, auth]);
   return (
     <div className='flex flex-col items-center'>

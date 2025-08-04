@@ -8,17 +8,23 @@ import {
 } from "@/components/ui/card";
 import { Calendar, Clock, ArrowRight } from "lucide-react";
 import backgroundImage from "@/assets/asset_home/HOME.webp";
-import artis from "@/assets/asset_home/artis_station.webp";
+import artis from "@/assets/images/main/FEEDS.webp";
+import { Button } from "../ui/button";
+import { Link, useNavigate } from "react-router";
 
 interface StationMainProps {
   sectionRef: React.RefObject<HTMLElement>;
 }
 
 const StationMain = ({ sectionRef }: StationMainProps) => {
+  const nav = useNavigate();
+  const handleBuyTicketClick=()=>{
+    nav("/station");
+  }
   return (
     <section
       ref={sectionRef}
-      className="min-h-dvh w-full flex items-center justify-center px-2 py-6 sm:px-4 md:px-8 bg-cover bg-center"
+      className="min-h-dvh w-full flex items-center justify-center px-2 py-6 sm:px-4 md:px-8 bg-cover bg-center "
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",
@@ -62,17 +68,21 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
               </div>
 
               {/* CTA Button */}
-              <div className="flex gap-2 sm:gap- lg:gap-2">
-                <button className="group bg-gradient-to-r from-red-600 to-red-800 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold text-sm sm:text-base flex items-center justify-center space-x-1 sm:space-x-2 hover:from-red-700 hover:to-red-900 hover:shadow-xl transition-all duration-300 transform hover:scale-105 shadow-lg w-full sm:w-auto">
-                  <span>Beli sekarang</span>
+              <div className="flex gap-2 lg:gap-2">
+                <Button  variant="clay" onClick={handleBuyTicketClick} className="">
+                    Beli sekarang
                   <ArrowRight
                     size={14}
                     className="sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform"
                   />
-                </button>
-                <button disabled className="opacity-50 group bg-gradient-to-r from-red-600 to-red-800 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold text-sm sm:text-base flex items-center justify-center space-x-1 sm:space-x-2 hover:from-red-700 hover:to-red-900 hover:shadow-xl transition-all duration-300 transform shadow-lg w-full sm:w-auto">
+                </Button>
+                {/* <button className="group bg-gradient-to-r from-red-600 to-red-800 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold text-sm sm:text-base flex items-center justify-center space-x-1 sm:space-x-2 hover:from-red-700 hover:to-red-900 hover:shadow-xl transition-all duration-300 transform hover:scale-105 shadow-lg w-full sm:w-auto">
+                </button> */}
+                <Button variant="outline">
                 <span>Lihat tiket</span>
-              </button>
+                </Button>
+                {/* <button disabled className="opacity-50 group bg-gradient-to-r from-red-600 to-red-800 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold text-sm sm:text-base flex items-center justify-center space-x-1 sm:space-x-2 hover:from-red-700 hover:to-red-900 hover:shadow-xl transition-all duration-300 transform shadow-lg w-full sm:w-auto">
+              </button> */}
               </div>
             </CardContent>
           </div>
@@ -86,13 +96,13 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
               <div className="relative max-w-xs sm:max-w-xs md:max-w-sm">
                 {/* Image frame */}
                 <div className="rounded-lg p-1 w-33 md:w-53 lg:w-63 xl:w-63 sm:p-2 transform rotate-3 sm:rotate-3 md:rotate-3 lg:rotate-3 xl:rotate-3  hover:rotate-0 transition-transform duration-500 shadow-2xl">
-                  <div className="w-30 md:w-50 lg:w-60 xl:w-60 lg:h-70 xl:h-80 rounded-md p-4 overflow-hidden bg-gradient-to-br from-red-500 to-purple-600 p-0.5 flex justify-center items-center">
                     <img
                       src={artis}
                       alt="Artist performing"
-                      className="w-20 h-45 sm:w-32 sm:h-55 md:w-32 md:h-40 md:h-58 lg:h-67 object-cover rounded"
+                      className="object-cover rounded"
                     />
-                  </div>
+                  {/* <div className="w-30 md:w-50 lg:w-60 xl:w-60 lg:h-70 xl:h-80 rounded-md p-4 overflow-hidden bg-gradient-to-br from-red-500 to-purple-600 p-0.5 flex justify-center items-center">
+                  </div> */}
                 </div>
 
                 {/* Microphone icon */}

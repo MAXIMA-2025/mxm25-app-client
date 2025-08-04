@@ -11,17 +11,15 @@ import {
 import { Button } from "../ui/button";
 import { Link } from "react-router";
 import { HomeIcon, UserIcon } from "lucide-react";
+import logo from "/favicon.png"
 
 const Navbar = () => {
-  const handleStationClick =()=>{
-
-  }
   return (
-    <nav className="fixed bottom-4">
-      <Menubar>
+    <nav className="fixed bottom-4 z-10">
+      <Menubar className="shadow-2xl/100 ">
         <MenubarMenu>
           <MenubarTrigger>
-            <Link to={"/station"}><HomeIcon className="size-5"/></Link>
+            <Link to={"/main"}><img src={logo} className="size-5 object-contain"/></Link>
           </MenubarTrigger>
           {/* <MenubarContent>
             <MenubarItem>
