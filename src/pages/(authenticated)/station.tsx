@@ -4,11 +4,21 @@ import useAuth, { type Auth, type UserEksternal } from "@/hooks/useAuth"; // �
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import Bg_desktop from "@/assets/asset_station/station_bg_desktop.webp";
-import axios from "axios";
 import { useNavigate } from "@/router";
 import { z } from "zod";
 import { toast } from "sonner";
-
+import {
+  Card,
+  CardTitle,
+  CardHeader,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import poster from "@/assets/images/main/FEEDS.webp";
+import logo from "/favicon.png";
 
 // Simple Indo phone validation (starts with 08 or +628, 9–15 digits)
 const phoneRegex = /^(?:\+62|62|08)[0-9]{8,13}$/;
@@ -19,8 +29,6 @@ const formSchema = z.object({
   noTelp: z.string().regex(phoneRegex, "Nomor telepon tidak valid"),
   jumlahTiket: z.number().min(1, "Minimal 1 tiket"),
 });
-
-
 
 // Notes:
 // 1. System login sudah terintegrasi dengan station, jadi tidak perlu lagi mengisi nama dan email.
@@ -50,24 +58,23 @@ const Index: React.FC = () => {
   //  set semua field di form ini menjadi kosong, kecuali jumlahTiket harus di 1.
 
   const auth = useAuth();
-  const email = (auth as Auth<UserEksternal>).user?.email;
-  const firstName = (auth as Auth<UserEksternal>).user?.firstName;
-  const lastName = (auth as Auth<UserEksternal>).user?.lastName;
-  console.log(email, firstName, lastName)
-
   useEffect(() => {
-  if (email && firstName && lastName) {
-    setForm((prev) => ({
-      ...prev,
-      nama: `${firstName} ${lastName}`,
-      email: email,
-    }));
-  }
-}, [email, firstName, lastName]);
+    const user = auth.user;
 
+    if (user && "firstName" in user && "lastName" in user) {
+      const fullName = user.lastName
+        ? `${user.firstName} ${user.lastName}`
+        : user.firstName;
+      setForm((prev) => ({
+        ...prev,
+        nama: fullName,
+        email: user.email,
+      }));
+    }
+  }, [auth.user]);
 
   const [form, setForm] = useState({
-    nama:  "",
+    nama: "",
     email: "",
     noTelp: "",
     jumlahTiket: 1,
@@ -76,9 +83,10 @@ const Index: React.FC = () => {
   useEffect(() => {
     // You can also change below url value to any script url you wish to load,
     // for example this is snap.js for Sandbox Env (Note: remove `.sandbox` from url if you want to use production version)
-    const midtransScriptUrl = import.meta.env.VITE_NODE_ENV === "production"
-      ? "https://app.midtrans.com/snap/snap.js"
-      : "https://app.sandbox.midtrans.com/snap/snap.js";
+    const midtransScriptUrl =
+      import.meta.env.VITE_NODE_ENV === "production"
+        ? "https://app.midtrans.com/snap/snap.js"
+        : "https://app.sandbox.midtrans.com/snap/snap.js";
 
     const scriptTag = document.createElement("script");
     scriptTag.src = midtransScriptUrl;
@@ -135,6 +143,7 @@ const Index: React.FC = () => {
             const ticketId = data.ticketId;
             await api.get(`/ticket/eksternal/paid/${ticketId}`);
             alert("Pembayaran berhasil");
+            toast.success("Tiket anda berhasil dibayar!");
             nav("/main");
           } catch (err) {
             console.error("Gagal memanggil callback paid:", err);
@@ -147,10 +156,12 @@ const Index: React.FC = () => {
         },
         onError: (error: any) => {
           alert("Terjadi kesalahan saat pembayaran.");
+          toast.error(error);
           console.error(error);
         },
         onClose: () => {
-          alert("Kamu menutup pembayaran tanpa menyelesaikannya.");
+          toast.error("Pembayaran dibatalkan");
+          alert("Anda menutup pembayaran tanpa menyelesaikannya.");
         },
       });
     },
@@ -160,23 +171,24 @@ const Index: React.FC = () => {
     },
   });
 
-const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
 
-  const parsed = formSchema.safeParse(form);
+    const parsed = formSchema.safeParse(form);
 
-  if (!parsed.success) {
-    const msg = parsed.error.issues.map((err) => `• ${err.message}`).join("\n");
-    toast.error("Formulir tidak valid", {
-      description: msg,
-      duration: 5000,
-    });
-    return;
-  }
+    if (!parsed.success) {
+      const msg = parsed.error.issues
+        .map((err) => `• ${err.message}`)
+        .join("\n");
+      toast.error("Formulir tidak valid", {
+        description: msg,
+        duration: 5000,
+      });
+      return;
+    }
 
-  mutation.mutate();
-};
-
+    mutation.mutate();
+  };
 
   // if (isLoading) {
   //   return <div className="text-center mt-10">Memuat data pengguna...</div>;
@@ -199,68 +211,106 @@ const handleSubmit = (e: React.FormEvent) => {
         backgroundSize: "cover",
       }}
     >
-      <div className="w-80 lg:w-120 md:w-120 mx-auto mt-10 p-6 border bg-white rounded shadow text-center">
-        <h2 className="text-3xl font-bold mb-6">FORM TRANSAKSI TIKET</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid">
-            {/* Nama user bisa diubah, tapi awalnya diisi dari data login */}
-            <input
-              type="text"
-              name="nama"
-              placeholder="Nama"
-              value={form.nama}
-              onChange={handleChange}
-              readOnly
-              required
-              className="p-2 border rounded bg-gray-100 cursor-not-allowed"
-            />
-          </div>
+      <div className="flex flex-row items-stretch justify-center px-6 w-full">
+        <Card className="font-futura border-4 w-full border-primary md:rounded-r-none md:border-r-0 md:w-xl bg-gradient-to-r from-white from-50% to-100% to-secondary">
+          <CardHeader>
+            <div className="flex flex-col sm:flex-row items-center gap-2 ">
+            <img src={logo} className="h-10 aspect-auto" />
+            <div className="flex flex-col">
+              <CardTitle>
+                <h2 className="text-3xl text-center sm:text-start">FORM TRANSAKSI TIKET</h2>
+              </CardTitle>
+              <CardDescription className="text-center sm:text-start">
+                Isi beberapa data berikut untuk membeli tiket anda!
+              </CardDescription>
+            </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+              <div className="flex flex-col">
+                {/* Nama user bisa diubah, tapi awalnya diisi dari data login */}
+                <Input
+                  type="text"
+                  name="nama"
+                  placeholder="Nama"
+                  value={form.nama}
+                  onChange={handleChange}
+                  readOnly
+                  required
+                  className="p-2 border rounded bg-gray-100 cursor-not-allowed"
+                  hidden
+                />
+              </div>
 
-          {/* Email wajib ambil dari akun user, dan tidak bisa diubah */}
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={form.email}
-            onChange={handleChange}
-            readOnly
-            // 🔒 Tidak bisa diubah
-            required
-            className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed"
+              {/* Email wajib ambil dari akun user, dan tidak bisa diubah */}
+              <Input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={form.email}
+                onChange={handleChange}
+                readOnly
+                // 🔒 Tidak bisa diubah
+                required
+                hidden
+                className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed"
+              />
+
+              {/* No HP bebas diubah */}
+              <div className="w-full flex flex-col gap-3">
+                <Label htmlFor="noTelp">Nomor Telepon</Label>
+                <Input
+                  type="tel"
+                  name="noTelp"
+                  placeholder="No. Telepon"
+                  value={form.noTelp}
+                  onChange={handleChange}
+                  required
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+
+              {/* Jumlah tiket bisa diubah */}
+              <div className="flex flex-col w-full gap-3">
+                <Label htmlFor="jumlahTiket">Jumlah Tiket</Label>
+                <Input
+                  type="number"
+                  name="jumlahTiket"
+                  placeholder="Jumlah Tiket"
+                  min={1}
+                  value={form.jumlahTiket}
+                  onChange={handleChange}
+                  required
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+            </form>
+          </CardContent>
+          <CardFooter>
+            <Button
+              type="submit"
+              className="w-full"
+              variant="clay"
+              disabled={mutation.isPending} // 🔒 Cegah submit saat loading
+            >
+              {mutation.isPending ? "MEMPROSES..." : "BAYAR SEKARANG"}
+            </Button>
+          </CardFooter>
+        </Card>
+        <div
+          className="hidden md:block border-4 border-solid border-primary border-l-0 rounded-l-none rounded-2xl"
+          style={{
+            borderLeft: "4px dashed var(--primary)", // tailwind's default 'primary' color (adjust as needed)
+          }}
+        >
+          <img
+            src={poster}
+            className="hidden md:h-86 rounded-l-none rounded-lg  shadow-2xl"
+            style={{ display: "block" }} // removes extra spacing
           />
-
-          {/* No HP bebas diubah */}
-          <input
-            type="tel"
-            name="noTelp"
-            placeholder="No. Telepon"
-            value={form.noTelp}
-            onChange={handleChange}
-            required
-            className="w-full p-2 border rounded"
-          />
-
-          {/* Jumlah tiket bisa diubah */}
-          <input
-            type="number"
-            name="jumlahTiket"
-            placeholder="Jumlah Tiket"
-            min={1}
-            value={form.jumlahTiket}
-            onChange={handleChange}
-            required
-            className="w-full p-2 border rounded"
-          />
-
-          <Button
-            type="submit"
-            className="px-4"
-            variant="clay"
-            disabled={mutation.isPending} // 🔒 Cegah submit saat loading
-          >
-            {mutation.isPending ? "MEMPROSES..." : "BAYAR SEKARANG"}
-          </Button>
-        </form>
+        </div>
+        {/* <img className="h-90 border-4 border-l-0 rounded-l-none rounded-2xl border-primary shadow-2xl" src={poster} /> */}
       </div>
     </section>
   );
