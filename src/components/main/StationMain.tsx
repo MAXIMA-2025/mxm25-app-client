@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -6,15 +6,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Calendar, Clock, ArrowRight } from "lucide-react";
+import { Calendar, Clock, ArrowRight, X } from "lucide-react";
 import backgroundImage from "@/assets/asset_station/station_bg_desktop.webp";
 import artis from "@/assets/images/main/FEEDS.webp";
 import { Button } from "../ui/button";
-import { Link, useNavigate } from "react-router";
-import Front1 from "@/assets/images/main/carousel/FRONT1.webp"
-import Front2 from "@/assets/images/main/carousel/FRONT2.webp"
-import Front3 from "@/assets/images/main/carousel/DSC_0091 (1).jpg"
-import Front4 from "@/assets/images/main/carousel/DSC_0331 (1).jpg"
+import { useNavigate } from "react-router";
+import StationCollage from "@/assets/images/main/carousel/StationCollage.webp";
+import LogoStation from "@/assets/images/main/logoRangkaian/LogoSTATION.webp";
 
 interface StationMainProps {
   sectionRef: React.RefObject<HTMLElement>;
@@ -22,27 +20,52 @@ interface StationMainProps {
 
 const StationMain = ({ sectionRef }: StationMainProps) => {
   const nav = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleBuyTicketClick = () => {
     nav("/station");
   };
+
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
+
   return (
     <section
       ref={sectionRef}
-      className="min-h-dvh w-full flex flex-col items-center gap-4 justify-center px-2 py-6 sm:px-4 md:px-8 bg-cover bg-center "
+      className="min-h-lvh w-full flex flex-col items-center gap-4 justify-center px-2 py-32 sm:px-4 md:px-8 bg-cover bg-center"
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",
         backgroundPosition: "top",
       }}
     >
-      <div className="flex flex-col gap-2 w-3/4">
-        <h1 className="font-fraunces text-6xl font-medium text-shadow-lg">
-          STATION
-        </h1>
-        <h2 className="font-futura font-medium text-2xl">
-          Start To Inspire Your Passion
-        </h2>
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center">
+          <div className="bg-white rounded-lg overflow-hidden shadow-xl max-w-3xl w-fit relative">
+            <button
+              onClick={toggleModal}
+              className="absolute z-100 top-2 right-2 p-0.5 bg-white/80 m-2 rounded-full text-gray-600 hover:bg-white hover:text-primary transition-colors hover:cursor-pointer"
+            >
+              <X size={24} />
+            </button>
+            <img src={artis} className="w-auto h-90 md:h-120 object-contain p-2 rounded-2xl" alt="Artis" />
+          </div>
+        </div>
+      )}
+
+      {/* Station Content */}
+      <div className="flex flex-col lg:flex-row items-center justify-start w-3/4">
+        <img className="size-50" src={LogoStation} />
+        <div className="flex flex-col items-center lg:items-start gap-2 w-3/4 mt-4">
+          <h1 className="font-fraunces text-center lg:text-start text-6xl font-medium text-shadow-lg">
+            STATION
+          </h1>
+          <h2 className="font-futura font-medium text-2xl text-center lg:text-start">
+            Start To Inspire Your Passion
+          </h2>
+        </div>
       </div>
+
       <Card className="font-futura w-3/4 py-2 bg-[#f2ca45] border-7 border-[#90171a] rounded-2xl overflow-hidden">
         <div className="flex flex-col-reverse lg:flex-row">
           {/* Left Content Section */}
@@ -70,7 +93,6 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
                     Sabtu, 23 Agustus 2025
                   </span>
                 </div>
-
                 <div className="flex items-center space-x-2 sm:space-x-3 text-[#2B2B2B]">
                   <div className="bg-white/20 p-1 sm:p-2 rounded-lg backdrop-blur-sm flex-shrink-0">
                     <Clock size={16} className="sm:w-4 sm:h-4" />
@@ -80,35 +102,30 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
                   </span>
                 </div>
               </div>
-
-              {/* CTA Button */}
               <div className="flex gap-2 lg:gap-2">
-                <Button
-                  variant="clay"
-                  onClick={handleBuyTicketClick}
-                  className=""
-                >
+                <Button variant="clay" onClick={handleBuyTicketClick}>
                   Beli sekarang
                   <ArrowRight
                     size={14}
                     className="sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform"
                   />
                 </Button>
-                {/* <button className="group bg-gradient-to-r from-red-600 to-red-800 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold text-sm sm:text-base flex items-center justify-center space-x-1 sm:space-x-2 hover:from-red-700 hover:to-red-900 hover:shadow-xl transition-all duration-300 transform hover:scale-105 shadow-lg w-full sm:w-auto">
-                </button> */}
                 <Button variant="outline">
                   <span>Lihat tiket</span>
                 </Button>
-                {/* <button disabled className="opacity-50 group bg-gradient-to-r from-red-600 to-red-800 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold text-sm sm:text-base flex items-center justify-center space-x-1 sm:space-x-2 hover:from-red-700 hover:to-red-900 hover:shadow-xl transition-all duration-300 transform shadow-lg w-full sm:w-auto">
-              </button> */}
               </div>
             </CardContent>
           </div>
-          <div className="relative w-[50%] h-64 py-2">
-                <img src={Front2} className="h-[240px] aspect-square absolute mt-8 ml-10 -rotate-2 border-6 rounded-xl border-white shadow-2xl transition-transform hover:-rotate-1"/>
-                <img src={Front1} className="w-[300px] absolute mt-30 ml-2 -rotate-4 border-6 rounded-xl border-white shadow-2xl transition-transform hover:rotate-1"/>
-                <img src={Front3} className="h-[280px] absolute mt-6 ml-70 rotate-5 border-6 rounded-xl border-white shadow-2xl transition-transform hover:rotate-2"/>
-                <img src={artis} className="h-[300px]  absolute mt-2 ml-30 border-6 rounded-xl border-white shadow-2xl  transition-transform hover:rotate-2"/>
+
+          {/* Right Image Section */}
+          <div className="relative flex p-6 md:pl-0 h-full justify-center items-center">
+            <img
+              onClick={toggleModal}
+              className="cursor-pointer absolute h-40 sm:h-60 rounded-md border-3 md:rounded-xl rotate-2 hover:rotate-1 transition-transform border-white shadow-2xl"
+              src={artis}
+              alt="Guest Star"
+            />
+            <img className="aspect-auto md:h-78" src={StationCollage} />
           </div>
         </div>
       </Card>

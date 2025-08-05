@@ -35,14 +35,18 @@ const HeroMain: React.FC<HeroMainProps> = ({ scrollToRef }) => {
       }}
     >
       <div className="flex flex-col-reverse gap-2 justify-center items-start md:flex-row">
-        <div className="text-nowrap flex text-shadow-lg flex-col gap-2 z-1 p-5 items-center text-center md:text-start md:items-start">
+        <div className="p-4 flex text-shadow-lg flex-col gap-2 z-1 items-center text-center md:text-start md:items-start">
           <div className="flex flex-col gap-0">
             <h1 className="font-fraunces text-blue-900 font-semibold text-md md:text-lg">
               MAXIMA <span className="text-primary">- 2025 -</span>
             </h1>
-            <h1 className="font-fraunces font-semibold text-3xl md:text-4xl">
-              Beli tiket konser STATION <br /> sekarang juga!
+            <h1 className="font-fraunces font-semibold text-2xl md:text-4xl">
+              Beli tiket konser STATION
             </h1>
+            <h2 className="font-fraunces font-semibold text-2xl md:text-4xl">
+              sekarang juga!
+            </h2>
+
           </div>
           <div className="font-futura font-medium text-lg ">
             <p className="text-center md:text-start">
@@ -53,7 +57,7 @@ const HeroMain: React.FC<HeroMainProps> = ({ scrollToRef }) => {
             </p>
           </div>
           <Button
-            className="w-[64%] md:w-[50%] mt-2"
+            className="mt-2 z-10"
             variant="clay"
             onClick={handleClick}
           >
