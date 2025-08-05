@@ -30,7 +30,7 @@ const HeroMain: React.FC<HeroMainProps> = ({ scrollToRef }) => {
               MAXIMA <span className="text-primary">- 2025 -</span>
             </h1>
             <h1 className="font-fraunces font-semibold text-2xl md:text-4xl">
-              Beli tiket konser STATION
+              Beli tiket STATION
             </h1>
             <h2 className="font-fraunces font-semibold text-2xl md:text-4xl">
               sekarang juga!
@@ -38,18 +38,18 @@ const HeroMain: React.FC<HeroMainProps> = ({ scrollToRef }) => {
           </div>
           <div className="font-futura font-medium text-lg ">
             <p className="text-center md:text-start">
-              Segera amankan kesempatan untuk bergabung
+              Amankan kesempatan untuk bergabung
             </p>
             <p className="text-center md:text-start">
-              dengan STATION MAXIMA 2025, starring JAZ!
+              dengan MAXIMA 2025, starring JAZ!
             </p>
           </div>
           <Button className="mt-2 z-50" variant="clay" onClick={handleClick}>
             Cek STATION <ArrowDown />
           </Button>
         </div>
-        <div className="flex w-full md:w-60 md:m-auto items-center justify-center">
-          <img src={StationCollage} className="h-46 md:h-auto" />
+        <div className="flex w-full md:w-80 md:m-auto items-center justify-center">
+          <img src={StationCollage} className="h-56 md:h-auto" />
         </div>
       </div>
     </section>
