@@ -12,7 +12,6 @@ const _layout = () => {
   const { isLoggedOut } = useAuthContext();
 
   useEffect(() => {
-    console.log(isLoggedOut)
     if (isLoggedOut) {
       toast.error("Silahkan login terlebih dahulu");
       nav("/login");

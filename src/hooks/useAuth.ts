@@ -64,7 +64,7 @@ const useAuth = () => {
   const { handleError } = useErrorHandler(["authUser"]);
 
   const { data, isLoading, error, status, refetch } = useQuery<
-    ApiResponse<UserPanitia | UserOrganisator>
+    ApiResponse<UserPanitia | UserOrganisator | UserEksternal>
   >({
     queryKey: ["authUser"],
     queryFn: async () => {

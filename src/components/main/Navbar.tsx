@@ -19,7 +19,7 @@ const Navbar = () => {
       <Menubar className="shadow-2xl/100 ">
         <MenubarMenu>
           <MenubarTrigger>
-            <Link to={"/main"}><img src={logo} className="size-5 object-contain"/></Link>
+            <Link to="/main"><img src={logo} className="size-5 object-contain"/></Link>
           </MenubarTrigger>
           {/* <MenubarContent>
             <MenubarItem>
