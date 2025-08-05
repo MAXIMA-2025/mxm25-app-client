@@ -23,7 +23,7 @@ const HeroMain: React.FC<HeroMainProps> = ({ scrollToRef }) => {
         backgroundPosition: "center",
       }}
     >
-      <div className="flex flex-col-reverse gap-2 justify-center items-start md:flex-row">
+      <div className="flex flex-col-reverse gap-2 justify-center items-start md:ml-16 md:flex-row">
         <div className="p-4 flex text-shadow-lg flex-col gap-2 items-center text-center md:text-start md:items-start">
           <div className="flex flex-col gap-0">
             <h1 className="font-fraunces text-blue-900 font-semibold text-md md:text-lg">
