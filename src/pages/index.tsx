@@ -15,12 +15,15 @@ import { Label } from "@/components/ui/label";
 import HeroSection from "@/components/landing/HeroSection";
 import AboutSection from "@/components/landing/AboutSection";
 import FAQSection from "@/components/landing/FAQSection";
+import FooterSection from "@/components/landing/FooterSection";
 
 const index = () => {
   return (
     <div className="flex flex-col">
-      <HeroSection />
+      {/* <HeroSection />*/}
       {/* <AboutSection /> */}
+      {/* <FAQSection />*/}
+      <FooterSection />
     </div>
   );
 };
