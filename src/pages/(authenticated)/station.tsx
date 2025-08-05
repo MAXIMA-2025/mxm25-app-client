@@ -284,10 +284,6 @@ const Index: React.FC = () => {
                   required
                   className="w-full p-2 border rounded"
                 />
-              </div>
-            </form>
-          </CardContent>
-          <CardFooter>
             <Button
               type="submit"
               className="w-full"
@@ -296,7 +292,9 @@ const Index: React.FC = () => {
             >
               {mutation.isPending ? "MEMPROSES..." : "BAYAR SEKARANG"}
             </Button>
-          </CardFooter>
+              </div>
+            </form>
+          </CardContent>
         </Card>
         <div
           className="hidden md:block border-4 border-solid border-primary border-l-0 rounded-l-none rounded-2xl"

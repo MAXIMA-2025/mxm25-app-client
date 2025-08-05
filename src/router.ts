@@ -14,6 +14,7 @@ export type Path =
   | `/maxlearn`
   | `/state`
   | `/station`
+  | `/tickets`
 
 export type Params = {
   
