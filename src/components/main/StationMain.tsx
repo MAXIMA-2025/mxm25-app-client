@@ -28,6 +28,10 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
 
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
+  const handleLihatClick = () =>{
+    nav("/tickets");
+  }
+
   return (
     <section
       ref={sectionRef}
@@ -110,7 +114,7 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
                     className="sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform"
                   />
                 </Button>
-                <Button variant="outline">
+                <Button variant="outline" onClick={handleLihatClick}>
                   <span>Lihat tiket</span>
                 </Button>
               </div>

@@ -15,18 +15,13 @@ import { Label } from "@/components/ui/label";
 import HeroSection from "@/components/landing/HeroSection";
 import AboutSection from "@/components/landing/AboutSection";
 import FAQSection from "@/components/landing/FAQSection";
-import ImageLoadWatcher from "@/components/imageLoadWatcher";
 import Loading from "@/components/loading";
 
 const index = () => {
   return (
     <div className="flex flex-col">
-      <ImageLoadWatcher
-        fallback={<Loading/>}
-      >
         <HeroSection />
         {/* <AboutSection /> */}
-      </ImageLoadWatcher>
     </div>
   );
 };
