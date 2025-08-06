@@ -1,10 +1,8 @@
 import React from "react";
 import backgroundImg from "../../assets/images/main/WELCOME-01.webp";
 import { Button } from "../ui/button";
-import Logo from "../../assets/images/logo.png";
 import { ArrowDown } from "lucide-react";
 import StationCollage from "@/assets/images/main/carousel/StationCollage.webp";
-import artis from "@/assets/images/main/FEEDS.webp";
 
 interface HeroMainProps {
   scrollToRef: React.RefObject<HTMLElement>;

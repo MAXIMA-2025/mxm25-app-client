@@ -7,10 +7,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Calendar, Clock, ArrowRight, X } from "lucide-react";
-import backgroundImage from "@/assets/asset_station/station_bg_desktop.webp";
-import artis from "@/assets/images/main/FEEDS.webp";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router";
+import backgroundImage from "@/assets/images/main/STATION.webp";
+import artis from "@/assets/images/main/Poster.webp";
 import StationCollage from "@/assets/images/main/carousel/StationCollage.webp";
 import LogoStation from "@/assets/images/main/logoRangkaian/LogoSTATION.webp";
 

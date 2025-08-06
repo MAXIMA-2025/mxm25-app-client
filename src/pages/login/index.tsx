@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import logo from "../../assets/images/logo.png";
 import Google from "../../assets/images/google-icon-logo-svgrepo-com.svg";
 import { Card, CardFooter, CardTitle } from "@/components/ui/card";
-import backgroundImg from "../../assets/images/onboarding.png";
 import axios from "axios";
 import { toast } from "sonner";
+import backgroundImg from "@/assets/images/onboarding.webp";
+import backdropLogo from "@/assets/images/LogoBackdrop.webp";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -39,7 +40,19 @@ const LoginPage = () => {
       }}
     >
       {/* Logo */}
-      <img src={logo} alt="MAXIMA Logo" className="size-30 object-contain drop-shadow-2xl" />
+      <div
+        className="p-4 drop-shadow-2xl"
+        style={{
+          backgroundImage: `url(${backdropLogo})`,
+          backgroundSize: "cover",
+        }}
+      >
+        <img
+          src={logo}
+          alt="MAXIMA Logo"
+          className="size-30 object-contain drop-shadow-2xl"
+        />
+      </div>
       <Card className="flex flex-col items-center">
         <CardTitle className="px-4 font-futura text-xl font-semibold text-center">
           Apakah anda merupakan Mahasiswa Baru UMN 2025?

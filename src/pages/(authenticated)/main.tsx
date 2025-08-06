@@ -10,7 +10,7 @@ const Main = () => {
       <HeroMain scrollToRef={stationRef} />
       <div className="relative z-1">
         <img
-          className="w-full h-80 -top-42 z-1 absolute object-cover drop-shadow-xl"
+          className="w-full h-80 -top-42 z-1 absolute object-cover drop-shadow-2xl"
           src={divider2}
         />
       </div>

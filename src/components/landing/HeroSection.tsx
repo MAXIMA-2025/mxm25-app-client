@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "../ui/button";
 import Logo from "../../assets/images/logo.png";
@@ -10,7 +9,7 @@ import { useNavigate } from "react-router";
 
 const HeroSection = () => {
   const navigate = useNavigate();
-  const handleClick = () =>{
+  const handleClick = () => {
     navigate("/login");
   };
   return (
@@ -37,14 +36,14 @@ const HeroSection = () => {
             <br /> Discover the Mistery!
           </h1>
           <div className="font-futura font-medium text-lg ">
-            <p className="text-center">
-              Kenali kegiatan dan organisasi di UMN
-            </p>
-            <p className="text-center">
-              Yuk, kita menjelajah bersama-sama!
-            </p>
+            <p className="text-center">Kenali kegiatan dan organisasi di UMN</p>
+            <p className="text-center">Yuk, kita menjelajah bersama-sama!</p>
           </div>
-          <Button className="w-[64%] md:w-[50%] mt-2" variant="clay" onClick={handleClick}>
+          <Button
+            className="w-[64%] md:w-[50%] mt-2"
+            variant="clay"
+            onClick={handleClick}
+          >
             Jelajahi Bersama!
           </Button>
         </div>
