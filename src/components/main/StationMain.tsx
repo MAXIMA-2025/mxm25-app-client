@@ -106,16 +106,16 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
                   </span>
                 </div>
               </div>
-              <div className="flex gap-2 lg:gap-2">
+              <div className="flex flex-col sm:flex-row gap-2 lg:gap-2">
                 <Button variant="clay" onClick={handleBuyTicketClick}>
-                  Beli sekarang
+                  Beli Tiket
                   <ArrowRight
                     size={14}
                     className="sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform"
                   />
                 </Button>
                 <Button variant="outline" onClick={handleLihatClick}>
-                  <span>Lihat tiket</span>
+                  Lihat Tiket
                 </Button>
               </div>
             </CardContent>

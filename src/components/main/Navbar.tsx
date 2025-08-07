@@ -15,7 +15,7 @@ import logo from "/favicon.png"
 
 const Navbar = () => {
   return (
-    <nav className="fixed bottom-4 z-10">
+    <nav className="fixed bottom-4 z-50">
       <Menubar className="shadow-2xl/100 ">
         <MenubarMenu>
           <MenubarTrigger>

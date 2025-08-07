@@ -34,7 +34,7 @@ const HeroMain: React.FC<HeroMainProps> = ({ scrollToRef }) => {
               sekarang juga!
             </h2>
           </div>
-          <div className="font-futura font-medium text-lg ">
+          <div className="font-futura font-medium text-lg z-50">
             <p className="text-center md:text-start">
               Amankan kesempatan untuk bergabung
             </p>
