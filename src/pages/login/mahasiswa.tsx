@@ -1,34 +1,40 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import React, { useState, useRef } from "react";
-import { Button } from '@/components/ui/button';
-import logo from '../../assets/images/logo.png';
-import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import backgroundImg from "../../assets/images/hero/BACKGROUND.webp";
-
+import { Button } from "@/components/ui/button";
+import logo from "../../assets/images/logo.png";
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import backgroundImg from "@/assets/images/onboarding.webp";
+import backdropLogo from "@/assets/images/LogoBackdrop.webp";
 
 const titleStyle: React.CSSProperties = {
-  fontFamily: 'Title Hero, sans-serif',
-  fontWeight: 'bold',
-  fontStyle: 'normal',
-  fontSize: '48px',
-  lineHeight: '1',
-  letterSpacing: '-0.03em',
-  textAlign: 'center',
+  fontFamily: "Title Hero, sans-serif",
+  fontWeight: "bold",
+  fontStyle: "normal",
+  fontSize: "48px",
+  lineHeight: "1",
+  letterSpacing: "-0.03em",
+  textAlign: "center",
   margin: 0,
 };
 
 const subtitleStyle: React.CSSProperties = {
   ...titleStyle,
-  fontSize: '48px',
-  marginBottom: '1rem',
+  fontSize: "48px",
+  marginBottom: "1rem",
 };
 
 const Mahasiswa = () => {
   const navigate = useNavigate();
 
-    const [loading, setLoading] = useState(false);
-    const isRedirecting = useRef(false); // Prevent double clicks
-  
+  const [loading, setLoading] = useState(false);
+  const isRedirecting = useRef(false); // Prevent double clicks
+
   const handleSSOLogin = () => {
     // Prevent double execution
     if (isRedirecting.current || loading) return;
@@ -54,29 +60,42 @@ const Mahasiswa = () => {
   };
 
   const handleYesClick = () => {
-    navigate('/login/onboarding');
+    navigate("/login/onboarding");
   };
 
-
   return (
-        <section
-      className="min-h-screen w-screen bg-white flex flex-col gap-4 items-center justify-center px-4"
+    <section
+      className="min-h-screen w-screen bg-black/40 flex flex-col gap-4 items-center justify-center px-4"
       style={{
         backgroundImage: `url(${backgroundImg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
+        backgroundBlendMode: "darken", // <-- key line
       }}
     >
       {/* Logo */}
-      <img src={logo} alt="MAXIMA Logo" className="size-40 object-contain" />
+      <div
+        className="p-4 drop-shadow-2xl"
+        style={{
+          backgroundImage: `url(${backdropLogo})`,
+          backgroundSize: "cover",
+        }}
+      >
+        <img
+          src={logo}
+          alt="MAXIMA Logo"
+          className="size-30 object-contain drop-shadow-2xl"
+        />
+      </div>
       <Card className="w-5/6 md:w-4/6">
         <CardHeader>
-        <CardTitle className="font-futura text-xl font-semibold">
-          Selamat Datang di MAXIMA 2025!
-        </CardTitle>
-        <CardDescription className='font-futura'>Segera daftarkan dirimu menggunakan akun student!</CardDescription>
+          <CardTitle className="font-futura text-xl font-semibold">
+            Selamat Datang di MAXIMA 2025!
+          </CardTitle>
+          <CardDescription className="font-futura">
+            Segera daftarkan dirimu menggunakan akun student!
+          </CardDescription>
         </CardHeader>
-        
 
         {/* Buttons */}
         <CardFooter className="flex flex-col md:flex-row gap-4 w-full justify-center">
