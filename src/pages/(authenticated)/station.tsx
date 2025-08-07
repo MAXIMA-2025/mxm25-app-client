@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import useApi, { ApiResponse } from "@/hooks/useApi";
+import useApi from "@/hooks/useApi";
+import type { ApiResponse } from "@/hooks/useApi";
 import useAuth, { type Auth, type UserEksternal } from "@/hooks/useAuth"; // 🔥 Tambahkan ini
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
