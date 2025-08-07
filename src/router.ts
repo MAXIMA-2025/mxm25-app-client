@@ -16,6 +16,7 @@ export type Path =
   | `/main`
   | `/state`
   | `/station`
+  | `/ticket`
   | `/tickets`
 
 export type Params = {
