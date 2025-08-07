@@ -25,6 +25,11 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
   const handleBuyTicketClick = () => {
     nav("/station");
   };
+
+  const handleViewTicketsClick = () => {
+    nav("/tickets");
+  };
+  
   return (
     <section
       ref={sectionRef}
@@ -96,7 +101,7 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
                 </Button>
                 {/* <button className="group bg-gradient-to-r from-red-600 to-red-800 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold text-sm sm:text-base flex items-center justify-center space-x-1 sm:space-x-2 hover:from-red-700 hover:to-red-900 hover:shadow-xl transition-all duration-300 transform hover:scale-105 shadow-lg w-full sm:w-auto">
                 </button> */}
-                <Button variant="outline">
+                <Button variant="outline" onClick={handleViewTicketsClick}>
                   <span>Lihat tiket</span>
                 </Button>
                 {/* <button disabled className="opacity-50 group bg-gradient-to-r from-red-600 to-red-800 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold text-sm sm:text-base flex items-center justify-center space-x-1 sm:space-x-2 hover:from-red-700 hover:to-red-900 hover:shadow-xl transition-all duration-300 transform shadow-lg w-full sm:w-auto">
