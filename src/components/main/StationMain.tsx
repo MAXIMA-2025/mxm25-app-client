@@ -59,12 +59,12 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
 
       {/* Station Content */}
       <div className="flex flex-col lg:flex-row items-center justify-start w-3/4">
-        <img className="size-50" src={LogoStation} />
+        <img className="size-30 lg:size-50 " src={LogoStation} />
         <div className="flex flex-col items-center lg:items-start gap-2 w-3/4 mt-4">
-          <h1 className="font-fraunces text-center lg:text-start text-6xl font-medium text-shadow-lg">
+          <h1 className="font-fraunces text-center text-4xl lg:text-start lg:text-6xl font-medium text-shadow-lg">
             STATION
           </h1>
-          <h2 className="font-futura font-medium text-2xl text-center lg:text-start">
+          <h2 className="font-futura font-medium text-xl lg:text-2xl text-center lg:text-start">
             Start To Inspire Your Passion
           </h2>
         </div>
