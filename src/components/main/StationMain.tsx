@@ -43,7 +43,7 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
           Start To Inspire Your Passion
         </h2>
       </div>
-      <Card className="font-futura w-3/4 py-2 bg-[#f2ca45] border-7 border-[#90171a] rounded-2xl overflow-hidden">
+      <Card className="font-futura w-4/5 sm:w-3/4 lg:w-4/5 py-2 bg-[#f2ca45] border-7 border-[#90171a] rounded-2xl overflow-hidden">
         <div className="flex flex-col-reverse lg:flex-row">
           {/* Left Content Section */}
           <div className="flex-1 p-4 sm:p-6 md:p-8">
@@ -104,11 +104,11 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
               </div>
             </CardContent>
           </div>
-          <div className="relative w-[50%] h-64 py-2">
-                <img src={Front2} className="h-[240px] aspect-square absolute mt-8 ml-10 -rotate-2 border-6 rounded-xl border-white shadow-2xl transition-transform hover:-rotate-1"/>
-                <img src={Front1} className="w-[300px] absolute mt-30 ml-2 -rotate-4 border-6 rounded-xl border-white shadow-2xl transition-transform hover:rotate-1"/>
-                <img src={Front3} className="h-[280px] absolute mt-6 ml-70 rotate-5 border-6 rounded-xl border-white shadow-2xl transition-transform hover:rotate-2"/>
-                <img src={artis} className="h-[300px]  absolute mt-2 ml-30 border-6 rounded-xl border-white shadow-2xl  transition-transform hover:rotate-2"/>
+          <div className="relative right-11 xs:right-8 sm:right-10 md:right-15 lg:right-35 xl:right-0 sm:ml-20 sm:mb-5 mb-20 w-[45%] h-30 md:w-[45%] md:h-32 md:mb-50 lg:w-[50%] lg:h-64 lg:my-0 lg:mb-0 py-2">
+                <img src={Front2} className="h-[90px] sm:h-[240px] aspect-square absolute mt-8 ml-12 sm:ml-10 -rotate-2 border-6 rounded-xl border-white shadow-2xl transition-transform hover:-rotate-1"/>
+                <img src={Front1} className="h-[70px] w-[100px] sm:h-[160px] sm:w-[300px] absolute mt-22 ml-12 sm:ml-10 sm:mt-35 sm:ml-2 -rotate-4 border-6 rounded-xl border-white shadow-2xl transition-transform hover:rotate-1"/>
+                <img src={Front3} className="h-[110px] sm:h-[260px] absolute mt-10 sm:mt-6 ml-60 sm:ml-70 rotate-5 border-6 rounded-xl border-white shadow-2xl transition-transform hover:rotate-2"/>
+                <img src={artis} className=" h-[180px] sm:h-[300px]  absolute mt-2 ml-30 border-6 rounded-xl border-white shadow-2xl  transition-transform hover:rotate-2"/>
           </div>
         </div>
       </Card>
