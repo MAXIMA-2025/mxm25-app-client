@@ -5,7 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
-import Bg_desktop from "@/assets/asset_station/station_bg_desktop.webp";
+import Bg_desktop from "@/assets/images/main/STATION.webp";
 import { useNavigate } from "@/router";
 import { z } from "zod";
 import { toast } from "sonner";
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import poster from "@/assets/images/main/FEEDS.webp";
+import poster from "@/assets/images/main/Poster.webp";
 import logo from "/favicon.png";
 import { Download, User, Phone, Mail, Ticket } from "lucide-react";
 import SadFace from "@/assets/asset_station/sad.gif";
