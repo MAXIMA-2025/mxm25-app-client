@@ -50,19 +50,9 @@ const tickets = () => {
     queryKey: ["myTickets"],
     queryFn: async () => {
       try {
-        const response = await api.get("ticket/eksternal/ticket", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        console.log("API Response:", response.data);
+        const response = await api.get("ticket/eksternal/ticket");
         return response.data;
       } catch (error: any) {
-        // Handle 404 as "no tickets found" instead of error
-        if (error.response?.status === 404) {
-          console.log("No tickets found (404) - returning empty array");
-          return []; // Return empty array for 404, not an error
-        }
 
         // Handle other 4xx errors that might indicate "no data"
         if (error.response?.status === 204 || error.response?.status === 400) {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useApi, { ApiResponse } from "@/hooks/useApi";
 import useAuth, { type Auth, type UserEksternal } from "@/hooks/useAuth"; // 🔥 Tambahkan ini
-import { useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import Bg_desktop from "@/assets/images/main/STATION.webp";
 import { useNavigate } from "@/router";
@@ -52,6 +52,7 @@ type MidtransResponse = {
 const Index: React.FC = () => {
   const api = useApi();
   const nav = useNavigate();
+  const queryClient  = useQueryClient();
   // const { user, isLoading } = useAuth();
 
   // Awalnya bisa diisi dengan nama default, nanti akan diupdate dengan data user. Jadi saat sudah diintegerasi dengan sistem login,
@@ -144,7 +145,8 @@ const Index: React.FC = () => {
             await api.get(`/ticket/eksternal/paid/${ticketId}`);
             alert("Pembayaran berhasil");
             toast.success("Tiket anda berhasil dibayar!");
-            nav("/main");
+            queryClient.invalidateQueries({queryKey:["myTickets"]});
+            nav("/tickets");
           } catch (err) {
             console.error("Gagal memanggil callback paid:", err);
             alert("Pembayaran berhasil tapi gagal update status tiket.");
