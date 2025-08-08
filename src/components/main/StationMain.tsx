@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, ArrowRight, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router";
@@ -83,6 +84,7 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
                 </CardDescription>
               </div>
             </CardHeader>
+                {/* <Badge className="bg-red-500" variant="default">LIMITED</Badge> */}
 
             <CardContent className="p-0 mt-2 sm:mt-3 lg:mt-4">
               <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-4">
