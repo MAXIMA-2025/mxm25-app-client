@@ -112,6 +112,11 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
                   />
                 </Button>
                 <Button variant="outline" onClick={handleLihatClick}>
+                  Lihat Tiket
+                  <ArrowRight
+                    size={14}
+                    className="sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform"
+                  />
                 </Button>
               </div>
             </CardContent>
