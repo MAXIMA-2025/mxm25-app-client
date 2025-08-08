@@ -25,13 +25,11 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
   const handleBuyTicketClick = () => {
     nav("/station");
   };
-
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   const handleLihatClick = () =>{
     nav("/tickets");
   }
-
   return (
     <section
       ref={sectionRef}
@@ -69,7 +67,6 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
           </h2>
         </div>
       </div>
-
       <Card className="font-futura w-3/4 py-2 bg-[#f2ca45] border-7 border-[#90171a] rounded-2xl overflow-hidden">
         <div className="flex flex-col-reverse lg:flex-row">
           {/* Left Content Section */}
@@ -115,12 +112,10 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
                   />
                 </Button>
                 <Button variant="outline" onClick={handleLihatClick}>
-                  Lihat Tiket
                 </Button>
               </div>
             </CardContent>
           </div>
-
           {/* Right Image Section */}
           <div className="relative flex p-6 md:pl-0 h-full justify-center items-center">
             <img
