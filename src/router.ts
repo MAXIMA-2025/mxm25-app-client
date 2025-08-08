@@ -11,9 +11,8 @@ export type Path =
   | `/challenges/maxsnap`
   | `/login`
   | `/login/mahasiswa`
-  | `/login/oauth`
-  | `/login/sso`
   | `/main`
+  | `/maxlearn`
   | `/state`
   | `/station`
   | `/tickets`

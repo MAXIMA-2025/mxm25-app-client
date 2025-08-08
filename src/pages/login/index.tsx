@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -28,8 +29,13 @@ const LoginPage = () => {
       toast.error("Failed to generate Google auth URL");
     }
   };
+=======
+import React from 'react'
+>>>>>>> ec1be48dffed1e00531ab77d7b5da182716915ee
 
+const index = () => {
   return (
+<<<<<<< HEAD
     <section
       className="min-h-screen w-screen bg-black/40 flex flex-col gap-4 items-center justify-center px-4"
       style={{
@@ -57,27 +63,10 @@ const LoginPage = () => {
         <CardTitle className="px-4 font-futura text-xl font-semibold text-center">
           Apakah anda merupakan Mahasiswa Baru UMN 2025?
         </CardTitle>
+=======
+    <div>index</div>
+  )
+}
+>>>>>>> ec1be48dffed1e00531ab77d7b5da182716915ee
 
-        {/* Buttons */}
-        <CardFooter className="flex flex-col md:flex-row gap-4 w-full justify-center">
-          <Button
-            onClick={handleYesClick}
-            variant="clay"
-            className="w-full md:w-1/2"
-          >
-            YES
-          </Button>
-          <Button
-            onClick={handleGoogleClick}
-            variant="outline"
-            className="w-full md:w-1/2"
-          >
-            NO, <img className="size-5" src={Google} /> Sign in with Google
-          </Button>
-        </CardFooter>
-      </Card>
-    </section>
-  );
-};
-
-export default LoginPage;
+export default index
