@@ -1,9 +1,9 @@
 import {
-  QueryObserverResult,
-  RefetchOptions,
+  type QueryObserverResult,
+  type RefetchOptions,
   useQuery,
 } from "@tanstack/react-query";
-import useApi, { ApiResponse } from "./useApi";
+import useApi, { type ApiResponse } from "./useApi";
 import useErrorHandler from "./useErrorHandler";
 import useAuthContext from "./useAuthContext";
 
@@ -16,7 +16,10 @@ export type Auth<T = UserPanitia | UserOrganisator | UserEksternal> = {
   refetch: (
     options?: RefetchOptions
   ) => Promise<
-    QueryObserverResult<ApiResponse<UserPanitia | UserOrganisator | UserEksternal>, Error>
+    QueryObserverResult<
+      ApiResponse<UserPanitia | UserOrganisator | UserEksternal>,
+      Error
+    >
   >;
 };
 
@@ -56,7 +59,7 @@ export type UserEksternal = {
   picture: string;
   role: string;
   email: string;
-}
+};
 
 const useAuth = () => {
   const { isLoggedOut } = useAuthContext();
@@ -82,7 +85,7 @@ const useAuth = () => {
     enabled: !isLoggedOut, // biar pas udah logout dia ga fetch lagi !! anjir gua debug ini berhari2 dan solusinya se simple ini tai emg
     refetchInterval: (query) => {
       const user = query.state.data?.data;
-      return user && user.isVerified === false ? 60000 : false;
+      return user ? 60000 : false;
     },
   });
 

@@ -25,23 +25,17 @@ const Transaction: React.FC = () => {
     namaBelakang: "",
     email: "",
     noTelp: "",
-    jumlahTiket: 1,
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
+  const handleChange = () => {
     setForm((prev) => ({
       ...prev,
-      [name]: name === "jumlahTiket" ? parseInt(value) : value,
     }));
   };
 
   const mutation = useMutation({
     mutationFn: async () => {
       const payload = {
-        jumlahTiket: form.jumlahTiket,
         customerDetails: {
           namaDepan: form.namaDepan,
           namaBelakang: form.namaBelakang,
@@ -129,16 +123,6 @@ const Transaction: React.FC = () => {
           name="noTelp"
           placeholder="No. Telepon"
           value={form.noTelp}
-          onChange={handleChange}
-          required
-          className="w-full p-2 border rounded"
-        />
-        <input
-          type="number"
-          name="jumlahTiket"
-          placeholder="Jumlah Tiket"
-          min={1}
-          value={form.jumlahTiket}
           onChange={handleChange}
           required
           className="w-full p-2 border rounded"

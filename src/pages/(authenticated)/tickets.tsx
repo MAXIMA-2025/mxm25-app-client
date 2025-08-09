@@ -1,28 +1,21 @@
-import React, { useEffect, useState } from "react";
-import useApi, { ApiResponse } from "@/hooks/useApi";
-import useAuth, { type Auth, type UserEksternal } from "@/hooks/useAuth"; // 🔥 Tambahkan ini
-import { useMutation } from "@tanstack/react-query";
+import useApi, { type ApiResponse } from "@/hooks/useApi";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
 import Bg_desktop from "@/assets/images/main/STATION.webp";
 import { useNavigate } from "@/router";
-import { z } from "zod";
-import { toast } from "sonner";
+
 import {
   Card,
   CardTitle,
   CardHeader,
   CardDescription,
   CardContent,
-  CardFooter,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import poster from "@/assets/images/main/Poster.webp";
+
 import logo from "/favicon.png";
-import { Download, User, Phone, Mail, Ticket } from "lucide-react";
+import { Download, User, Phone, Mail } from "lucide-react";
 import SadFace from "@/assets/asset_station/sad.gif";
+import type { AxiosError } from "axios";
 
 type TicketData = {
   id: number;
@@ -31,7 +24,6 @@ type TicketData = {
   namaBelakang: string;
   email: string;
   noTelp: string;
-  jumlahTiket: number;
   ticketId: string;
   isPaid: boolean;
   isCheckedIn: boolean;
@@ -39,34 +31,20 @@ type TicketData = {
   updatedAt: string;
 };
 
-const tickets = () => {
+const Tickets = () => {
   const api = useApi();
   const {
-    data: apiResponse,
+    data: tickets,
     isLoading,
     isError,
     error,
-  } = useQuery<any>({
+  } = useQuery({
     queryKey: ["myTickets"],
     queryFn: async () => {
-      try {
-        const response = await api.get("ticket/eksternal/ticket");
-        return response.data;
-      } catch (error: any) {
-
-        // Handle other 4xx errors that might indicate "no data"
-        if (error.response?.status === 204 || error.response?.status === 400) {
-          console.log(
-            `No content found (${error.response.status}) - returning empty array`
-          );
-          return [];
-        }
-
-        // For other errors, re-throw to be handled by error state
-        throw error;
-      }
+      const response = await api.get<ApiResponse<TicketData[]>>("/ticket/me");
+      return response.data.data;
     },
-    retry: (failureCount, error: any) => {
+    retry: (failureCount, error: AxiosError) => {
       // Don't retry on 404, 400, or 204 - these are not network errors
       if (
         error?.response?.status === 404 ||
@@ -80,63 +58,6 @@ const tickets = () => {
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
-
-  // Process the API response to ensure we have an array
-  const tickets = React.useMemo(() => {
-    // If loading or no response yet, return empty array
-    if (!apiResponse) return [];
-
-    // Handle different possible response structures
-    if (Array.isArray(apiResponse)) {
-      return apiResponse.length > 0 ? apiResponse : [];
-    }
-
-    // If response has data property that contains array
-    if (apiResponse.data && Array.isArray(apiResponse.data)) {
-      return apiResponse.data.length > 0 ? apiResponse.data : [];
-    }
-
-    // If response has tickets property that contains array
-    if (apiResponse.tickets && Array.isArray(apiResponse.tickets)) {
-      return apiResponse.tickets.length > 0 ? apiResponse.tickets : [];
-    }
-
-    // If response has items property that contains array
-    if (apiResponse.items && Array.isArray(apiResponse.items)) {
-      return apiResponse.items.length > 0 ? apiResponse.items : [];
-    }
-
-    // If response has results property that contains array
-    if (apiResponse.results && Array.isArray(apiResponse.results)) {
-      return apiResponse.results.length > 0 ? apiResponse.results : [];
-    }
-
-    // If single ticket object, wrap in array
-    if (typeof apiResponse === "object" && apiResponse.id) {
-      return [apiResponse];
-    }
-
-    // Handle empty response cases
-    if (
-      apiResponse === null ||
-      apiResponse === undefined ||
-      (typeof apiResponse === "object" && Object.keys(apiResponse).length === 0)
-    ) {
-      return [];
-    }
-
-    // Handle response with success/status indicators but empty data
-    if (
-      apiResponse.success === false ||
-      apiResponse.status === "empty" ||
-      apiResponse.count === 0
-    ) {
-      return [];
-    }
-
-    console.warn("Unexpected API response structure:", apiResponse);
-    return [];
-  }, [apiResponse]);
 
   const handleDownloadQR = async (ticketId: string, qrCodeUrl: string) => {
     try {
@@ -196,14 +117,14 @@ const tickets = () => {
           <div className="mt-4 w-50 mx-auto">
             <div className="bg-[#f2ca45] px-3 py-1 rounded-full">
               <span className="text-sm font-medium text-[#2B2B2B]">
-                Total: {tickets.length} tiket
+                Total: {tickets?.length} tiket
               </span>
             </div>
           </div>
         </div>
         {/* Tickets Grid */}
         <div className="space-y-6">
-          {tickets.length === 0 ? (
+          {tickets?.length === 0 ? (
             <div className="flex flex-col items-center justify-center mt-12 space-y-4">
               <img
                 src={SadFace}
@@ -218,7 +139,7 @@ const tickets = () => {
               </Button>
             </div>
           ) : (
-            tickets.map((ticket) => (
+            tickets?.map((ticket) => (
               <div key={ticket.id} className="flex flex-col md:flex-row w-full">
                 {/* Left Section - Ticket Details */}
                 <Card
@@ -346,4 +267,4 @@ const tickets = () => {
   );
 };
 
-export default tickets;
+export default Tickets;
