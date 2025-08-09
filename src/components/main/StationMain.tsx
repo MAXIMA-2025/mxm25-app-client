@@ -78,7 +78,7 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
                 </CardTitle>
                 <CardDescription className="text-[#2B2B2B] text-sm sm:text-base lg:text-lg leading-relaxed">
                   Ikuti STATION MAXIMA 2025 untuk menyaksikan pameran
-                  organisasi, bazaar, foodtruck, hingga beragam performance dari
+                  organisasi, bazaar, hingga beragam performance dari
                   UKM dan guest star kita!
                 </CardDescription>
               </div>
