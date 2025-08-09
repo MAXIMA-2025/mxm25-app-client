@@ -10,15 +10,19 @@ import { useNavigate } from "react-router";
 import useAuth from "@/hooks/useAuth";
 import useAuthContext from "@/hooks/useAuthContext";
 
+
 const index = () => {
   const nav = useNavigate();
   const auth = useAuth();
   const { isLoggedOut } = useAuthContext();
   useEffect(() => {
-    if (!isLoggedOut) {
+    const hasVisited = sessionStorage.getItem("hasVisitedLanding");
+
+    if (!hasVisited && !isLoggedOut) {
+      // Mark that they've visited already
+      sessionStorage.setItem("hasVisitedLanding", "true");
       nav("/main");
     }
-
   }, [nav, isLoggedOut, auth]);
   return (
     <div className="flex flex-col">
