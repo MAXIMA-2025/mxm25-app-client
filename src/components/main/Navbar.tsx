@@ -10,8 +10,14 @@ import {
 } from "@/components/ui/menubar";
 import { Button } from "../ui/button";
 import { Link } from "react-router";
-import { HomeIcon, UserIcon } from "lucide-react";
-import logo from "/favicon.png"
+import {
+  HomeIcon,
+  Ticket,
+  TicketCheck,
+  TicketIcon,
+  UserIcon,
+} from "lucide-react";
+import logo from "/favicon.png";
 
 const Navbar = () => {
   return (
@@ -19,7 +25,9 @@ const Navbar = () => {
       <Menubar className="shadow-2xl/100 ">
         <MenubarMenu>
           <MenubarTrigger>
-            <Link to="/main"><img src={logo} className="size-5 object-contain"/></Link>
+            <Link to="/main">
+              <img src={logo} className="size-5 object-contain" />
+            </Link>
           </MenubarTrigger>
           {/* <MenubarContent>
             <MenubarItem>
@@ -33,7 +41,12 @@ const Navbar = () => {
           </MenubarContent> */}
         </MenubarMenu>
         <MenubarMenu>
-          <MenubarTrigger><UserIcon className="size-5 mr-1"/>Profile</MenubarTrigger>
+          <Link to = "/tickets">
+            <MenubarTrigger>
+              <TicketCheck className="size-5 mr-1" />
+              TIKET
+            </MenubarTrigger>
+          </Link>
           {/* <MenubarContent>
           </MenubarContent> */}
         </MenubarMenu>
