@@ -7,13 +7,11 @@ import AboutSection from "@/components/landing/AboutSection";
 import FAQSection from "@/components/landing/FAQSection";
 import LoaderWrapper from "@/components/loaderWrapper";
 import { useNavigate } from "react-router";
-import useAuth from "@/hooks/useAuth";
 import useAuthContext from "@/hooks/useAuthContext";
 
 
 const index = () => {
   const nav = useNavigate();
-  const auth = useAuth();
   const { isLoggedOut } = useAuthContext();
   useEffect(() => {
     const hasVisited = sessionStorage.getItem("hasVisitedLanding");
@@ -23,7 +21,7 @@ const index = () => {
       sessionStorage.setItem("hasVisitedLanding", "true");
       nav("/main");
     }
-  }, [nav, isLoggedOut, auth]);
+  }, [nav, isLoggedOut]);
   return (
     <div className="flex flex-col">
       <LoaderWrapper>
