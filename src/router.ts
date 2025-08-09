@@ -5,15 +5,18 @@ import { components, hooks, utils } from '@generouted/react-router/client'
 
 export type Path =
   | `/`
-  | `/app`
+  | `/challenges`
+  | `/challenges/maxlearn`
+  | `/challenges/maxlearn/game`
+  | `/challenges/maxsnap`
   | `/login`
   | `/login/mahasiswa`
   | `/login/oauth`
   | `/login/sso`
   | `/main`
-  | `/maxlearn`
   | `/state`
   | `/station`
+  | `/tickets`
 
 export type Params = {
   

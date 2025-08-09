@@ -1,8 +1,10 @@
 import React from 'react'
 
+// PDF DISINIH
+
 const index = () => {
   return (
-    <div>STATE MAXIMA</div>
+    <div>index</div>
   )
 }
 

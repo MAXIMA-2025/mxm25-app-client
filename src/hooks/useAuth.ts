@@ -7,7 +7,7 @@ import useApi, { ApiResponse } from "./useApi";
 import useErrorHandler from "./useErrorHandler";
 import useAuthContext from "./useAuthContext";
 
-export type Auth<T = UserPanitia | UserOrganisator> = {
+export type Auth<T = UserPanitia | UserOrganisator | UserEksternal> = {
   user: T | undefined;
   status: "error" | "success" | "pending";
   isLoading: boolean;
@@ -16,7 +16,7 @@ export type Auth<T = UserPanitia | UserOrganisator> = {
   refetch: (
     options?: RefetchOptions
   ) => Promise<
-    QueryObserverResult<ApiResponse<UserPanitia | UserOrganisator>, Error>
+    QueryObserverResult<ApiResponse<UserPanitia | UserOrganisator | UserEksternal>, Error>
   >;
 };
 
@@ -48,13 +48,23 @@ export type UserOrganisator = {
   role: "mahasiswa" | "panitia" | "organisator" | "unknown";
 };
 
+export type UserEksternal = {
+  id: number;
+  googleId: string;
+  firstName: string;
+  lastName: string;
+  picture: string;
+  role: string;
+  email: string;
+}
+
 const useAuth = () => {
   const { isLoggedOut } = useAuthContext();
   const api = useApi();
   const { handleError } = useErrorHandler(["authUser"]);
 
   const { data, isLoading, error, status, refetch } = useQuery<
-    ApiResponse<UserPanitia | UserOrganisator>
+    ApiResponse<UserPanitia | UserOrganisator | UserEksternal>
   >({
     queryKey: ["authUser"],
     queryFn: async () => {

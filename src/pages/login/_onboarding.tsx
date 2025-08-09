@@ -11,9 +11,8 @@ import {
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
 import { Loader2 } from "lucide-react";
-import backgroundImg from "../../assets/images/hero/BACKGROUND.webp";
 import { toast } from "sonner";
-
+import backgroundImg from "@/assets/images/onboarding.webp";
 
 // TYPE untuk data form
 type DataMahasiswa = {
@@ -255,11 +254,12 @@ const Onboarding: React.FC = () => {
 
   return (
     <section
-      className="min-h-screen w-screen bg-white flex flex-col gap-4 items-center justify-center px-4"
+      className="min-h-screen w-screen bg-black/40 flex flex-col gap-4 items-center justify-center px-4"
       style={{
         backgroundImage: `url(${backgroundImg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
+        backgroundBlendMode: "darken", // <-- key line
       }}
     >
       <Card className="font-futura mx-2 my-6">
