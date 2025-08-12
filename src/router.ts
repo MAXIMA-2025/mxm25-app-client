@@ -12,10 +12,12 @@ export type Path =
   | `/login`
   | `/login/mahasiswa`
   | `/login/oauth`
+  | `/login/onboarding`
   | `/login/sso`
   | `/main`
   | `/state`
   | `/station`
+  | `/station/mahasiswa`
   | `/tickets`
 
 export type Params = {
