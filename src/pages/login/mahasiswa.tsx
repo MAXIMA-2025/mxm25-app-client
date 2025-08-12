@@ -103,7 +103,7 @@ const Mahasiswa = () => {
             onClick={handleYesClick}
             variant="clay"
             className="w-full md:w-1/2"
-            disabled
+            
           >
             REGISTER
           </Button>
@@ -111,7 +111,7 @@ const Mahasiswa = () => {
             onClick={handleSSOLogin}
             variant="outline"
             className="w-full md:w-1/2"
-            disabled
+            
           >
             LOGIN
           </Button>

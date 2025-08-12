@@ -13,12 +13,15 @@ import backgroundImage from "@/assets/images/main/STATION.webp";
 import artis from "@/assets/images/main/Poster.webp";
 import StationCollage from "@/assets/images/main/carousel/StationCollage.webp";
 import LogoStation from "@/assets/images/main/logoRangkaian/LogoSTATION.webp";
+import { useToggle } from "@/contexts/ToggleContext";
 
 interface StationMainProps {
   sectionRef: React.RefObject<HTMLElement>;
 }
 
 const StationMain = ({ sectionRef }: StationMainProps) => {
+  const { toggleAcara } = useToggle();
+  const target = toggleAcara?.find(t => t.nama === "Station");
   const nav = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -104,14 +107,15 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
                 </div>
               </div>
               <div className="flex flex-col sm:flex-row gap-2 lg:gap-2">
-                <Button variant="clay" onClick={handleBuyTicketClick}>
+                
+                <Button variant="clay" onClick={handleBuyTicketClick} disabled={!target?.isOn}> 
                   Beli Tiket
                   <ArrowRight
                     size={14}
                     className="sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform"
                   />
                 </Button>
-                <Button variant="outline" onClick={handleLihatClick}>
+                <Button variant="outline" onClick={handleLihatClick} disabled={!target?.isOn}>
                   Lihat Tiket
                   <ArrowRight
                     size={14}
