@@ -14,6 +14,7 @@ import artis from "@/assets/images/main/Poster.webp";
 import StationCollage from "@/assets/images/main/carousel/StationCollage.webp";
 import LogoStation from "@/assets/images/main/logoRangkaian/LogoSTATION.webp";
 import { useToggle } from "@/contexts/ToggleContext";
+import useAuth from "@/hooks/useAuth";
 
 interface StationMainProps {
   sectionRef: React.RefObject<HTMLElement>;
@@ -21,18 +22,22 @@ interface StationMainProps {
 
 const StationMain = ({ sectionRef }: StationMainProps) => {
   const { toggleAcara } = useToggle();
-  const target = toggleAcara?.find(t => t.nama === "Station");
+  const target = toggleAcara?.find((t) => t.nama === "Station");
   const nav = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const auth = useAuth();
 
   const handleBuyTicketClick = () => {
     nav("/station");
   };
+  const handleClaimTicketClick = () => {
+    nav("/station/mahasiswa")
+  }
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
-  const handleLihatClick = () =>{
+  const handleLihatClick = () => {
     nav("/tickets");
-  }
+  };
   return (
     <section
       ref={sectionRef}
@@ -53,7 +58,11 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
             >
               <X size={24} />
             </button>
-            <img src={artis} className="w-auto h-90 md:h-120 object-contain p-2 rounded-2xl" alt="Artis" />
+            <img
+              src={artis}
+              className="w-auto h-90 md:h-120 object-contain p-2 rounded-2xl"
+              alt="Artis"
+            />
           </div>
         </div>
       )}
@@ -81,8 +90,8 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
                 </CardTitle>
                 <CardDescription className="text-[#2B2B2B] text-sm sm:text-base lg:text-lg leading-relaxed">
                   Ikuti STATION MAXIMA 2025 untuk menyaksikan pameran
-                  organisasi, bazaar, hingga beragam performance dari
-                  UKM dan guest star kita!
+                  organisasi, bazaar, hingga beragam performance dari UKM dan
+                  guest star kita!
                 </CardDescription>
               </div>
             </CardHeader>
@@ -106,23 +115,57 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
                   </span>
                 </div>
               </div>
-              <div className="flex flex-col sm:flex-row gap-2 lg:gap-2">
-                
-                <Button variant="clay" onClick={handleBuyTicketClick} disabled={!target?.isOn}> 
-                  Beli Tiket
-                  <ArrowRight
-                    size={14}
-                    className="sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform"
-                  />
-                </Button>
-                <Button variant="outline" onClick={handleLihatClick} disabled={!target?.isOn}>
-                  Lihat Tiket
-                  <ArrowRight
-                    size={14}
-                    className="sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform"
-                  />
-                </Button>
-              </div>
+              {auth.user?.role === "eksternal" ? (
+                <div className="flex flex-col sm:flex-row gap-2 lg:gap-2">
+                  <Button
+                    variant="clay"
+                    onClick={handleBuyTicketClick}
+                    disabled={!target?.isOn}
+                  >
+                    Beli Tiket
+                    <ArrowRight
+                      size={14}
+                      className="sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform"
+                    />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={handleLihatClick}
+                    disabled={!target?.isOn}
+                  >
+                    Lihat Tiket
+                    <ArrowRight
+                      size={14}
+                      className="sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform"
+                    />
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex flex-col sm:flex-row gap-2 lg:gap-2">
+                  <Button
+                    variant="clay"
+                    onClick={handleClaimTicketClick}
+                    disabled={!target?.isOn}
+                  >
+                    Klaim Tiket
+                    <ArrowRight
+                      size={14}
+                      className="sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform"
+                    />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={handleLihatClick}
+                    disabled={!target?.isOn}
+                  >
+                    Lihat Tiket
+                    <ArrowRight
+                      size={14}
+                      className="sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform"
+                    />
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </div>
           {/* Right Image Section */}
