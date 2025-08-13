@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import useApi, { ApiResponse } from "@/hooks/useApi";
-import useAuth, { type Auth, type UserEksternal } from "@/hooks/useAuth"; // 🔥 Tambahkan ini
-import { useMutation } from "@tanstack/react-query";
+import useApi, { type ApiResponse } from "@/hooks/useApi";
+import useAuth from "@/hooks/useAuth"; // 🔥 Tambahkan ini
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import Bg_desktop from "@/assets/images/main/STATION.webp";
 import { useNavigate } from "@/router";
@@ -13,21 +13,20 @@ import {
   CardHeader,
   CardDescription,
   CardContent,
-  CardFooter,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import poster from "@/assets/images/main/Poster.webp";
 import logo from "/favicon.png";
+import Turnstile from "react-turnstile";
 
 // Simple Indo phone validation (starts with 08 or +628, 9–15 digits)
 const phoneRegex = /^(?:\+62|62|08)[0-9]{8,13}$/;
 
 const formSchema = z.object({
   nama: z.string().min(1, "Nama wajib diisi"),
-  email: z.string().email("Email tidak valid"),
+  email: z.email("Email tidak valid"),
   noTelp: z.string().regex(phoneRegex, "Nomor telepon tidak valid"),
-  jumlahTiket: z.number().min(1, "Minimal 1 tiket"),
 });
 
 // Notes:
@@ -52,6 +51,7 @@ type MidtransResponse = {
 const Index: React.FC = () => {
   const api = useApi();
   const nav = useNavigate();
+  const queryClient = useQueryClient();
   // const { user, isLoading } = useAuth();
 
   // Awalnya bisa diisi dengan nama default, nanti akan diupdate dengan data user. Jadi saat sudah diintegerasi dengan sistem login,
@@ -73,11 +73,11 @@ const Index: React.FC = () => {
     }
   }, [auth.user]);
 
+  const [token, setToken] = useState<string | null>(null);
   const [form, setForm] = useState({
     nama: "",
     email: "",
     noTelp: "",
-    jumlahTiket: 1,
   });
 
   useEffect(() => {
@@ -111,22 +111,22 @@ const Index: React.FC = () => {
     const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
-      [name]: name === "jumlahTiket" ? parseInt(value) : value,
+      [name]: value,
     }));
   };
 
   const mutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (token: string) => {
       // if (!form.nama || !form.email || !form.noTelp || !form.jumlahTiket) {
       //   throw new Error("Data tidak lengkap");
       // }
 
       const payload = {
-        jumlahTiket: form.jumlahTiket,
         customerDetails: {
           nama: form.nama,
           email: form.email,
           noTelp: form.noTelp,
+          turnstileToken: token,
         },
       };
 
@@ -144,7 +144,8 @@ const Index: React.FC = () => {
             await api.get(`/ticket/eksternal/paid/${ticketId}`);
             alert("Pembayaran berhasil");
             toast.success("Tiket anda berhasil dibayar!");
-            nav("/main");
+            queryClient.invalidateQueries({ queryKey: ["myTickets"] });
+            nav("/tickets");
           } catch (err) {
             console.error("Gagal memanggil callback paid:", err);
             alert("Pembayaran berhasil tapi gagal update status tiket.");
@@ -174,6 +175,11 @@ const Index: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!token) {
+      toast.error("Please complete the Turnstile verification first.");
+      return;
+    }
+
     const parsed = formSchema.safeParse(form);
 
     if (!parsed.success) {
@@ -187,7 +193,7 @@ const Index: React.FC = () => {
       return;
     }
 
-    mutation.mutate();
+    mutation.mutate(token);
   };
 
   // if (isLoading) {
@@ -215,15 +221,17 @@ const Index: React.FC = () => {
         <Card className="font-futura border-4 w-full border-primary md:rounded-r-none md:border-r-0 md:w-xl bg-gradient-to-r from-white from-50% to-100% to-secondary">
           <CardHeader>
             <div className="flex flex-col sm:flex-row items-center gap-2 ">
-            <img src={logo} className="h-10 aspect-auto" />
-            <div className="flex flex-col">
-              <CardTitle>
-                <h2 className="text-3xl text-center sm:text-start">FORM TRANSAKSI TIKET</h2>
-              </CardTitle>
-              <CardDescription className="text-center sm:text-start">
-                Isi beberapa data berikut untuk membeli tiket anda!
-              </CardDescription>
-            </div>
+              <img src={logo} className="h-10 aspect-auto" />
+              <div className="flex flex-col">
+                <CardTitle>
+                  <h2 className="text-3xl text-center sm:text-start">
+                    FORM TRANSAKSI TIKET
+                  </h2>
+                </CardTitle>
+                <CardDescription className="text-center sm:text-start">
+                  Isi beberapa data berikut untuk membeli tiket anda!
+                </CardDescription>
+              </div>
             </div>
           </CardHeader>
           <CardContent>
@@ -271,27 +279,23 @@ const Index: React.FC = () => {
                 />
               </div>
 
+              <div className="mx-auto py-5">
+                <Turnstile
+                  sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                  onVerify={(token) => setToken(token)}
+                  refreshExpired="auto"
+                />
+              </div>
               {/* Jumlah tiket bisa diubah */}
               <div className="flex flex-col w-full gap-3">
-                <Label htmlFor="jumlahTiket">Jumlah Tiket</Label>
-                <Input
-                  type="number"
-                  name="jumlahTiket"
-                  placeholder="Jumlah Tiket"
-                  min={1}
-                  value={form.jumlahTiket}
-                  onChange={handleChange}
-                  required
-                  className="w-full p-2 border rounded"
-                />
-            <Button
-              type="submit"
-              className="w-full"
-              variant="clay"
-              disabled={mutation.isPending} // 🔒 Cegah submit saat loading
-            >
-              {mutation.isPending ? "MEMPROSES..." : "BAYAR SEKARANG"}
-            </Button>
+                <Button
+                  type="submit"
+                  className="w-full"
+                  variant="clay"
+                  disabled={mutation.isPending} // 🔒 Cegah submit saat loading
+                >
+                  {mutation.isPending ? "MEMPROSES..." : "BAYAR SEKARANG"}
+                </Button>
               </div>
             </form>
           </CardContent>
