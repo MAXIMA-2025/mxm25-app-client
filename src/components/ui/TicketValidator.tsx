@@ -31,7 +31,7 @@ const TicketValidator: React.FC<TicketValidatorProps> = ({ ticketId }) => {
       setState("loading");
       setError("");
 
-      const apiUrl = `http://localhost:5000/api/detail/${ticketId}`;
+      const apiUrl = `${import.meta.env.VITE_API_URL}/ticket/detail/${ticketId}`;
       console.log("Fetching:", apiUrl);
 
       const response = await fetch(apiUrl, {

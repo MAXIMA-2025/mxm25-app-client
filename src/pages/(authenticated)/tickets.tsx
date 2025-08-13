@@ -16,6 +16,7 @@ import logo from "/favicon.png";
 import { Download, User, Phone, Mail } from "lucide-react";
 import SadFace from "@/assets/asset_station/sad.gif";
 import type { AxiosError } from "axios";
+import useAuth from "@/hooks/useAuth";
 
 type TicketData = {
   id: number;
@@ -33,6 +34,7 @@ type TicketData = {
 
 const Tickets = () => {
   const api = useApi();
+  const auth = useAuth();
   const {
     data: tickets,
     isLoading,
@@ -111,12 +113,12 @@ const Tickets = () => {
       <div className="w-2/3 md:w-3/4 mx-auto">
         {/* Header */}
         <div className="mb-8 justify-center text-center">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+          <h1 className="text-4xl font-fraunces sm:text-4xl font-bold text-gray-900 mb-2">
             Tiket Ku
           </h1>
           <div className="mt-4 w-50 mx-auto">
-            <div className="bg-[#f2ca45] px-3 py-1 rounded-full">
-              <span className="text-sm font-medium text-[#2B2B2B]">
+            <div className="bg-[#f2ca45] shadow-2xl px-3 py-1 rounded-full">
+              <span className="font-futura font-medium text-md text-[#2B2B2B]">
                 Total: {tickets?.length} tiket
               </span>
             </div>
@@ -143,7 +145,7 @@ const Tickets = () => {
               <div key={ticket.id} className="flex flex-col md:flex-row w-full">
                 {/* Left Section - Ticket Details */}
                 <Card
-                  className="font-futura border-4 w-full border-primary md:rounded-r-none md:border-r-0 md:border-b-4 md:w-[75%] lg:w-[800px] bg-gradient-to-r from-white from-50% to-100% to-secondary rounded-b-none md:rounded-b-xl"
+                  className="font-futura border-4 w-full border-primary md:rounded-r-none md:border-r-0 md:border-b-4 md:w-[75%] lg:w-[800px] bg-gradient-to-b md:bg-gradient-to-r from-white from-50% to-100%  to-yellow-200 rounded-b-none md:rounded-bl-2xl"
                   style={{
                     borderBottom: window.innerWidth <= 768 ? "0px" : undefined,
                   }}
@@ -218,7 +220,7 @@ const Tickets = () => {
 
                 {/* Right Section - QR Code */}
                 <Card
-                  className="font-futura border-4 w-full border-primary md:rounded-l-none md:border-l-0 md:w-[25%] lg:w-[300px] bg-gradient-to-r from-secondary from-0% to-100% to-white rounded-t-none md:rounded-t-xl border-t-0 md:border-t-4"
+                  className="font-futura border-4 w-full border-primary md:rounded-l-none md:border-l-0 md:w-[25%] lg:w-[300px] bg-gradient-to-b md:bg-gradient-to-r from-yellow-200 from-0% to-100% to-white rounded-t-none md:rounded-t-xl border-t-0 md:border-t-4"
                   style={{
                     borderLeft:
                       window.innerWidth >= 768
