@@ -17,6 +17,7 @@ export type Path =
   | `/main`
   | `/state`
   | `/station`
+  | `/ticket`
   | `/station/mahasiswa`
   | `/tickets`
 
