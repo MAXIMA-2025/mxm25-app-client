@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 
 import logo from "/favicon.png";
-import { Download, User, Phone, Mail } from "lucide-react";
+import { Download, User, Phone, Mail, TicketCheckIcon } from "lucide-react";
 import SadFace from "@/assets/asset_station/sad.gif";
 import type { AxiosError } from "axios";
 import useAuth from "@/hooks/useAuth";
@@ -142,8 +142,12 @@ const Tickets = () => {
             </div>
           ) : (
             tickets?.map((ticket) => (
-              <div key={ticket.id} className="flex flex-col md:flex-row w-full">
+              <div
+                key={ticket.id}
+                className="flex flex-col justify-center md:flex-row w-full"
+              >
                 {/* Left Section - Ticket Details */}
+
                 <Card className="font-futura border-4 w-full border-primary border-b-0 md:rounded-r-none md:border-r-0 md:border-b-4  bg-gradient-to-b md:bg-gradient-to-r from-white from-50% to-100%  to-yellow-200 rounded-b-none md:rounded-bl-2xl">
                   <CardHeader className="">
                     <div className="flex flex-col sm:flex-row items-center gap-3">
@@ -212,7 +216,6 @@ const Tickets = () => {
                     </div>
                   </CardContent>
                 </Card>
-
                 {/* Right Section - QR Code */}
                 <Card
                   className="
@@ -224,25 +227,36 @@ const Tickets = () => {
                     md:[border-top-style:solid] md:[border-left-style:dashed]
                   "
                 >
-                  <img
-                    src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticket.ticketId}`}
-                    alt={`QR Code for ${ticket.ticketId}`}
-                    className="size-40 aspect-square mx-14"
-                    loading="lazy"
-                  />
-                  <Button
-                    onClick={() =>
-                      handleDownloadQR(
-                        ticket.ticketId,
-                        `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticket.ticketId}`
-                      )
-                    }
-                    className="w-10/12"
-                    variant="clay"
-                  >
-                    <Download size={14} />
-                    <span>Download</span>
-                  </Button>
+                  {!ticket.isCheckedIn ? (
+                    <div className="flex flex-col  items-center gap-2">
+                      <TicketCheckIcon className="size-12 md:size-18 text-red-700" />
+                      <h1 className=" font-black text-center p-2 px-4 text-red-700 text-4xl md:text-nowrap">
+                        CHECKED IN
+                      </h1>
+                    </div>
+                  ) : (
+                    <>
+                      <img
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticket.ticketId}`}
+                        alt={`QR Code for ${ticket.ticketId}`}
+                        className="size-40 aspect-square mx-14"
+                        loading="lazy"
+                      />
+                      <Button
+                        onClick={() =>
+                          handleDownloadQR(
+                            ticket.ticketId,
+                            `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticket.ticketId}`
+                          )
+                        }
+                        className="w-10/12"
+                        variant="clay"
+                      >
+                        <Download size={14} />
+                        <span>Download</span>
+                      </Button>
+                    </>
+                  )}
                 </Card>
               </div>
             ))
