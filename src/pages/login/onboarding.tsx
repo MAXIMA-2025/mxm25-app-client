@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -13,6 +13,7 @@ import { Button } from "../../components/ui/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import backgroundImg from "@/assets/images/onboarding.webp";
+import Turnstile from "react-turnstile";
 
 // TYPE untuk data form
 type DataMahasiswa = {
@@ -40,8 +41,35 @@ type ErrorState = {
 };
 
 const Onboarding: React.FC = () => {
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const isRedirecting = useRef(false); // Prevent double clicks
 
+  const handleSSOLogin = async (role: string) => {
+    // Prevent double execution
+    if (isRedirecting.current || loading) return;
+    localStorage.setItem("google-login-role", role);
+
+    isRedirecting.current = true;
+    setLoading(true);
+
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/auth/google`
+      );
+      const url = res.data?.data?.authUrl;
+      console.log(url);
+
+      // Add small delay to ensure state is updated
+      setTimeout(() => {
+        window.location.href = url;
+      }, 100);
+    } catch (error) {
+      toast.error("Failed to generate Google auth URL");
+      setLoading(false);
+      isRedirecting.current = false;
+    }
+  };
   const [formData, setFormData] = useState<DataMahasiswa>({
     nama: "",
     nim: "",
@@ -83,9 +111,9 @@ const Onboarding: React.FC = () => {
       "whatsapp",
       "lineId",
     ];
-
     for (const field of requiredFields) {
-      if (!formData[field].trim()) {
+      const value = formData[field];
+      if (typeof value === "string" && !value.trim()) {
         setError({
           message: `Field ${field} harus diisi!`,
           fields: { [field]: `${field} tidak boleh kosong` },
@@ -107,11 +135,11 @@ const Onboarding: React.FC = () => {
     }
 
     // Validate email format and domain
-    const emailPattern = /^[^\s@]+@student\.umn\.ac\.id$/;
+    const emailPattern = /^[^\s@]+@gmail\.com$/;
     if (!emailPattern.test(formData.email)) {
       setError({
         message: "Format email tidak valid!",
-        fields: { email: "Email harus menggunakan domain @student.umn.ac.id" },
+        fields: { email: "Email harus menggunakan domain @gmail.com" },
       });
       return false;
     }
@@ -167,6 +195,10 @@ const Onboarding: React.FC = () => {
   };
 
   const handleRegister = async () => {
+    if (!turnstileToken) {
+      toast.error("Selesaikan captcha terlebih dahulu!");
+      return;
+    }
     if (!validateForm()) {
       return;
     }
@@ -188,6 +220,7 @@ const Onboarding: React.FC = () => {
             prodi: formData.prodi,
             whatsapp: formData.whatsapp,
             lineId: formData.lineId,
+            turnstileToken,
           },
         };
 
@@ -200,15 +233,15 @@ const Onboarding: React.FC = () => {
 
           if (response.status === 200) {
             setSuccess(response.data.message);
-            setTimeout(() => {
-              navigate("/login/sso");
-            }, 2000);
+            setTimeout(async () => {
+              await handleSSOLogin("mahasiswa");
+            }, 500);
             setIsLoading(false);
             return resolve();
           }
         } catch (err: any) {
           const { data, statusText } = err.response;
-          let message = data.message;
+          const message = data.message;
           console.log(err.response);
 
           setError({ message, status: statusText });
@@ -259,7 +292,7 @@ const Onboarding: React.FC = () => {
         backgroundImage: `url(${backgroundImg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundBlendMode: "darken", // <-- key line
+        backgroundBlendMode: "darken",
       }}
     >
       <Card className="font-futura mx-2 my-6">
@@ -269,73 +302,81 @@ const Onboarding: React.FC = () => {
             Isi data kamu untuk memasuki website MAXIMA 2025!
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-2">
-          <div className="space-y-2">
-            <label className="text-sm font-title">Nama Lengkap</label>
-            <Input
-              placeholder="Nama Lengkap"
-              value={formData.nama}
-              onChange={handleInputChange("nama")}
-              className={error?.fields?.nama ? "border-red-500" : ""}
-            />
-          </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-title">Email Student</label>
-            <Input
-              placeholder="example@student.umn.ac.id"
-              type="email"
-              value={formData.email}
-              onChange={handleInputChange("email")}
-              className={error?.fields?.email ? "border-red-500" : ""}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-title">Prodi</label>
-            <select
-              value={formData.prodi}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, prodi: e.target.value }))
-              }
-              className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
-                error?.fields?.prodi ? "border-red-500" : ""
-              }`}
-            >
-              <option value="">Pilih Program Studi</option>
-              <option value="Informatika">Informatika</option>
-              <option value="Sistem Informasi">Sistem Informasi</option>
-              <option value="Teknik Komputer">Teknik Komputer</option>
-              <option value="Teknik Elektro">Teknik Elektro</option>
-              <option value="Teknik Fisika">Teknik Fisika</option>
-              <option value="Film & Animasi">Film & Animasi</option>
-              <option value="Arsitektur">Arsitektur</option>
-              <option value="DKV">DKV</option>
-              <option value="Strategic Communication">
-                Strategic Communication
-              </option>
-              <option value="Jurnalistik">Jurnalistik</option>
-              <option value="Akuntansi">Akuntansi</option>
-              <option value="Manajemen">Manajemen</option>
-              <option value="D3 Perhotelan">D3 Perhotelan</option>
-            </select>
-          </div>
-
-          <div className="flex gap-4">
-            <div className="flex-1 space-y-2">
-              <label className="text-sm font-title">NIM</label>
+        {/* form wrapper */}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleRegister();
+          }}
+        >
+          <CardContent className="space-y-2">
+            <div className="space-y-2">
+              <label className="text-sm font-title">Nama Lengkap</label>
               <Input
-                placeholder="00000123456"
-                value={formData.nim}
-                onChange={handleInputChange("nim")}
-                className={error?.fields?.nim ? "border-red-500" : ""}
-                maxLength={11}
+                placeholder="Nama Lengkap"
+                value={formData.nama}
+                onChange={handleInputChange("nama")}
+                className={error?.fields?.nama ? "border-red-500" : ""}
               />
-              {/* <p className="text-xs text-gray-500">
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-title">Email Google</label>
+              <Input
+                placeholder="example@gmail.com"
+                type="email"
+                value={formData.email}
+                onChange={handleInputChange("email")}
+                className={error?.fields?.email ? "border-red-500" : ""}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-title">Prodi</label>
+              <select
+                value={formData.prodi}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, prodi: e.target.value }))
+                }
+                className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                  error?.fields?.prodi ? "border-red-500" : ""
+                }`}
+              >
+                <option value="">Pilih Program Studi</option>
+                <option value="Informatika">Informatika</option>
+                <option value="Sistem Informasi">Sistem Informasi</option>
+                <option value="Teknik Komputer">Teknik Komputer</option>
+                <option value="Teknik Elektro">Teknik Elektro</option>
+                <option value="Teknik Fisika">Teknik Fisika</option>
+                <option value="Film & Animasi">Film & Animasi</option>
+                <option value="Arsitektur">Arsitektur</option>
+                <option value="DKV">DKV</option>
+                <option value="Strategic Communication">
+                  Strategic Communication
+                </option>
+                <option value="Jurnalistik">Jurnalistik</option>
+                <option value="Akuntansi">Akuntansi</option>
+                <option value="Manajemen">Manajemen</option>
+                <option value="D3 Perhotelan">D3 Perhotelan</option>
+              </select>
+            </div>
+
+            <div className="flex gap-4">
+              <div className="flex-1 space-y-2">
+                <label className="text-sm font-title">NIM</label>
+                <Input
+                  placeholder="00000123456"
+                  value={formData.nim}
+                  onChange={handleInputChange("nim")}
+                  className={error?.fields?.nim ? "border-red-500" : ""}
+                  maxLength={11}
+                />
+                {/* <p className="text-xs text-gray-500">
                   Format: 00000XXXXXX (11 digit)
                 </p> */}
-            </div>
-            {/* <div className="flex-1 space-y-2">
+              </div>
+              {/* <div className="flex-1 space-y-2">
                 <label className="text-sm font-title">Angkatan</label>
                 <Input
                   placeholder="2025"
@@ -345,55 +386,62 @@ const Onboarding: React.FC = () => {
                   className={error?.fields?.angkatan ? "border-red-500" : ""}
                 />
               </div> */}
-          </div>
-
-          <div className="flex gap-4">
-            <div className="flex-1 space-y-2">
-              <label className="text-sm font-title">No WhatsApp</label>
-              <Input
-                placeholder="081234567890"
-                value={formData.whatsapp}
-                onChange={handleInputChange("whatsapp")}
-                className={error?.fields?.whatsapp ? "border-red-500" : ""}
-              />
-              {/* <p className="text-xs text-gray-500">Format: 08XXXXXXXXX</p> */}
             </div>
-            <div className="flex-1 space-y-2">
-              <label className="text-sm font-title">ID Line</label>
-              <Input
-                placeholder="johndoe_line"
-                value={formData.lineId}
-                onChange={handleInputChange("lineId")}
-                className={error?.fields?.lineId ? "border-red-500" : ""}
+
+            <div className="flex gap-4">
+              <div className="flex-1 space-y-2">
+                <label className="text-sm font-title">No WhatsApp</label>
+                <Input
+                  placeholder="081234567890"
+                  value={formData.whatsapp}
+                  onChange={handleInputChange("whatsapp")}
+                  className={error?.fields?.whatsapp ? "border-red-500" : ""}
+                />
+                {/* <p className="text-xs text-gray-500">Format: 08XXXXXXXXX</p> */}
+              </div>
+              <div className="flex-1 space-y-2">
+                <label className="text-sm font-title">ID Line</label>
+                <Input
+                  placeholder="johndoe_line"
+                  value={formData.lineId}
+                  onChange={handleInputChange("lineId")}
+                  className={error?.fields?.lineId ? "border-red-500" : ""}
+                />
+              </div>
+            </div>
+            <div className="pl-5">
+              <Turnstile
+                refreshExpired="auto"
+                onVerify={(t) => setTurnstileToken(t)}
+                sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
               />
             </div>
-          </div>
 
-          <Button
-            onClick={handleRegister}
-            disabled={isLoading}
-            className="w-full mt-2 bg-gradient-to-b from-[#B2203B] to-[#5B0712] hover:from-[#a01c34] hover:to-[#4a0510] text-white font-bold font-title disabled:opacity-50"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                MENDAFTAR...
-              </>
-            ) : (
-              "REGISTER"
-            )}
-          </Button>
-
-          <p className="text-sm text-gray-600 text-center">
-            Sudah punya akun?{" "}
-            <span
-              onClick={() => navigate("/login/sso")}
-              className="text-red-700 cursor-pointer underline"
+            <Button
+              onClick={handleRegister}
+              disabled={isLoading}
+              className="w-full bg-gradient-to-b from-[#B2203B] to-[#5B0712] hover:from-[#a01c34] hover:to-[#4a0510] text-white font-bold font-title disabled:opacity-50"
             >
-              Login di sini
-            </span>
-          </p>
-        </CardContent>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  MENDAFTAR...
+                </>
+              ) : (
+                "REGISTER"
+              )}
+            </Button>
+            <p className="text-sm text-gray-600 text-center">
+              Sudah punya akun?
+              <span
+                onClick={async () => await handleSSOLogin("mahasiswa")}
+                className="text-red-700 cursor-pointer underline"
+              >
+                Login di sini
+              </span>
+            </p>
+          </CardContent>
+        </form>
       </Card>
     </section>
   );

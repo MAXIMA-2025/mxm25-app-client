@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/card";
 import backgroundImg from "@/assets/images/onboarding.webp";
 import backdropLogo from "@/assets/images/LogoBackdrop.webp";
+import { toast } from "sonner";
+import axios from "axios";
 
 const titleStyle: React.CSSProperties = {
   fontFamily: "Title Hero, sans-serif",
@@ -35,25 +37,27 @@ const Mahasiswa = () => {
   const [loading, setLoading] = useState(false);
   const isRedirecting = useRef(false); // Prevent double clicks
 
-  const handleSSOLogin = () => {
+  const handleSSOLogin = async (role: string) => {
     // Prevent double execution
     if (isRedirecting.current || loading) return;
+    localStorage.setItem("google-login-role", role);
 
     isRedirecting.current = true;
     setLoading(true);
 
     try {
-      const redirectURL = `${import.meta.env.VITE_CLIENT_URL}/login/sso`;
-      const ssoURL = `https://sso.umn.ac.id/cas/login?service=${encodeURIComponent(
-        redirectURL
-      )}`;
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/auth/google`
+      );
+      const url = res.data?.data?.authUrl;
+      console.log(url);
 
       // Add small delay to ensure state is updated
       setTimeout(() => {
-        window.location.href = ssoURL;
+        window.location.href = url;
       }, 100);
     } catch (error) {
-      console.error("Error redirecting to SSO:", error);
+      toast.error("Failed to generate Google auth URL");
       setLoading(false);
       isRedirecting.current = false;
     }
@@ -93,7 +97,7 @@ const Mahasiswa = () => {
             Selamat Datang di MAXIMA 2025!
           </CardTitle>
           <CardDescription className="font-futura">
-            Segera daftarkan dirimu menggunakan akun student!
+            Segera daftarkan dirimu !
           </CardDescription>
         </CardHeader>
 
@@ -103,15 +107,13 @@ const Mahasiswa = () => {
             onClick={handleYesClick}
             variant="clay"
             className="w-full md:w-1/2"
-            
           >
             REGISTER
           </Button>
           <Button
-            onClick={handleSSOLogin}
+            onClick={async () => await handleSSOLogin("mahasiswa")}
             variant="outline"
             className="w-full md:w-1/2"
-            
           >
             LOGIN
           </Button>

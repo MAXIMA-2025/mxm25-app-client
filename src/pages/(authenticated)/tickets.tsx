@@ -13,9 +13,17 @@ import {
 } from "@/components/ui/card";
 
 import logo from "/favicon.png";
-import { Download, User, Phone, Mail } from "lucide-react";
+import {
+  Download,
+  User,
+  Phone,
+  Mail,
+  TicketCheckIcon,
+  IdCard,
+} from "lucide-react";
 import SadFace from "@/assets/asset_station/sad.gif";
 import type { AxiosError } from "axios";
+import useAuth, { type UserMahasiswa } from "@/hooks/useAuth";
 
 type TicketData = {
   id: number;
@@ -33,6 +41,7 @@ type TicketData = {
 
 const Tickets = () => {
   const api = useApi();
+  const auth = useAuth();
   const {
     data: tickets,
     isLoading,
@@ -111,12 +120,12 @@ const Tickets = () => {
       <div className="w-2/3 md:w-3/4 mx-auto">
         {/* Header */}
         <div className="mb-8 justify-center text-center">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
-            Tiket Ku
+          <h1 className="text-4xl font-fraunces sm:text-4xl font-bold text-gray-900 mb-2">
+            Tiket Saya
           </h1>
           <div className="mt-4 w-50 mx-auto">
-            <div className="bg-[#f2ca45] px-3 py-1 rounded-full">
-              <span className="text-sm font-medium text-[#2B2B2B]">
+            <div className="bg-[#f2ca45] shadow-2xl px-3 py-1 rounded-full">
+              <span className="font-futura font-medium text-md text-[#2B2B2B]">
                 Total: {tickets?.length} tiket
               </span>
             </div>
@@ -140,124 +149,237 @@ const Tickets = () => {
             </div>
           ) : (
             tickets?.map((ticket) => (
-              <div key={ticket.id} className="flex flex-col md:flex-row w-full">
+              <div
+                key={ticket.id}
+                className="flex flex-col justify-center md:flex-row w-full"
+              >
                 {/* Left Section - Ticket Details */}
-                <Card
-                  className="font-futura border-4 w-full border-primary md:rounded-r-none md:border-r-0 md:border-b-4 md:w-[75%] lg:w-[800px] bg-gradient-to-r from-white from-50% to-100% to-secondary rounded-b-none md:rounded-b-xl"
-                  style={{
-                    borderBottom: window.innerWidth <= 768 ? "0px" : undefined,
-                  }}
-                >
-                  <CardHeader className="pb-4">
-                    <div className="flex flex-col sm:flex-row items-center gap-3">
-                      <img
-                        src={logo}
-                        className="h-8 sm:h-10 aspect-auto flex-shrink-0"
-                      />
-                      <div className="flex flex-col text-center sm:text-left">
-                        <CardTitle>
-                          <h2 className="text-lg sm:text-xl md:text-2xl font-bold">
-                            TIKET STATION MAXIMA 2025
-                          </h2>
-                        </CardTitle>
-                        <CardDescription className="text-sm">
-                          Detail tiket dan informasi pemegang tiket
-                        </CardDescription>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="space-y-4">
-                      {/* User Details */}
-                      <div className="space-y-3">
-                        <div className="flex items-start space-x-3">
-                          <div className="bg-gray-100 p-2 rounded-lg flex-shrink-0">
-                            <User size={18} className="text-gray-600" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">
-                              Nama Pemegang Tiket
-                            </p>
-                            <p className="text-sm sm:text-base font-semibold text-gray-900 break-words">
-                              {ticket.namaDepan} {ticket.namaBelakang}
-                            </p>
+                {auth.user?.role === "mahasiswa" ? (
+                  <>
+                    <Card className="font-futura border-4 w-full border-primary border-b-0 md:rounded-r-none md:border-r-0 md:border-b-4  bg-gradient-to-b md:bg-gradient-to-r from-white from-30% to-100%  to-yellow-200 rounded-b-none md:rounded-bl-2xl">
+                      <CardHeader className="">
+                        <div className="flex flex-col sm:flex-row items-center gap-3">
+                          <img
+                            src={logo}
+                            className="h-8 sm:h-10 aspect-auto flex-shrink-0"
+                          />
+                          <div className="flex flex-col text-center sm:text-left">
+                            <CardTitle>
+                              <h2 className="text-lg sm:text-xl md:text-2xl font-bold">
+                                TIKET STATION MAXIMA 2025
+                              </h2>
+                            </CardTitle>
+                            <CardDescription className="text-sm">
+                              Detail tiket dan informasi pemegang tiket
+                            </CardDescription>
                           </div>
                         </div>
-
-                        <div className="flex items-start space-x-3">
-                          <div className="bg-gray-100 p-2 rounded-lg flex-shrink-0">
-                            <Mail size={18} className="text-gray-600" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">
-                              Email
-                            </p>
-                            <p className="text-sm sm:text-base font-semibold text-gray-900 break-all">
-                              {ticket.email}
-                            </p>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <div className="space-y-4">
+                          {/* User Details */}
+                          <div className="space-y-3">
+                            <div className="flex items-start space-x-3">
+                              <div className="bg-gray-100 p-2 rounded-lg flex-shrink-0">
+                                <User size={18} className="text-gray-600" />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">
+                                  Nama Pemegang Tiket
+                                </p>
+                                <p className="text-sm sm:text-lg font-medium text-gray-900 break-words">
+                                  {(auth.user as UserMahasiswa)?.nama}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-start space-x-3">
+                              <div className="bg-gray-100 p-2 rounded-lg flex-shrink-0">
+                                <IdCard size={18} className="text-gray-600" />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">
+                                  NIM
+                                </p>
+                                <p className="text-sm sm:text-base font-medium text-gray-900">
+                                  {(auth.user as UserMahasiswa)?.nim}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-start space-x-3">
+                              <div className="bg-gray-100 p-2 rounded-lg flex-shrink-0">
+                                <Mail size={18} className="text-gray-600" />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">
+                                  Email
+                                </p>
+                                <p className="text-sm sm:text-base font-medium text-gray-900 break-all">
+                                  {(auth.user as UserMahasiswa)?.email}
+                                </p>
+                              </div>
+                            </div>
                           </div>
                         </div>
-
-                        <div className="flex items-start space-x-3">
-                          <div className="bg-gray-100 p-2 rounded-lg flex-shrink-0">
-                            <Phone size={18} className="text-gray-600" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">
-                              Nomor Telepon
-                            </p>
-                            <p className="text-sm sm:text-base font-semibold text-gray-900">
-                              {ticket.noTelp}
-                            </p>
+                      </CardContent>
+                    </Card>
+                    {/* Right Section - QR Code */}
+                    <Card
+                      className="
+                    flex flex-col gap-4 items-center justify-evenly shadow-2xl font-futura
+                    w-auto rounded-t-none md:rounded-tr-2xl md:rounded-l-none
+                    border-4 border-primary
+                    /* styles swap by breakpoint */
+                    [border-top-style:dashed] [border-left-style:solid]
+                    md:[border-top-style:solid] md:[border-left-style:dashed]
+                  "
+                    >
+                      {ticket.isCheckedIn ? (
+                        <div className="flex flex-col  items-center gap-2">
+                          <TicketCheckIcon className="size-12 md:size-18 text-red-700" />
+                          <h1 className=" font-black text-center p-2 px-4 text-red-700 text-4xl md:text-nowrap">
+                            CHECKED IN
+                          </h1>
+                        </div>
+                      ) : (
+                        <>
+                          <img
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticket.ticketId}`}
+                            alt={`QR Code for ${ticket.ticketId}`}
+                            className="size-40 aspect-square mx-14"
+                            loading="lazy"
+                          />
+                          <Button
+                            onClick={() =>
+                              handleDownloadQR(
+                                ticket.ticketId,
+                                `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticket.ticketId}`
+                              )
+                            }
+                            className="w-10/12"
+                            variant="clay"
+                          >
+                            <Download size={14} />
+                            <span>Download</span>
+                          </Button>
+                        </>
+                      )}
+                    </Card>
+                  </>
+                ) : (
+                  <>
+                    {" "}
+                    <Card className="font-futura border-4 w-full border-primary border-b-0 md:rounded-r-none md:border-r-0 md:border-b-4  bg-gradient-to-b md:bg-gradient-to-r from-white from-30% to-100%  to-red-300 rounded-b-none md:rounded-bl-2xl">
+                      <CardHeader className="">
+                        <div className="flex flex-col sm:flex-row items-center gap-3">
+                          <img
+                            src={logo}
+                            className="h-8 sm:h-10 aspect-auto flex-shrink-0"
+                          />
+                          <div className="flex flex-col text-center sm:text-left">
+                            <CardTitle>
+                              <h2 className="text-lg sm:text-xl md:text-2xl font-bold">
+                                TIKET STATION MAXIMA 2025
+                              </h2>
+                            </CardTitle>
+                            <CardDescription className="text-sm">
+                              Detail tiket dan informasi pemegang tiket
+                            </CardDescription>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <div className="space-y-4">
+                          {/* User Details */}
+                          <div className="space-y-3">
+                            <div className="flex items-start space-x-3">
+                              <div className="bg-gray-100 p-2 rounded-lg flex-shrink-0">
+                                <User size={18} className="text-gray-600" />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">
+                                  Nama Pemegang Tiket
+                                </p>
+                                <p className="text-sm sm:text-base font-medium text-gray-900">
+                                  {ticket.namaDepan} {ticket.namaBelakang}
+                                </p>
+                              </div>
+                            </div>
 
-                {/* Right Section - QR Code */}
-                <Card
-                  className="font-futura border-4 w-full border-primary md:rounded-l-none md:border-l-0 md:w-[25%] lg:w-[300px] bg-gradient-to-r from-secondary from-0% to-100% to-white rounded-t-none md:rounded-t-xl border-t-0 md:border-t-4"
-                  style={{
-                    borderLeft:
-                      window.innerWidth >= 768
-                        ? "4px dashed var(--primary)"
-                        : undefined,
-                    borderTop:
-                      window.innerWidth <= 768
-                        ? "4px dashed var(--primary)"
-                        : undefined,
-                  }}
-                >
-                  <CardContent className="p-4 sm:p-6 flex flex-col items-center justify-center min-h-[200px] md:min-h-full">
-                    <div className="text-center space-y-3">
-                      <div className="bg-white p-3 rounded-xl shadow-sm">
-                        <img
-                          src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticket.ticketId}`}
-                          alt={`QR Code for ${ticket.ticketId}`}
-                          className="w-40 h-40 sm:w-24 sm:h-24 md:w-28 md:h-28 mx-auto"
-                          loading="lazy"
-                        />
-                      </div>
+                            <div className="flex items-start space-x-3">
+                              <div className="bg-gray-100 p-2 rounded-lg flex-shrink-0">
+                                <Mail size={18} className="text-gray-600" />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">
+                                  Email
+                                </p>
+                                <p className="text-sm sm:text-base font-medium text-gray-900">
+                                  {ticket.email}
+                                </p>
+                              </div>
+                            </div>
 
-                      <div>
-                        <Button
-                          onClick={() =>
-                            handleDownloadQR(
-                              ticket.ticketId,
-                              `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticket.ticketId}`
-                            )
-                          }
-                          className="cursor-pointer bg-[#90171a] hover:bg-[#701419] text-white text-xs px-3 py-2 rounded-lg flex items-center space-x-2 w-full justify-center transition-colors duration-200"
-                        >
-                          <Download size={14} />
-                          <span>Download</span>
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                            <div className="flex items-start space-x-3">
+                              <div className="bg-gray-100 p-2 rounded-lg flex-shrink-0">
+                                <Phone size={18} className="text-gray-600" />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">
+                                  Nomor Telepon
+                                </p>
+                                <p className="text-sm sm:text-base font-medium text-gray-900">
+                                  {ticket.noTelp}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    {/* Right Section - QR Code */}
+                    <Card
+                      className="
+                    flex flex-col gap-4 items-center justify-evenly shadow-2xl font-futura
+                    w-auto rounded-t-none md:rounded-tr-2xl md:rounded-l-none
+                    border-4 border-primary
+                    /* styles swap by breakpoint */
+                    [border-top-style:dashed] [border-left-style:solid]
+                    md:[border-top-style:solid] md:[border-left-style:dashed]
+                  "
+                    >
+                      {ticket.isCheckedIn ? (
+                        <div className="flex flex-col  items-center gap-2">
+                          <TicketCheckIcon className="size-12 md:size-18 text-red-700" />
+                          <h1 className=" font-black text-center p-2 px-4 text-red-700 text-4xl md:text-nowrap">
+                            CHECKED IN
+                          </h1>
+                        </div>
+                      ) : (
+                        <>
+                          <img
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticket.ticketId}`}
+                            alt={`QR Code for ${ticket.ticketId}`}
+                            className="size-40 aspect-square mx-14"
+                            loading="lazy"
+                          />
+                          <Button
+                            onClick={() =>
+                              handleDownloadQR(
+                                ticket.ticketId,
+                                `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticket.ticketId}`
+                              )
+                            }
+                            className="w-10/12"
+                            variant="clay"
+                          >
+                            <Download size={14} />
+                            <span>Download</span>
+                          </Button>
+                        </>
+                      )}
+                    </Card>
+                  </>
+                )}
               </div>
             ))
           )}
