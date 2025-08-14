@@ -38,7 +38,9 @@ const Oauth = () => {
         // Redirect to dashboard or homepage
         localStorage.removeItem("google-login-role"); // Bersihkan
         setIsLoggedOut(false);
-        nav("/main");
+        setTimeout(() => {
+          nav("/main");
+        }, 5000);
       } catch (err) {
         console.error(err);
         toast.error("Google login failed");
@@ -48,7 +50,7 @@ const Oauth = () => {
     };
 
     handleGoogleCallback();
-  }, [nav]);
+  }, [nav, setIsLoggedOut]);
   return <Loading />;
 };
 
