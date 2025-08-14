@@ -2,12 +2,10 @@ import Navbar from "@/components/main/Navbar";
 import React, { useEffect } from "react";
 import { Outlet } from "react-router";
 import { useNavigate } from "react-router";
-import useAuth from "@/hooks/useAuth";
 import useAuthContext from "@/hooks/useAuthContext";
 import useApi, { type ApiResponse } from "@/hooks/useApi";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import useErrorHandler from "@/hooks/useErrorHandler";
 import { ToggleProvider } from "@/contexts/ToggleContext";
 
 type Toggle = {
