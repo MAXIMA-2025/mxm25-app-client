@@ -13,6 +13,7 @@ import { Button } from "../../components/ui/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import backgroundImg from "@/assets/images/onboarding.webp";
+import Turnstile from "react-turnstile";
 
 // TYPE untuk data form
 type DataMahasiswa = {
@@ -41,6 +42,7 @@ type ErrorState = {
 
 const Onboarding: React.FC = () => {
   const [loading, setLoading] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const isRedirecting = useRef(false); // Prevent double clicks
 
   const handleSSOLogin = async (role: string) => {
@@ -193,6 +195,10 @@ const Onboarding: React.FC = () => {
   };
 
   const handleRegister = async () => {
+    if (!turnstileToken) {
+      toast.error("Selesaikan captcha terlebih dahulu!");
+      return;
+    }
     if (!validateForm()) {
       return;
     }
@@ -214,6 +220,7 @@ const Onboarding: React.FC = () => {
             prodi: formData.prodi,
             whatsapp: formData.whatsapp,
             lineId: formData.lineId,
+            turnstileToken,
           },
         };
 
@@ -402,11 +409,18 @@ const Onboarding: React.FC = () => {
                 />
               </div>
             </div>
+            <div className="pl-5">
+              <Turnstile
+                refreshExpired="auto"
+                onVerify={(t) => setTurnstileToken(t)}
+                sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+              />
+            </div>
 
             <Button
               onClick={handleRegister}
               disabled={isLoading}
-              className="w-full mt-2 bg-gradient-to-b from-[#B2203B] to-[#5B0712] hover:from-[#a01c34] hover:to-[#4a0510] text-white font-bold font-title disabled:opacity-50"
+              className="w-full bg-gradient-to-b from-[#B2203B] to-[#5B0712] hover:from-[#a01c34] hover:to-[#4a0510] text-white font-bold font-title disabled:opacity-50"
             >
               {isLoading ? (
                 <>
