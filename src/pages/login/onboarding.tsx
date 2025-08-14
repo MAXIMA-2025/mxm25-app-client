@@ -40,29 +40,30 @@ type ErrorState = {
 };
 
 const Onboarding: React.FC = () => {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const isRedirecting = useRef(false); // Prevent double clicks
 
-  const handleSSOLogin = () => {
+  const handleSSOLogin = async (role: string) => {
     // Prevent double execution
     if (isRedirecting.current || loading) return;
+    localStorage.setItem("google-login-role", role);
 
     isRedirecting.current = true;
     setLoading(true);
 
     try {
-      const redirectURL = `${import.meta.env.VITE_CLIENT_URL}/login/sso`;
-      const ssoURL = `https://sso.umn.ac.id/cas/login?service=${encodeURIComponent(
-        redirectURL
-      )}`;
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/auth/google`
+      );
+      const url = res.data?.data?.authUrl;
+      console.log(url);
 
       // Add small delay to ensure state is updated
       setTimeout(() => {
-        window.location.href = ssoURL;
+        window.location.href = url;
       }, 100);
     } catch (error) {
-      console.error("Error redirecting to SSO:", error);
+      toast.error("Failed to generate Google auth URL");
       setLoading(false);
       isRedirecting.current = false;
     }
@@ -132,11 +133,11 @@ const Onboarding: React.FC = () => {
     }
 
     // Validate email format and domain
-    const emailPattern = /^[^\s@]+@student\.umn\.ac\.id$/;
+    const emailPattern = /^[^\s@]+@gmail\.com$/;
     if (!emailPattern.test(formData.email)) {
       setError({
         message: "Format email tidak valid!",
-        fields: { email: "Email harus menggunakan domain @student.umn.ac.id" },
+        fields: { email: "Email harus menggunakan domain @gmail.com" },
       });
       return false;
     }
@@ -225,15 +226,15 @@ const Onboarding: React.FC = () => {
 
           if (response.status === 200) {
             setSuccess(response.data.message);
-            setTimeout(() => {
-              handleSSOLogin();
+            setTimeout(async () => {
+              await handleSSOLogin("mahasiswa");
             }, 500);
             setIsLoading(false);
             return resolve();
           }
         } catch (err: any) {
           const { data, statusText } = err.response;
-          let message = data.message;
+          const message = data.message;
           console.log(err.response);
 
           setError({ message, status: statusText });
@@ -314,9 +315,9 @@ const Onboarding: React.FC = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-title">Email Student</label>
+              <label className="text-sm font-title">Email Google</label>
               <Input
-                placeholder="example@student.umn.ac.id"
+                placeholder="example@gmail.com"
                 type="email"
                 value={formData.email}
                 onChange={handleInputChange("email")}
@@ -419,10 +420,9 @@ const Onboarding: React.FC = () => {
             <p className="text-sm text-gray-600 text-center">
               Sudah punya akun?
               <span
-                onClick={handleSSOLogin}
+                onClick={async () => await handleSSOLogin("mahasiswa")}
                 className="text-red-700 cursor-pointer underline"
               >
-
                 Login di sini
               </span>
             </p>
