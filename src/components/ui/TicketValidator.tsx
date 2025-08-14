@@ -39,7 +39,7 @@ const TicketValidator: React.FC<TicketValidatorProps> = ({ ticketId }) => {
       if (result.status !== "success") {
         throw new Error(result.message || "Failed to retrieve ticket data");
       }
-      return result.data;
+      return result;
     },
     enabled: !!ticketId,
     retry: false,
