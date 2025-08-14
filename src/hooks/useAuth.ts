@@ -7,7 +7,7 @@ import useApi, { type ApiResponse } from "./useApi";
 import useErrorHandler from "./useErrorHandler";
 import useAuthContext from "./useAuthContext";
 
-export type Auth<T = UserPanitia | UserOrganisator | UserEksternal> = {
+export type Auth<T = UserPanitia | UserOrganisator | UserEksternal | UserMahasiswa> = {
   user: T | undefined;
   status: "error" | "success" | "pending";
   isLoading: boolean;
@@ -17,7 +17,7 @@ export type Auth<T = UserPanitia | UserOrganisator | UserEksternal> = {
     options?: RefetchOptions
   ) => Promise<
     QueryObserverResult<
-      ApiResponse<UserPanitia | UserOrganisator | UserEksternal>,
+      ApiResponse<UserPanitia | UserOrganisator | UserEksternal| UserMahasiswa>,
       Error
     >
   >;
@@ -61,13 +61,27 @@ export type UserEksternal = {
   email: string;
 };
 
+// {"json":{"uuid":"b9d17ad5-a48c-4603-9351-44347cdd9a1d","nim":"00000090103","nama":"deswandy wong","email":"deswandy.wong@student.umn.ac.id","angkatan":2025,"prodi":"Teknik Komputer","whatsapp":"081290949233","lineId":"deswadny_123","role":"mahasiswa"}}
+
+export type UserMahasiswa = {
+  uuid: string;
+  nim: number;
+  nama: string;
+  email: string;
+  angkatan: number;
+  prodi: string;
+  whatsapp: string;
+  lineId: string;
+  role: string;
+};
+
 const useAuth = () => {
   const { isLoggedOut } = useAuthContext();
   const api = useApi();
   const { handleError } = useErrorHandler(["authUser"]);
 
   const { data, isLoading, error, status, refetch } = useQuery<
-    ApiResponse<UserPanitia | UserOrganisator | UserEksternal>
+    ApiResponse<UserPanitia | UserOrganisator | UserEksternal | UserMahasiswa>
   >({
     queryKey: ["authUser"],
     queryFn: async () => {

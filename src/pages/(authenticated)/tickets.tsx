@@ -227,7 +227,7 @@ const Tickets = () => {
                     md:[border-top-style:solid] md:[border-left-style:dashed]
                   "
                 >
-                  {!ticket.isCheckedIn ? (
+                  {ticket.isCheckedIn ? (
                     <div className="flex flex-col  items-center gap-2">
                       <TicketCheckIcon className="size-12 md:size-18 text-red-700" />
                       <h1 className=" font-black text-center p-2 px-4 text-red-700 text-4xl md:text-nowrap">
