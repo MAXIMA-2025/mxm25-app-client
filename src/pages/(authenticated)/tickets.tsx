@@ -13,9 +13,10 @@ import {
 } from "@/components/ui/card";
 
 import logo from "/favicon.png";
-import { Download, User, Phone, Mail } from "lucide-react";
+import { Download, User, Phone, Mail, TicketCheckIcon } from "lucide-react";
 import SadFace from "@/assets/asset_station/sad.gif";
 import type { AxiosError } from "axios";
+import useAuth from "@/hooks/useAuth";
 
 type TicketData = {
   id: number;
@@ -33,6 +34,7 @@ type TicketData = {
 
 const Tickets = () => {
   const api = useApi();
+  const auth = useAuth();
   const {
     data: tickets,
     isLoading,
@@ -111,12 +113,12 @@ const Tickets = () => {
       <div className="w-2/3 md:w-3/4 mx-auto">
         {/* Header */}
         <div className="mb-8 justify-center text-center">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+          <h1 className="text-4xl font-fraunces sm:text-4xl font-bold text-gray-900 mb-2">
             Tiket Ku
           </h1>
           <div className="mt-4 w-50 mx-auto">
-            <div className="bg-[#f2ca45] px-3 py-1 rounded-full">
-              <span className="text-sm font-medium text-[#2B2B2B]">
+            <div className="bg-[#f2ca45] shadow-2xl px-3 py-1 rounded-full">
+              <span className="font-futura font-medium text-md text-[#2B2B2B]">
                 Total: {tickets?.length} tiket
               </span>
             </div>
@@ -140,15 +142,14 @@ const Tickets = () => {
             </div>
           ) : (
             tickets?.map((ticket) => (
-              <div key={ticket.id} className="flex flex-col md:flex-row w-full">
+              <div
+                key={ticket.id}
+                className="flex flex-col justify-center md:flex-row w-full"
+              >
                 {/* Left Section - Ticket Details */}
-                <Card
-                  className="font-futura border-4 w-full border-primary md:rounded-r-none md:border-r-0 md:border-b-4 md:w-[75%] lg:w-[800px] bg-gradient-to-r from-white from-50% to-100% to-secondary rounded-b-none md:rounded-b-xl"
-                  style={{
-                    borderBottom: window.innerWidth <= 768 ? "0px" : undefined,
-                  }}
-                >
-                  <CardHeader className="pb-4">
+
+                <Card className="font-futura border-4 w-full border-primary border-b-0 md:rounded-r-none md:border-r-0 md:border-b-4  bg-gradient-to-b md:bg-gradient-to-r from-white from-50% to-100%  to-yellow-200 rounded-b-none md:rounded-bl-2xl">
+                  <CardHeader className="">
                     <div className="flex flex-col sm:flex-row items-center gap-3">
                       <img
                         src={logo}
@@ -215,48 +216,47 @@ const Tickets = () => {
                     </div>
                   </CardContent>
                 </Card>
-
                 {/* Right Section - QR Code */}
                 <Card
-                  className="font-futura border-4 w-full border-primary md:rounded-l-none md:border-l-0 md:w-[25%] lg:w-[300px] bg-gradient-to-r from-secondary from-0% to-100% to-white rounded-t-none md:rounded-t-xl border-t-0 md:border-t-4"
-                  style={{
-                    borderLeft:
-                      window.innerWidth >= 768
-                        ? "4px dashed var(--primary)"
-                        : undefined,
-                    borderTop:
-                      window.innerWidth <= 768
-                        ? "4px dashed var(--primary)"
-                        : undefined,
-                  }}
+                  className="
+                    flex flex-col gap-4 items-center justify-evenly shadow-2xl font-futura
+                    w-auto rounded-t-none md:rounded-tr-2xl md:rounded-l-none
+                    border-4 border-primary
+                    /* styles swap by breakpoint */
+                    [border-top-style:dashed] [border-left-style:solid]
+                    md:[border-top-style:solid] md:[border-left-style:dashed]
+                  "
                 >
-                  <CardContent className="p-4 sm:p-6 flex flex-col items-center justify-center min-h-[200px] md:min-h-full">
-                    <div className="text-center space-y-3">
-                      <div className="bg-white p-3 rounded-xl shadow-sm">
-                        <img
-                          src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticket.ticketId}`}
-                          alt={`QR Code for ${ticket.ticketId}`}
-                          className="w-40 h-40 sm:w-24 sm:h-24 md:w-28 md:h-28 mx-auto"
-                          loading="lazy"
-                        />
-                      </div>
-
-                      <div>
-                        <Button
-                          onClick={() =>
-                            handleDownloadQR(
-                              ticket.ticketId,
-                              `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticket.ticketId}`
-                            )
-                          }
-                          className="cursor-pointer bg-[#90171a] hover:bg-[#701419] text-white text-xs px-3 py-2 rounded-lg flex items-center space-x-2 w-full justify-center transition-colors duration-200"
-                        >
-                          <Download size={14} />
-                          <span>Download</span>
-                        </Button>
-                      </div>
+                  {ticket.isCheckedIn ? (
+                    <div className="flex flex-col  items-center gap-2">
+                      <TicketCheckIcon className="size-12 md:size-18 text-red-700" />
+                      <h1 className=" font-black text-center p-2 px-4 text-red-700 text-4xl md:text-nowrap">
+                        CHECKED IN
+                      </h1>
                     </div>
-                  </CardContent>
+                  ) : (
+                    <>
+                      <img
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticket.ticketId}`}
+                        alt={`QR Code for ${ticket.ticketId}`}
+                        className="size-40 aspect-square mx-14"
+                        loading="lazy"
+                      />
+                      <Button
+                        onClick={() =>
+                          handleDownloadQR(
+                            ticket.ticketId,
+                            `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticket.ticketId}`
+                          )
+                        }
+                        className="w-10/12"
+                        variant="clay"
+                      >
+                        <Download size={14} />
+                        <span>Download</span>
+                      </Button>
+                    </>
+                  )}
                 </Card>
               </div>
             ))
