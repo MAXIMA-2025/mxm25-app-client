@@ -43,8 +43,8 @@ const TicketPage = () => {
         backgroundSize: "cover",
       }}
     >
-      <h1 className="text-4xl font-fraunces sm:text-4xl font-bold text-gray-900 mb-2">
-        Tiket Ku
+      <h1 className="text-4xl font-fraunces sm:text-4xl font-bold text-gray-900 mb-6">
+        Tiket Saya
       </h1>
       <TicketValidator ticketId={ticketId} />
     </section>

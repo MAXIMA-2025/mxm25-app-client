@@ -58,6 +58,9 @@ const Index: React.FC = () => {
   //  set semua field di form ini menjadi kosong, kecuali jumlahTiket harus di 1.
 
   const auth = useAuth();
+  useEffect(()=>{
+    auth.user?.role==="mahasiswa" && nav("/station/mahasiswa")
+  })
   useEffect(() => {
     const user = auth.user;
 
