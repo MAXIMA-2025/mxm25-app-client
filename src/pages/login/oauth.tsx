@@ -40,7 +40,7 @@ const Oauth = () => {
         setIsLoggedOut(false);
         setTimeout(() => {
           nav("/main");
-        }, 5000);
+        }, 10000);
       } catch (err) {
         console.error(err);
         toast.error("Google login failed");
