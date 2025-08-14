@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
 import Loading from "@/components/loading";
+import useAuthContext from "@/hooks/useAuthContext";
 
 const Oauth = () => {
   const nav = useNavigate();
+  const { setIsLoggedOut } = useAuthContext();
 
   useEffect(() => {
     const handleGoogleCallback = async () => {
@@ -35,6 +37,7 @@ const Oauth = () => {
         toast.success(message);
         // Redirect to dashboard or homepage
         localStorage.removeItem("google-login-role"); // Bersihkan
+        setIsLoggedOut(false);
         nav("/main");
       } catch (err) {
         console.error(err);
