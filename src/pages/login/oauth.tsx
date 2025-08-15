@@ -29,19 +29,20 @@ const Oauth = () => {
         toast.success(res.data.message);
         localStorage.removeItem("google-login-role");
         setIsLoggedOut(false);
+        nav("/main");
 
         // ✅ Verify login by fetching the logged-in user
-        const userRes = await axios.get(
-          `${import.meta.env.VITE_API_URL}/auth/me`,
-          { withCredentials: true }
-        );
+        // const userRes = await axios.get(
+        //   `${import.meta.env.VITE_API_URL}/auth/me`,
+        //   { withCredentials: true }
+        // );
 
-        if (userRes.data?.status === "success") {
-          nav("/main");
-        } else {
-          toast.error("Login verification failed.");
-          nav("/login");
-        }
+        // if (userRes.data?.status === "success") {
+        //   nav("/main");
+        // } else {
+        //   toast.error("Login verification failed.");
+        //   nav("/login");
+        // }
       } catch (err) {
         console.log("ada error");
         if (axios.isAxiosError(err)) {
