@@ -56,8 +56,8 @@ const setupInterceptors = (
         originalRequest._retry = true;
         try {
           await refreshToken();
-          // return api(originalRequest);
-          return;
+          return api(originalRequest);
+          // return;
         } catch (error) {
           queryClient.removeQueries({ queryKey: ["authUser"] });
           setIsLoggedOut(true);
