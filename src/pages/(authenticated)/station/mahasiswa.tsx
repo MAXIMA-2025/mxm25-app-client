@@ -13,7 +13,7 @@ import useAuth, { type UserMahasiswa } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
 
-const allowedPrefixes = ["999999", "999001", "999004", "999003", "99902000"];
+const allowedPrefixes = ["999999", "999001","999002", "999004", "999003", "99902000"];
 
 const checkPrefix = (allowed: string[]) => (val: string) =>
   allowed.some((prefix) => val.startsWith(prefix));
