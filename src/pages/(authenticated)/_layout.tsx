@@ -1,12 +1,12 @@
 import Navbar from "@/components/main/Navbar";
 import React, { useEffect } from "react";
-import { Outlet } from "react-router";
-import { useNavigate } from "react-router";
-import useAuthContext from "@/hooks/useAuthContext";
+import { Outlet, useNavigate } from "react-router-dom";
 import useApi, { type ApiResponse } from "@/hooks/useApi";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ToggleProvider } from "@/contexts/ToggleContext";
+import useAuth from "@/hooks/useAuth";
+import Loading from "@/components/loading";
 
 type Toggle = {
   id: number;
@@ -16,26 +16,43 @@ type Toggle = {
 
 const Layout = () => {
   const nav = useNavigate();
-  const { isLoggedOut } = useAuthContext();
   const api = useApi();
+  const {
+    user,
+    isLoading: authLoading,
+    error: authError,
+    status: authStatus,
+  } = useAuth();
 
-  const { data: toggleAcara, status } = useQuery({
+  // Call useQuery ALWAYS, but control execution via enabled flag
+  const { data: toggleAcara, status: toggleStatus } = useQuery({
     queryKey: ["toggles"],
     queryFn: async () => {
       const resp = await api.get<ApiResponse<Toggle[]>>("/toggle");
       return resp.data;
     },
+    enabled: !!user, // won't fetch until user exists
   });
 
+  // Redirect after auth check
   useEffect(() => {
-    if (isLoggedOut) {
+    if (!authLoading && (authStatus === "error" || !user)) {
       toast.error("Silahkan login terlebih dahulu");
       nav("/login");
     }
-  }, [nav, isLoggedOut]);
+  }, [authLoading, authStatus, user, nav]);
 
-  // Map react-query status to ToggleContextType status
-  const mappedStatus = status === "pending" ? "loading" : status;
+  // Show loading until auth finishes
+  if (authLoading) {
+    return <Loading />;
+  }
+
+  // Block render until redirect happens
+  if (authStatus === "error" || !user) {
+    return null;
+  }
+
+  const mappedStatus = toggleStatus === "pending" ? "loading" : toggleStatus;
 
   return (
     <ToggleProvider
