@@ -3,6 +3,9 @@ import { Outlet, useNavigate } from "react-router-dom";
 import useApi, { type ApiResponse } from "@/hooks/useApi";
 import { useQuery } from "@tanstack/react-query";
 import { ToggleProvider } from "@/contexts/ToggleContext";
+import { useEffect } from "react";
+import useAuthContext from "@/hooks/useAuthContext";
+import { toast } from "sonner";
 // import useAuth from "@/hooks/useAuth";
 // import Loading from "@/components/loading";
 
@@ -15,12 +18,21 @@ type Toggle = {
 const Layout = () => {
   const nav = useNavigate();
   const api = useApi();
+  const { isLoggedOut } = useAuthContext();
   // const {
   //   user,
   //   isLoading: authLoading,
   //   error: authError,
   //   status: authStatus,
   // } = useAuth();
+
+  useEffect(() => {
+    if (isLoggedOut) {
+      console.log("No jwt tokens, logging out ...");
+      toast.error("Session berakhir. Silahkan login lagi");
+      nav("/login");
+    }
+  }, [nav, isLoggedOut]);
 
   // Call useQuery ALWAYS, but control execution via enabled flag
   const { data: toggleAcara, status: toggleStatus } = useQuery({
