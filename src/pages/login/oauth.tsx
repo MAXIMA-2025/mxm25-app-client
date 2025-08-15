@@ -41,9 +41,23 @@ const Oauth = () => {
           nav("/main");
         }, 10000);
       } catch (err) {
-        console.error(err);
-        toast.error("Google login failed");
-        localStorage.removeItem("google-login-role"); // Bersihkan
+        if (axios.isAxiosError(err)) {
+          console.error("Google login failed:", {
+            message: err.message,
+            status: err.response?.status,
+            data: err.response?.data,
+            headers: err.response?.headers,
+            config: err.config,
+          });
+          toast.error(
+            err.response?.data?.message || `Google login failed: ${err.message}`
+          );
+        } else {
+          console.error("Unexpected error:", err);
+          toast.error("An unexpected error occurred during Google login");
+        }
+
+        localStorage.removeItem("google-login-role");
         nav("/login");
       }
     };
