@@ -20,27 +20,30 @@ const Oauth = () => {
         return;
       }
       try {
-        // Send the code to your backend
         const res = await axios.post(
           `${import.meta.env.VITE_API_URL}/auth/google/callback`,
-          {
-            role,
-          },
-          {
-            params: { code },
-            withCredentials: true, // if backend sets cookies
-          }
+          { role },
+          { params: { code }, withCredentials: true }
         );
 
-        const { message } = res.data;
-        toast.success(message);
-        // Redirect to dashboard or homepage
-        localStorage.removeItem("google-login-role"); // Bersihkan
+        toast.success(res.data.message);
+        localStorage.removeItem("google-login-role");
         setIsLoggedOut(false);
-        setTimeout(() => {
+
+        // ✅ Verify login by fetching the logged-in user
+        const userRes = await axios.get(
+          `${import.meta.env.VITE_API_URL}/auth/me`,
+          { withCredentials: true }
+        );
+
+        if (userRes.data?.status === "success") {
           nav("/main");
-        }, 10000);
+        } else {
+          toast.error("Login verification failed.");
+          nav("/login");
+        }
       } catch (err) {
+        console.log("ada error");
         if (axios.isAxiosError(err)) {
           console.error("Google login failed:", {
             message: err.message,
