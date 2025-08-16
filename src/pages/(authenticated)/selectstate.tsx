@@ -3,7 +3,11 @@ import React, { useState, useMemo } from 'react';
 // Assets Import
 import backgroundImage from "@/assets/images/background_state.webp";
 import petaImage from "@/assets/images/peta-state.webp";
-import acesLogoImage from "@/assets/images/aces.webp";
+
+//Logo UKM
+import acesLogoImage from "@/assets/images/logoUkm/aces.webp";
+import teaterKatakLogo from "@/assets/images/logoUkm/katak.webp";
+import kspmLogo from "@/assets/images/logoUkm/kspm.webp";
 
 // Components
 import UkmCard from "@/components/state/UkmCard";
@@ -59,6 +63,7 @@ const DateFilter: React.FC<DateFilterProps> = ({ onFilterChange, className = "" 
 // Main Component
 const SelectState: React.FC = () => {
   const [selectedFilter, setSelectedFilter] = useState<number | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const dummyUkm = [
     {
@@ -73,23 +78,23 @@ const SelectState: React.FC = () => {
     },
     {
       id: 2,
-      name: "Tech Innovators Club",
+      name: "Teater Katak",
       date: "16 Agustus 1945",
       dateDay: 4,
-      location: "Gedung Informatika",
+      location: "Damen",
       capacity: 100,
       filledCapacity: 25,
-      logo: acesLogoImage,
+      logo: teaterKatakLogo,
     },
     {
       id: 3,
-      name: "Green Earth Society",
+      name: "KSPM UMN",
       date: "15 Agustus 1945",
       dateDay: 3,
       location: "Taman Kampus",
       capacity: 100,
       filledCapacity: 50,
-      logo: acesLogoImage,
+      logo: kspmLogo,
     },
     {
       id: 4,
@@ -152,14 +157,19 @@ const SelectState: React.FC = () => {
       logo: acesLogoImage,
     },
   ];
-
-  // Filter UKM berdasarkan hari yang dipilih
+  // Filter UKM berdasarkan hari yang dipilih dan search term
   const filteredUkm = useMemo(() => {
-    if (selectedFilter === null) {
-      return dummyUkm;
+    let filtered = dummyUkm;
+    if (selectedFilter !== null) {
+      filtered = filtered.filter(ukm => ukm.dateDay === selectedFilter);
     }
-    return dummyUkm.filter(ukm => ukm.dateDay === selectedFilter);
-  }, [selectedFilter, dummyUkm]);
+    if (searchTerm.trim() !== "") {
+      filtered = filtered.filter(ukm =>
+        ukm.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    return filtered;
+  }, [selectedFilter, searchTerm, dummyUkm]);
 
   const handleFilterChange = (day: number | null) => {
     setSelectedFilter(day);
@@ -183,7 +193,7 @@ const SelectState: React.FC = () => {
         }
 
         .card-hover:hover {
-          transform: translateY(-10px);
+          transform: translateY(-2px);
           box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
@@ -446,7 +456,7 @@ const SelectState: React.FC = () => {
               STATE
             </h1>
             <p className="text-lg md:text-xl text-blue-100 max-w-md mx-auto leading-relaxed">
-              Lorem Dolor Ipsum Amet Sit, Haha hihi wow!
+              Pilih STATE kamu!
             </p>
           </header>
 
@@ -457,6 +467,25 @@ const SelectState: React.FC = () => {
               className="w-full"
             />
           </div>
+
+          {/* Search Feature */}
+            <div className="mb-8 w-full max-w-2xl bg-[#F5DEB3] rounded-xl relative">
+            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#722F37]">
+              {/* Search Icon SVG */}
+              <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="7" stroke="#722F37" strokeWidth="2"/>
+              <path d="M20 20L16.65 16.65" stroke="#722F37" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </span>
+            <input
+              type="text"
+              placeholder="Cari STATE..."
+              className="w-full pl-12 pr-5 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#722F37] text-lg shadow-md"
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              aria-label="Cari STATE"
+            />
+            </div>
 
           {/* Filter Status */}
           <div className="text-center mb-12">
@@ -491,8 +520,8 @@ const SelectState: React.FC = () => {
           {filteredUkm.length === 0 && (
             <div className="text-center py-12">
               <div className="bg-white bg-opacity-90 backdrop-blur-md rounded-xl p-8 shadow-lg">
-                <p className="text-xl text-gray-600 mb-2">Tidak ada UKM untuk hari yang dipilih</p>
-                <p className="text-gray-500">Silakan pilih hari lain atau klik tombol hari yang sudah aktif untuk menampilkan semua UKM</p>
+                <p className="text-xl text-gray-600 mb-2">Tidak ada UKM untuk dari hari yang kamu pilih atau kamu cari</p>
+                <p className="text-gray-500">Pastikan kamu telah memilih hari yang benar dan sesuai dengan pencarianmu.</p>
               </div>
             </div>
           )}

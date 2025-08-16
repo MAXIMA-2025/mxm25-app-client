@@ -2,7 +2,7 @@ import React from 'react';
 
 // Asset imports
 import backgroundImage from '@/assets/images/background_state.webp';
-import acesLogoImage from '@/assets/images/aces.webp';
+import acesLogoImage from '@/assets/images/logoUkm/aces.webp';
 
 //State Card Slot configuration
 import EmptyCard from '@/components/state/EmptyState';
