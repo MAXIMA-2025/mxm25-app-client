@@ -324,9 +324,9 @@ const SelectState: React.FC = () => {
           border-radius: 20px;
           padding: 16px 20px;
           display: flex;
-          justify-content: space-between;
+          justify-content: center;
           align-items: center;
-          gap: 12px;
+          gap: 20px;
           box-shadow: 
             inset 0 2px 8px rgba(139, 69, 19, 0.1),
             inset 0 -1px 3px rgba(245, 222, 179, 0.8);
@@ -461,7 +461,7 @@ const SelectState: React.FC = () => {
           </header>
 
           {/* Date Filter */}
-          <div className="mt-4 mb-8 w-full max-w-2xl">
+          <div className="mt-4 mb-8 max-w-2xl">
             <DateFilter 
               onFilterChange={handleFilterChange}
               className="w-full"
