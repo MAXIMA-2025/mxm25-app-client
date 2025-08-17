@@ -1,57 +1,96 @@
-import React from 'react';
-import FooterMaxima from '@/assets/images/footer/footer maxima-01.png';
-import LogoSponsor from '@/assets/images/footer/LOGO SPONSOR.png';
-import Medpar from '@/assets/images/footer/MEDPAR-01.png';
-import MaximaLogo from '@/assets/images/logo.png';
-import InstagramIcon from '@/assets/images/footer/Instagram.png';
-import LineIcon from '@/assets/images/footer/Line.png';
-import YoutubeIcon from '@/assets/images/footer/Youtube.png';
-import TiktokIcon from '@/assets/images/footer/Tiktok.png';
+import React from "react";
+import FooterBg1 from "@/assets/images/footer/FOOTER MAXIMA1-01.png";
+import FooterBg2 from "@/assets/images/footer/footer maxima-02.png";
+import FooterBg3 from "@/assets/images/footer/FOOTER MAXIMA1-03.png";
+import FooterBg4 from "@/assets/images/footer/FOOTER MAXIMA1-04.png";
+import LogoSponsor from "@/assets/images/footer/LOGO SPONSOR.png";
+import Medpar from "@/assets/images/footer/MEDPAR-01.png";
+import MaximaLogo from "@/assets/images/logo.png";
+import InstagramIcon from "@/assets/images/footer/Instagram.png";
+import LineIcon from "@/assets/images/footer/Line.png";
+import YoutubeIcon from "@/assets/images/footer/Youtube.png";
+import TiktokIcon from "@/assets/images/footer/Tiktok.png";
 
 const FooterSection: React.FC = () => {
   return (
     <footer
-      className="relative w-full h-screen overflow-hidden bg-no-repeat bg-center"
+      className="relative w-full min-h-[720px] bg-no-repeat"
       style={{
-        backgroundImage: `url(${FooterMaxima})`,
-        backgroundSize: '100% 100%',
+        backgroundImage: `url(${FooterBg2}), url(${FooterBg1})`,
+        backgroundPosition: "top center, bottom center",
+        backgroundRepeat: "no-repeat, no-repeat",
+        backgroundSize: "100% 100%, 100% 100%",
       }}
     >
-      <div
-        className="absolute top-[10%] left-[4%] w-[42%]
-                   sm:left-[5%] sm:w-[40%]
-                   md:left-[6%] md:w-[38%]
-                   lg:left-[7%] lg:w-[36%]
-                   xl:left-[8%] xl:w-[34%]
-                   2xl:left-[9%] 2xl:w-[32%]"
-      >
-        <img
-          src={LogoSponsor}
-          alt=""
-          className="w-full h-auto object-contain"
-        />
-      </div>
+      {/* Hiasan Kiri */}
+      <img
+        src={FooterBg3}
+        alt=""
+        className="
+    absolute left-0 bottom-0 object-fill
+    w-[120%] h-[100%]
+    sm:w-[120%] sm:h-[100%]
+    md:w-[110%] md:h-[100%]
+    lg:w-[110%] lg:h-[100%]
+    xl:w-[100%] xl:h-[100%]
+    2xl:w-[100%] 2xl:h-[100%]
+  "
+      />
 
+      {/* Hiasan Kanan */}
+      <img
+        src={FooterBg4}
+        alt=""
+        className="
+    absolute right-0 bottom-0 object-fill
+    w-[120%] h-[100%]
+    sm:w-[120%] sm:h-[100%]
+    md:w-[110%] md:h-[100%]
+    lg:w-[110%] lg:h-[100%]
+    xl:w-[100%] xl:h-[100%]
+    2xl:w-[100%] 2xl:h-[100%]
+  "
+      />
+
+      {/* Sponsor & Medpar Wrapper */}
       <div
-        className="absolute top-[10%] right-[4%] w-[42%]
-                   sm:right-[5%] sm:w-[40%]
-                   md:right-[6%] md:w-[38%]
-                   lg:right-[7%] lg:w-[36%]
-                   xl:right-[8%] xl:w-[34%]
-                   2xl:right-[9%] 2xl:w-[32%]"
+        className="
+          absolute top-[4%] left-0 w-full
+          flex flex-col items-center
+          md:flex-row md:justify-between md:px-[6%]
+        "
       >
-        <img
-          src={Medpar}
-          alt=""
-          className="w-full h-auto object-contain"
-        />
+       {/* Logo Sponsor */}
+<div className="w-[50%] xs:w-[45%] sm:w-[38%] md:w-[40%] flex flex-col items-center order-1 md:order-1">
+  <span className="font-lexend font-bold text-[2.5vw] xs:text-[3vw] sm:text-[2.5vw] md:text-[1.8vw] text-[#8B4513] mb-1 text-center">
+    Sponsored By
+  </span>
+  <img
+    src={LogoSponsor}
+    alt="Sponsor"
+    className="w-full h-auto object-contain"
+  />
+</div>
+
+{/* Medpar */}
+<div className="w-[50%] xs:w-[45%] sm:w-[38%] md:w-[40%] flex flex-col items-center order-2 md:order-2">
+  <span className="font-lexend font-bold text-[2.5vw] xs:text-[3vw] sm:text-[2.5vw] md:text-[1.8vw] text-[#8B4513] mb-1 text-center">
+    Media Partners
+  </span>
+  <img
+    src={Medpar}
+    alt="Medpar"
+    className="w-full h-auto object-contain"
+  />
+</div>
+
       </div>
 
       {/* Location Section */}
       <div
-        className="absolute bottom-[13%] left-[10%] w-[30%]
-                   sm:bottom-[13%] sm:left-[10%] sm:w-[32%]
-                   md:bottom-[13%] md:left-[10%] md:w-[28%]
+        className="absolute bottom-[14%] left-[10%] w-[30%]
+                   sm:bottom-[14%] sm:left-[10%] sm:w-[32%]
+                   md:bottom-[14%] md:left-[10%] md:w-[28%]
                    lg:bottom-[13%] lg:left-[10%] lg:w-[25%]
                    xl:bottom-[13%] xl:left-[10%] xl:w-[23%]
                    2xl:bottom-[13%] 2xl:left-[12%] 2xl:w-[20%]
@@ -93,20 +132,18 @@ const FooterSection: React.FC = () => {
                    xl:bottom-[11%]
                    2xl:bottom-[7%]"
       >
-        <span
-          className="font-lexend font-bold text-[3vw] sm:text-[2.5vw] md:text-[2vw] lg:text-[1.8vw] xl:text-[1.5vw] 2xl:text-[1.2vw] leading-none tracking-normal text-black text-center"
-        >
+        <span className="font-lexend font-bold text-[3vw] sm:text-[2.5vw] md:text-[2vw] lg:text-[1.8vw] xl:text-[1.5vw] 2xl:text-[1.2vw] leading-none tracking-normal text-black text-center">
           Made by Nexus MAXIMA 2025
         </span>
       </div>
 
-        {/* MEDSOS */}
+      {/* MEDSOS */}
       <div
-        className="absolute bottom-[15%] right-[7%]
-                   sm:bottom-[15%] sm:right-[7%]
-                   md:bottom-[15%] md:right-[9%]
-                   lg:bottom-[12%] lg:right-[14%]
-                   xl:bottom-[12%] xl:right-[14%]
+        className="absolute bottom-[15%] right-[2%]
+                   sm:bottom-[15%] sm:right-[2%]
+                   md:bottom-[15%] md:right-[8%]
+                   lg:bottom-[12%] lg:right-[8%]
+                   xl:bottom-[12%] xl:right-[10%]
                    2xl:bottom-[7%] 2xl:right-[14%]
                    flex flex-col gap-4"
       >
@@ -124,9 +161,7 @@ const FooterSection: React.FC = () => {
                        2xl:w-[13%] 2xl:h-[10%]
                        object-contain cursor-pointer hover:opacity-80 transition-opacity"
           />
-          <span
-            className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-lexend font-normal not-italic leading-none tracking-normal text-black drop-shadow-md"
-          >
+          <span className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-lexend font-normal not-italic leading-none tracking-normal text-black drop-shadow-md">
             @maxima_umn
           </span>
         </div>
@@ -145,9 +180,7 @@ const FooterSection: React.FC = () => {
                        2xl:w-[13%] 2xl:h-[10%]
                        object-contain cursor-pointer hover:opacity-80 transition-opacity"
           />
-          <span
-            className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-lexend font-normal not-italic leading-none tracking-normal text-black drop-shadow-md"
-          >
+          <span className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-lexend font-normal not-italic leading-none tracking-normal text-black drop-shadow-md">
             @maxima_umn
           </span>
         </div>
@@ -166,9 +199,7 @@ const FooterSection: React.FC = () => {
                        2xl:w-[13%] 2xl:h-[10%]
                        object-contain cursor-pointer hover:opacity-80 transition-opacity"
           />
-          <span
-            className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-lexend font-normal not-italic leading-none tracking-normal text-black drop-shadow-md"
-          >
+          <span className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-lexend font-normal not-italic leading-none tracking-normal text-black drop-shadow-md">
             @maxima_umn
           </span>
         </div>
@@ -187,9 +218,7 @@ const FooterSection: React.FC = () => {
                        2xl:w-[13%] 2xl:h-[10%]
                        object-contain cursor-pointer hover:opacity-80 transition-opacity"
           />
-          <span
-            className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-lexend font-normal not-italic leading-none tracking-normal text-black drop-shadow-md"
-          >
+          <span className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-lexend font-normal not-italic leading-none tracking-normal text-black drop-shadow-md">
             @maxima_umn
           </span>
         </div>
