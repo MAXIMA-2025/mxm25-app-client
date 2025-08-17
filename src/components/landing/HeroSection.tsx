@@ -13,7 +13,7 @@ const HeroSection = () => {
     navigate("/login");
   };
   return (
-    <section className="w-dvw h-dvh flex justify-center items-center overflow-hidden relative">
+    <section className="w-dvw h-dvh flex justify-center items-center overflow-hidden relative z-0">
       <img
         src={HeroBackground}
         className="absolute inset-0 w-full h-full object-cover z-0"
