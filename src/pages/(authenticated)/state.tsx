@@ -1,4 +1,9 @@
 import React from 'react';
+import useApi, { type ApiResponse } from "@/hooks/useApi";
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "@/router";
+import type { AxiosError } from "axios";
+import useAuth, { type UserMahasiswa } from "@/hooks/useAuth";
 
 // Asset imports
 import backgroundImage from '@/assets/images/background_state.webp';
@@ -33,7 +38,73 @@ const dummyStates = [
   },
 ];
 
+//Get Registered State
+type RegisteredState = {
+  id: number;
+  absenAwal: string;
+  absenAkhir: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  stateId: number;
+  mahasiswaUUID: string;
+};
+
 const State: React.FC = () => {
+  const api = useApi();
+  const auth = useAuth();
+  const {
+    data:States,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ['states'],
+    queryFn: async () => {
+      if (!auth.user) throw new Error('User not authenticated');
+      const response = await api.get<ApiResponse<RegisteredState[]>>('/state/registration',{
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+        },
+      });
+      return response.data;
+    },
+    retry: (failureCount, error: AxiosError) => {
+          // Don't retry on 404, 400, or 204 - these are not network errors
+          if (
+            error?.response?.status === 404 ||
+            error?.response?.status === 400 ||
+            error?.response?.status === 204
+          ) {
+            return false;
+          }
+          // Only retry on actual network errors, max 1 retry
+          return failureCount < 1;
+        },
+        staleTime: 5 * 60 * 1000, // 5 minutes
+  })
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#90171a] mx-auto mb-4"></div>
+          <p className="text-gray-600 font-medium">Memuat state Kamu...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError)
+    return (
+      <p className="text-red-500">
+        Gagal memuat state. {(error as Error).message}
+      </p>
+    );
+
+  //Debug
+  console.log("States:", States); 
+
   return (
     <div 
       className="bg-image min-h-screen w-full relative overflow-x-hidden"
