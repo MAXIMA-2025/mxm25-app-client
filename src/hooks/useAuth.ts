@@ -6,8 +6,11 @@ import {
 import useApi, { type ApiResponse } from "./useApi";
 import useErrorHandler from "./useErrorHandler";
 import useAuthContext from "./useAuthContext";
+import type { MaxlearnStatus } from "@/pages/(authenticated)/challenges/maxlearn/game";
 
-export type Auth<T = UserPanitia | UserOrganisator | UserEksternal | UserMahasiswa> = {
+export type Auth<
+  T = UserPanitia | UserOrganisator | UserEksternal | UserMahasiswa
+> = {
   user: T | undefined;
   status: "error" | "success" | "pending";
   isLoading: boolean;
@@ -17,7 +20,9 @@ export type Auth<T = UserPanitia | UserOrganisator | UserEksternal | UserMahasis
     options?: RefetchOptions
   ) => Promise<
     QueryObserverResult<
-      ApiResponse<UserPanitia | UserOrganisator | UserEksternal| UserMahasiswa>,
+      ApiResponse<
+        UserPanitia | UserOrganisator | UserEksternal | UserMahasiswa
+      >,
       Error
     >
   >;
@@ -73,6 +78,7 @@ export type UserMahasiswa = {
   whatsapp: string;
   lineId: string;
   role: string;
+  isFinishedMaxlearn: MaxlearnStatus;
 };
 
 const useAuth = () => {

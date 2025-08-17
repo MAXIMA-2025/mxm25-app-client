@@ -22,7 +22,11 @@ const _layout = () => {
   const { isLoggedOut } = useAuthContext();
   const api = useApi();
 
-  const { data: toggleAcara, status, error } = useQuery({
+  const {
+    data: toggleAcara,
+    status,
+    error,
+  } = useQuery({
     queryKey: ["toggles"],
     queryFn: async () => {
       const resp = await api.get<ApiResponse<Toggle[]>>("/toggle");
@@ -41,13 +45,12 @@ const _layout = () => {
   }, [nav, isLoggedOut, auth]);
 
   // Map react-query status to ToggleContextType status
-  const mappedStatus =
-    status === "pending"
-      ? "loading"
-      : status;
+  const mappedStatus = status === "pending" ? "loading" : status;
 
   return (
-    <ToggleProvider value={{ toggleAcara: toggleAcara?.data, status: mappedStatus }}>
+    <ToggleProvider
+      value={{ toggleAcara: toggleAcara?.data, status: mappedStatus }}
+    >
       <div className="flex flex-col items-center">
         <Outlet />
         <Navbar />
