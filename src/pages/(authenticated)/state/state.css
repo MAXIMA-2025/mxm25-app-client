@@ -25,7 +25,7 @@
   background-size: cover;
   background-position: top center;
   background-repeat: no-repeat;
-  min-height: 80vh;
+  min-height: 100vh;
   width: 85%;
 }
 
@@ -230,8 +230,8 @@
   }
 
   .day-button {
-    width: 45px;
-    height: 45px;
+    width: 32px;
+    height: 32px;
     font-size: 1.125rem;
   }
 }

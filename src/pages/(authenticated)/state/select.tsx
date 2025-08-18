@@ -19,11 +19,6 @@ import kspmLogo from "@/assets/images/logoUkm/kspm.webp";
 
 // Define Ukm type - Updated to match actual database structure
 interface Ukm {
-  name: string;
-  day: {
-    id: number;
-    date: string;
-  };
   id: number;
   nama: string;
   logo: string | null;
@@ -33,6 +28,10 @@ interface Ukm {
   createdAt: string;
   updatedAt: string;
   dayId: number;
+  day: {
+    id: number;
+    date: string;
+  };
   filledCapacity?: number; // This might need to be calculated
 }
 
@@ -40,11 +39,13 @@ interface Ukm {
 interface DateFilterProps {
   onFilterChange: (selectedDay: number | null) => void;
   className?: string;
+  availableDays: number[]; // Add this to show only available days
 }
 
 const DateFilter: React.FC<DateFilterProps> = ({
   onFilterChange,
   className = "",
+  availableDays,
 }) => {
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
 
@@ -54,6 +55,9 @@ const DateFilter: React.FC<DateFilterProps> = ({
     { number: 3, label: "Hari ke 3" },
     { number: 4, label: "Hari ke 4" },
     { number: 5, label: "Hari ke 5" },
+    { number: 6, label: "Hari ke 6" },
+    { number: 7, label: "Hari ke 7" },
+    { number: 8, label: "Hari ke 8" },
   ];
 
   const handleDayClick = (dayNumber: number) => {
@@ -68,19 +72,23 @@ const DateFilter: React.FC<DateFilterProps> = ({
         <div className="filter-title">Hari ke</div>
 
         <div className="days-container">
-          {days.map((day) => (
-            <button
-              key={day.number}
-              className={`day-button ${
-                selectedDay === day.number ? "selected" : ""
-              }`}
-              onClick={() => handleDayClick(day.number)}
-              title={day.label}
-              aria-label={day.label}
-            >
-              {day.number}
-            </button>
-          ))}
+          {days.map((day) => {
+            const isAvailable = availableDays.includes(day.number);
+            return (
+              <button
+                key={day.number}
+                className={`day-button ${
+                  selectedDay === day.number ? "selected" : ""
+                } ${!isAvailable ? "disabled" : ""}`}
+                onClick={() => isAvailable && handleDayClick(day.number)}
+                disabled={!isAvailable}
+                title={isAvailable ? day.label : `${day.label} - Tidak tersedia`}
+                aria-label={day.label}
+              >
+                {day.number}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -95,7 +103,7 @@ const Select = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   const {
-    data: ukm,
+    data: ukmResponse,
     isLoading,
     isError,
     error,
@@ -103,19 +111,31 @@ const Select = () => {
     queryKey: ["ukm"],
     queryFn: async () => {
       const resp = await api.get<ApiResponse<Ukm[]>>("/state/");
-      const fafa = "a";
-      return { ...resp.data, fafa };
+      return resp.data;
     },
   });
 
-  // Helper function to convert dayId to date string (moved outside queryFn)
+  // Extract the actual array of UKM from the API response
+  const ukm: Ukm[] = ukmResponse?.data ?? [];
+
+  // Get available days from the actual data
+  const availableDays = useMemo(() => {
+    if (!Array.isArray(ukm)) return [];
+    const days = [...new Set(ukm.map(item => item.dayId))].sort();
+    return days;
+  }, [ukm]);
+
+  // Helper function to convert dayId to date string
   const getDateByDayId = (dayId: number): string => {
     const dates = {
       1: "13 Agustus 1945",
-      2: "14 Agustus 1945",
+      2: "14 Agustus 1945", 
       3: "15 Agustus 1945",
       4: "16 Agustus 1945",
       5: "17 Agustus 1945",
+      6: "18 Agustus 1945",
+      7: "19 Agustus 1945",
+      8: "20 Agustus 1945",
     };
     return dates[dayId as keyof typeof dates] || `Hari ke-${dayId}`;
   };
@@ -130,25 +150,24 @@ const Select = () => {
     let filtered = Array.isArray(ukm) ? ukm : [];
     console.log("Initial filtered array:", filtered);
 
+    // Filter by day
     if (selectedFilter !== null) {
       const beforeFilter = filtered.length;
       filtered = filtered.filter((item) => {
         const matchesDayId = item.dayId === selectedFilter;
-        const matchesDateDay = item.dateDay === selectedFilter;
         console.log(
-          `Item ${item.id} (${item.nama}): dayId=${item.dayId}, dateDay=${
-            item.dateDay
-          }, matches=${matchesDayId || matchesDateDay}`
+          `Item ${item.id} (${item.nama}): dayId=${item.dayId}, matches=${matchesDayId}`
         );
-        return matchesDayId || matchesDateDay;
+        return matchesDayId;
       });
       console.log(`Day filter: ${beforeFilter} -> ${filtered.length} items`);
     }
 
+    // Filter by search term
     if (searchTerm.trim() !== "") {
       const beforeSearch = filtered.length;
       filtered = filtered.filter((item) => {
-        const name = item.name || item.nama || "";
+        const name = item.nama || "";
         const matches = name.toLowerCase().includes(searchTerm.toLowerCase());
         console.log(
           `Item ${item.id} name="${name}" matches search "${searchTerm}": ${matches}`
@@ -164,6 +183,19 @@ const Select = () => {
 
   const handleFilterChange = (day: number | null) => {
     setSelectedFilter(day);
+  };
+
+  // Get the date string for selected filter
+  const getSelectedDateString = () => {
+    if (!selectedFilter) return "13 - 20 Agustus 1945";
+    
+    // Find an item with the selected dayId to get the actual date
+    const ukmForDay = filteredUkm.find(item => item.dayId === selectedFilter);
+    if (ukmForDay && ukmForDay.day?.date) {
+      return ukmForDay.day.date;
+    }
+    
+    return getDateByDayId(selectedFilter);
   };
 
   // Loading state
@@ -244,6 +276,7 @@ const Select = () => {
             <DateFilter
               onFilterChange={handleFilterChange}
               className="w-full"
+              availableDays={availableDays}
             />
           </div>
 
@@ -280,19 +313,13 @@ const Select = () => {
           {/* Filter Status */}
           <div className="text-center mb-12">
             <p className="text-xl font-semibold text-white">
-              {selectedFilter
-                ? (() => {
-                    const ukmForDay = (ukm ?? []).find(
-                      (item) =>
-                        item.dateDay === selectedFilter ||
-                        item.dayId === selectedFilter
-                    );
-                    return ukmForDay
-                      ? ukmForDay.date || getDateByDayId(ukmForDay.dayId)
-                      : `Hari ke-${selectedFilter}`;
-                  })()
-                : `13 - 17 Agustus 1945`}
+              {getSelectedDateString()}
             </p>
+            {selectedFilter && (
+              <p className="text-sm text-blue-100 mt-1">
+                Menampilkan STATE untuk Hari ke-{selectedFilter}
+              </p>
+            )}
           </div>
 
           {/* Cards Section */}
@@ -304,46 +331,62 @@ const Select = () => {
                   <UkmCard
                     key={item.id}
                     stateId={item.id}
-                    stateName={item.name || item.nama || "Unknown State"}
-                    stateDate={
-                      item.date ||
-                      getDateByDayId(item.dayId || item.dateDay || 1)
-                    }
-                    stateLocation={item.location || "Unknown Location"}
-                    stateCapacity={item.capacity || item.quota || 0}
+                    stateName={item.nama}
+                    stateDate={item.day?.date || getDateByDayId(item.dayId)}
+                    stateLocation={item.location}
+                    stateQuota={item.quota}
                     currentFilledCapacity={item.filledCapacity || 0}
-                    ukmLogo={item.logo || "/default-logo.png"}
+                    ukmLogo={item.logo}
+                    stateDescription={item.deskripsi}
+                    onPilihState={(stateId) => {
+                      // Handle pilih state - you can implement navigation or modal here
+                      console.log('Pilih state:', stateId);
+                      // Example: navigate to state detail or show confirmation
+                      // navigate(`/state/${stateId}/confirm`);
+                    }}
+                    onInfoState={(stateId) => {
+                      // Handle info state - you can implement modal or navigation here
+                      console.log('Info state:', stateId);
+                      // Example: show modal with state details
+                      // showStateInfoModal(stateId);
+                    }}
                   />
                 );
               })
             ) : (
               <div className="col-span-full text-center">
-                <p className="text-white text-lg">
-                  {ukm && ukm.length > 0
-                    ? "No items match your filter/search"
-                    : "No data available"}
-                </p>
-                <p className="text-white text-sm mt-2">
-                  Raw data count: {ukm?.length || 0}
-                </p>
+                <div className="bg-white bg-opacity-90 backdrop-blur-md rounded-xl p-8 shadow-lg">
+                  <p className="text-xl text-gray-600 mb-2">
+                    {searchTerm && selectedFilter 
+                      ? `Tidak ada STATE yang cocok dengan pencarian "${searchTerm}" pada Hari ke-${selectedFilter}`
+                      : searchTerm 
+                      ? `Tidak ada STATE yang cocok dengan pencarian "${searchTerm}"`
+                      : selectedFilter
+                      ? `Tidak ada STATE pada Hari ke-${selectedFilter}`
+                      : "Belum ada STATE yang tersedia"
+                    }
+                  </p>
+                  <p className="text-gray-500">
+                    {searchTerm || selectedFilter 
+                      ? "Coba ubah kriteria pencarian atau filter hari"
+                      : "Data STATE akan muncul ketika sudah tersedia"
+                    }
+                  </p>
+                  {(searchTerm || selectedFilter) && (
+                    <button
+                      onClick={() => {
+                        setSearchTerm("");
+                        setSelectedFilter(null);
+                      }}
+                      className="mt-4 bg-[#90171a] text-white px-4 py-2 rounded hover:bg-[#722F37] transition-colors"
+                    >
+                      Reset Filter
+                    </button>
+                  )}
+                </div>
               </div>
             )}
           </div>
-
-          {/* Empty State */}
-          {filteredUkm.length === 0 && (
-            <div className="text-center py-12">
-              <div className="bg-white bg-opacity-90 backdrop-blur-md rounded-xl p-8 shadow-lg">
-                <p className="text-xl text-gray-600 mb-2">
-                  Tidak ada UKM untuk dari hari yang kamu pilih atau kamu cari
-                </p>
-                <p className="text-gray-500">
-                  Pastikan kamu telah memilih hari yang benar dan sesuai dengan
-                  pencarianmu.
-                </p>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
