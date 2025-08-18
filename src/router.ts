@@ -15,8 +15,8 @@ export type Path =
   | `/login/onboarding`
   | `/login/sso`
   | `/main`
-  | `/selectstate`
   | `/state`
+  | `/state/select`
   | `/station`
   | `/station/mahasiswa`
   | `/ticket`

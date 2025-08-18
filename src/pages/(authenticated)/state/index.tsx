@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@/router";
 import type { AxiosError } from "axios";
 import useAuth, { type UserMahasiswa } from "@/hooks/useAuth";
+import "./state.css";
 
 // Asset imports
 import backgroundImage from '@/assets/images/background_state.webp';
