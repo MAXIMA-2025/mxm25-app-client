@@ -14,7 +14,7 @@ import TiktokIcon from "@/assets/images/footer/Tiktok.png";
 const FooterSection: React.FC = () => {
   return (
     <footer
-      className="relative w-full min-h-[720px] bg-no-repeat"
+      className="relative w-full min-h-[700px] bg-no-repeat overflow-hidden"
       style={{
         backgroundImage: `url(${FooterBg2}), url(${FooterBg1})`,
         backgroundPosition: "top center, bottom center",
@@ -27,14 +27,14 @@ const FooterSection: React.FC = () => {
         src={FooterBg3}
         alt=""
         className="
-    absolute left-0 bottom-0 object-fill
-    w-[120%] h-[100%]
-    sm:w-[120%] sm:h-[100%]
-    md:w-[110%] md:h-[100%]
-    lg:w-[110%] lg:h-[100%]
-    xl:w-[100%] xl:h-[100%]
-    2xl:w-[100%] 2xl:h-[100%]
-  "
+          absolute left-[0%] bottom-0 object-fill pointer-events-none
+          w-[120%] h-[100%]
+          sm:w-[120%] sm:h-[100%]
+          md:w-[110%] md:h-[100%]
+          lg:w-[110%] lg:h-[100%]
+          xl:w-[100%] xl:h-[100%]
+          2xl:w-[100%] 2xl:h-[100%]
+        "
       />
 
       {/* Hiasan Kanan */}
@@ -42,48 +42,50 @@ const FooterSection: React.FC = () => {
         src={FooterBg4}
         alt=""
         className="
-    absolute right-0 bottom-0 object-fill
-    w-[120%] h-[100%]
-    sm:w-[120%] sm:h-[100%]
-    md:w-[110%] md:h-[100%]
-    lg:w-[110%] lg:h-[100%]
-    xl:w-[100%] xl:h-[100%]
-    2xl:w-[100%] 2xl:h-[100%]
-  "
+          absolute right-[0%] bottom-0 object-fill pointer-events-none
+          w-[120%] h-[100%]
+          sm:w-[120%] sm:h-[100%]
+          md:w-[110%] md:h-[100%]
+          lg:w-[110%] lg:h-[100%]
+          xl:w-[100%] xl:h-[100%]
+          2xl:w-[100%] 2xl:h-[100%]
+        "
       />
 
       {/* Sponsor & Medpar Wrapper */}
       <div
         className="
           absolute top-[4%] left-0 w-full
-          flex flex-col items-center
-          md:flex-row md:justify-between md:px-[6%]
+          flex flex-col items-center gap-2
+          xs:gap-3 sm:gap-4 md:gap-5
+          lg:flex-row lg:justify-center lg:gap-[12%] lg:px-[4%]
+          xl:gap-[15%] xl:px-[5%]
+          2xl:gap-[17%] 2xl:px-[6%]
         "
       >
-       {/* Logo Sponsor */}
-<div className="w-[50%] xs:w-[45%] sm:w-[38%] md:w-[40%] flex flex-col items-center order-1 md:order-1">
-  <span className="font-lexend font-bold text-[2.5vw] xs:text-[3vw] sm:text-[2.5vw] md:text-[1.8vw] text-[#8B4513] mb-1 text-center">
-    Sponsored By
-  </span>
-  <img
-    src={LogoSponsor}
-    alt="Sponsor"
-    className="w-full h-auto object-contain"
-  />
-</div>
+        {/* Logo Sponsor */}
+        <div className="w-[40%] xs:w-[45%] sm:w-[35%] md:w-[25%] lg:w-[45%] xl:w-[40%] 2xl:w-[40%] flex flex-col items-center order-1 lg:order-1">
+          <span className="font-lexend font-bold text-[3vw] xs:text-[2.8vw] sm:text-[2.5vw] md:text-[2.2vw] lg:text-[1.8vw] xl:text-[1.6vw] 2xl:text-[1.4vw] text-[#8B4513] mb-1 text-center whitespace-nowrap">
+            Sponsored By
+          </span>
+          <img
+            src={LogoSponsor}
+            alt="Sponsor"
+            className="w-full h-auto object-fill"
+          />
+        </div>
 
-{/* Medpar */}
-<div className="w-[50%] xs:w-[45%] sm:w-[38%] md:w-[40%] flex flex-col items-center order-2 md:order-2">
-  <span className="font-lexend font-bold text-[2.5vw] xs:text-[3vw] sm:text-[2.5vw] md:text-[1.8vw] text-[#8B4513] mb-1 text-center">
-    Media Partners
-  </span>
-  <img
-    src={Medpar}
-    alt="Medpar"
-    className="w-full h-auto object-contain"
-  />
-</div>
-
+        {/* Medpar */}
+        <div className="w-[40%] xs:w-[45%] sm:w-[35%] md:w-[25%] lg:w-[45%] xl:w-[40%] 2xl:w-[40%] flex flex-col items-center order-2 lg:order-2">
+          <span className="font-lexend font-bold text-[3vw] xs:text-[2.8vw] sm:text-[2.5vw] md:text-[2.2vw] lg:text-[1.8vw] xl:text-[1.6vw] 2xl:text-[1.4vw] text-[#8B4513] mb-1 text-center whitespace-nowrap">
+            Media Partners
+          </span>
+          <img
+            src={Medpar}
+            alt="Medpar"
+            className="w-full h-auto object-fill"
+          />
+        </div>
       </div>
 
       {/* Location Section */}
@@ -139,7 +141,7 @@ const FooterSection: React.FC = () => {
 
       {/* MEDSOS */}
       <div
-        className="absolute bottom-[15%] right-[2%]
+        className="absolute bottom-[14%] right-[2%]
                    sm:bottom-[15%] sm:right-[2%]
                    md:bottom-[15%] md:right-[8%]
                    lg:bottom-[12%] lg:right-[8%]
