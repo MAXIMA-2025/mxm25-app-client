@@ -111,9 +111,15 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
                   <div className="bg-white/20 p-1 sm:p-2 rounded-lg backdrop-blur-sm flex-shrink-0">
                     <Clock size={16} className="sm:w-4 sm:h-4" />
                   </div>
-                  <span className="text-sm sm:text-base lg:text-lg font-medium">
-                    14.00 WIB
-                  </span>
+                  {auth.user?.role === "eksternal" ? (
+                    <span className="text-sm sm:text-base lg:text-lg font-medium">
+                      16:00 WIB
+                    </span>
+                  ) : (
+                    <span className="text-sm sm:text-base lg:text-lg font-medium">
+                      14:00 WIB
+                    </span>
+                  )}
                 </div>
               </div>
               {auth.user?.role === "eksternal" ? (
