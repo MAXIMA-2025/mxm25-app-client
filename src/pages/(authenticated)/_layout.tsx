@@ -41,7 +41,7 @@ const Layout = () => {
       const resp = await api.get<ApiResponse<Toggle[]>>("/toggle");
       return resp.data;
     },
-    // enabled: !!user, // won't fetch until user exists
+    enabled: !isLoggedOut, // won't fetch until user exists
   });
 
   // Redirect after auth check
