@@ -66,14 +66,14 @@ const LoginPage = () => {
             variant="clay"
             className="w-full md:w-1/2"
           >
-            YES
+            Mahasiswa Baru UMN 2025
           </Button>
           <Button
             onClick={async () => await handleGoogleClick("eksternal")}
             variant="outline"
             className="w-full md:w-1/2"
           >
-            NO, <img className="size-5" src={Google} /> Sign in with Google
+            <img src={Google} className="size-5"/>Login <p className="underline">Eksternal</p>
           </Button>
         </CardFooter>
       </Card>

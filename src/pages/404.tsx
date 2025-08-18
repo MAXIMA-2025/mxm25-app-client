@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import { ArrowRight } from "lucide-react";
 import backgroundImage from "@/assets/images/onboarding.webp";
 import CircularText from "@/components/CircularText/CircularText";
+import joget_1 from "@/assets/videos/joget_1.mp4"
 
 const ErrorPage = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const ErrorPage = () => {
     >
       <div className="flex flex-col justify-center items-center">
         <div className="relative justify-center flex flex-col items-center">
-          <img className="absolute w-30 z-1 drop-shadow-2xl" src={Logo} />
+          <img className="absolute w-30 z-1 drop-shadow-2xl hover:w-32 hover:cursor-pointer transition-all" src={Logo} />
           <CircularText
             text="NEXUS*MAXIMA*2025*"
             onHover="speedUp"
