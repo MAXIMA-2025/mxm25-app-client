@@ -63,9 +63,7 @@ const State: React.FC = () => {
     queryKey: ["states"],
     queryFn: async () => {
       if (!auth.user) throw new Error("User not authenticated");
-      const response = await api.get<ApiResponse<RegisteredState[]>>(
-        "/state/registration"
-      );
+      const response = await api.get<ApiResponse<RegisteredState[]>>("/state/");
       return response.data;
     },
     retry: (failureCount, error: AxiosError) => {
@@ -115,54 +113,6 @@ const State: React.FC = () => {
         backgroundAttachment: "fixed",
       }}
     >
-      {/* Inline Styles */}
-      <style jsx>{`
-        .card-hover {
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card-hover:hover {
-          transform: translateY(-10px);
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .floating-element {
-          animation: float 6s ease-in-out infinite;
-        }
-
-        .floating-element:nth-child(2) {
-          animation-delay: -2s;
-        }
-
-        .floating-element:nth-child(3) {
-          animation-delay: -4s;
-        }
-
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0px) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-20px) rotate(5deg);
-          }
-        }
-
-        @keyframes fade-in-up {
-          0% {
-            opacity: 0;
-            transform: translateY(50px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .entrance {
-          animation: fade-in-up 1s ease forwards;
-        }
-      `}</style>
 
       {/* Background Pattern Overlay */}
       <div className="pattern-overlay absolute inset-0 z-0"></div>
