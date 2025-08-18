@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import useApi, { type ApiResponse } from "@/hooks/useApi";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@/router";
@@ -7,12 +7,12 @@ import useAuth, { type UserMahasiswa } from "@/hooks/useAuth";
 import "./state.css";
 
 // Asset imports
-import backgroundImage from '@/assets/images/background_state.webp';
-import acesLogoImage from '@/assets/images/logoUkm/aces.webp';
+import backgroundImage from "@/assets/images/background_state.webp";
+import acesLogoImage from "@/assets/images/logoUkm/aces.webp";
 
 //State Card Slot configuration
-import EmptyCard from '@/components/state/EmptyState';
-import FilledCard from '@/components/state/FilledState';
+import EmptyCard from "@/components/state/EmptyState";
+import FilledCard from "@/components/state/FilledState";
 
 //Dummy State
 const dummyStates = [
@@ -55,35 +55,33 @@ const State: React.FC = () => {
   const api = useApi();
   const auth = useAuth();
   const {
-    data:States,
+    data: States,
     isLoading,
     isError,
     error,
   } = useQuery({
-    queryKey: ['states'],
+    queryKey: ["states"],
     queryFn: async () => {
-      if (!auth.user) throw new Error('User not authenticated');
-      const response = await api.get<ApiResponse<RegisteredState[]>>('/state/registration',{
-        headers: {
-          Authorization: `Bearer ${auth.token}`,
-        },
-      });
+      if (!auth.user) throw new Error("User not authenticated");
+      const response = await api.get<ApiResponse<RegisteredState[]>>(
+        "/state/registration"
+      );
       return response.data;
     },
     retry: (failureCount, error: AxiosError) => {
-          // Don't retry on 404, 400, or 204 - these are not network errors
-          if (
-            error?.response?.status === 404 ||
-            error?.response?.status === 400 ||
-            error?.response?.status === 204
-          ) {
-            return false;
-          }
-          // Only retry on actual network errors, max 1 retry
-          return failureCount < 1;
-        },
-        staleTime: 5 * 60 * 1000, // 5 minutes
-  })
+      // Don't retry on 404, 400, or 204 - these are not network errors
+      if (
+        error?.response?.status === 404 ||
+        error?.response?.status === 400 ||
+        error?.response?.status === 204
+      ) {
+        return false;
+      }
+      // Only retry on actual network errors, max 1 retry
+      return failureCount < 1;
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
   if (isLoading) {
     return (
@@ -104,17 +102,17 @@ const State: React.FC = () => {
     );
 
   //Debug
-  console.log("States:", States); 
+  console.log("States:", States);
 
   return (
-    <div 
+    <div
       className="bg-image min-h-screen w-full relative overflow-x-hidden"
       style={{
         backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
       }}
     >
       {/* Inline Styles */}
@@ -141,7 +139,8 @@ const State: React.FC = () => {
         }
 
         @keyframes float {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px) rotate(0deg);
           }
           50% {
@@ -190,7 +189,6 @@ const State: React.FC = () => {
 
         {/* Cards Section */}
         <div className="entrance grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 max-w-7xl w-full">
-
           {dummyStates.map((state) =>
             state.stateName ? (
               <FilledCard key={state.cardSlot} {...state} />

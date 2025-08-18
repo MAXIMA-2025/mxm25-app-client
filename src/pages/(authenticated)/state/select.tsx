@@ -20,12 +20,15 @@ import kspmLogo from "@/assets/images/logoUkm/kspm.webp";
 // Define Ukm type - Updated to match actual database structure
 interface Ukm {
   name: string;
-  dateDay: number;
+  day: {
+    id: number;
+    date: string;
+  };
   id: number;
-  nama: string; 
+  nama: string;
   logo: string | null;
   deskripsi: string | null;
-  quota: number; 
+  quota: number;
   location: string;
   createdAt: string;
   updatedAt: string;
@@ -99,95 +102,20 @@ const Select = () => {
   } = useQuery({
     queryKey: ["ukm"],
     queryFn: async () => {
-      try {
-        const response = await api.get<ApiResponse<Ukm[]>>("/state/");
-        console.log("=== API DEBUG ===");
-        console.log("Full Response:", response);
-        console.log("Response Data:", response.data);
-        console.log("Response Status:", response.status);
-        
-        let rawData: Ukm[] = [];
-        
-        // Handle different response structures
-        if (response.data?.data && Array.isArray(response.data.data)) {
-          rawData = response.data.data;
-          console.log("Using response.data.data:", rawData);
-        } else if (Array.isArray(response.data)) {
-          rawData = response.data;
-          console.log("Using response.data directly:", rawData);
-        } else if (response.data && typeof response.data === 'object' && !Array.isArray(response.data)) {
-          // Handle case where data might be wrapped differently
-          console.log("Response data is object, checking properties:", Object.keys(response.data));
-          return [];
-        } else {
-          console.warn("Unexpected response structure:", response.data);
-          return [];
-        }
-
-        console.log("Raw data before transformation:", rawData);
-        console.log("Raw data length:", rawData.length);
-
-        if (!Array.isArray(rawData) || rawData.length === 0) {
-          console.warn("No data found or data is not an array");
-          return [];
-        }
-
-        // Transform data to match expected format
-        const transformedData = rawData.map((item, index) => {
-          console.log(`Transforming item ${index}:`, item);
-          
-          const transformed = {
-            ...item,
-            // Map database fields to expected fields for backward compatibility
-            name: item.nama || item.name || 'Unnamed State',
-            capacity: item.quota || 0,
-            dateDay: item.dayId || item.dateDay || 1,
-            // Generate date based on dayId
-            date: getDateByDayId(item.dayId || item.dateDay || 1),
-            // Set default filledCapacity
-            filledCapacity: item.filledCapacity || 0,
-            // Handle null logo
-            logo: item.logo || '/default-logo.png',
-          };
-          
-          console.log(`Transformed item ${index}:`, transformed);
-          return transformed;
-        });
-
-        console.log("Final transformed data:", transformedData);
-        return transformedData;
-      } catch (error) {
-        console.error("API Error:", error);
-        console.error("Error details:", error.response?.data);
-        console.error("Error status:", error.response?.status);
-        throw error;
-      }
+      const resp = await api.get<ApiResponse<Ukm[]>>("/state/");
+      const fafa = "a";
+      return { ...resp.data, fafa };
     },
-    retry: (failureCount, error: AxiosError) => {
-      // Don't retry on 404, 400, or 204 - these are not network errors
-      if (
-        error?.response?.status === 404 ||
-        error?.response?.status === 400 ||
-        error?.response?.status === 204
-      ) {
-        return false;
-      }
-      // Only retry on actual network errors, max 1 retry
-      return failureCount < 1;
-    },
-    staleTime: 5 * 60 * 1000,
-    // Add default data to prevent undefined issues
-    initialData: [],
   });
 
   // Helper function to convert dayId to date string (moved outside queryFn)
   const getDateByDayId = (dayId: number): string => {
     const dates = {
       1: "13 Agustus 1945",
-      2: "14 Agustus 1945", 
+      2: "14 Agustus 1945",
       3: "15 Agustus 1945",
       4: "16 Agustus 1945",
-      5: "17 Agustus 1945"
+      5: "17 Agustus 1945",
     };
     return dates[dayId as keyof typeof dates] || `Hari ke-${dayId}`;
   };
@@ -198,32 +126,38 @@ const Select = () => {
     console.log("Raw ukm data:", ukm);
     console.log("Selected filter:", selectedFilter);
     console.log("Search term:", searchTerm);
-    
+
     let filtered = Array.isArray(ukm) ? ukm : [];
     console.log("Initial filtered array:", filtered);
-    
+
     if (selectedFilter !== null) {
       const beforeFilter = filtered.length;
       filtered = filtered.filter((item) => {
         const matchesDayId = item.dayId === selectedFilter;
         const matchesDateDay = item.dateDay === selectedFilter;
-        console.log(`Item ${item.id} (${item.nama}): dayId=${item.dayId}, dateDay=${item.dateDay}, matches=${matchesDayId || matchesDateDay}`);
+        console.log(
+          `Item ${item.id} (${item.nama}): dayId=${item.dayId}, dateDay=${
+            item.dateDay
+          }, matches=${matchesDayId || matchesDateDay}`
+        );
         return matchesDayId || matchesDateDay;
       });
       console.log(`Day filter: ${beforeFilter} -> ${filtered.length} items`);
     }
-    
+
     if (searchTerm.trim() !== "") {
       const beforeSearch = filtered.length;
       filtered = filtered.filter((item) => {
-        const name = item.name || item.nama || '';
+        const name = item.name || item.nama || "";
         const matches = name.toLowerCase().includes(searchTerm.toLowerCase());
-        console.log(`Item ${item.id} name="${name}" matches search "${searchTerm}": ${matches}`);
+        console.log(
+          `Item ${item.id} name="${name}" matches search "${searchTerm}": ${matches}`
+        );
         return matches;
       });
       console.log(`Search filter: ${beforeSearch} -> ${filtered.length} items`);
     }
-    
+
     console.log("Final filtered result:", filtered);
     return filtered;
   }, [selectedFilter, searchTerm, ukm]);
@@ -255,8 +189,8 @@ const Select = () => {
           <p className="text-gray-600 mb-4">
             {(error as Error)?.message || "Terjadi kesalahan saat memuat data"}
           </p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="bg-[#90171a] text-white px-4 py-2 rounded hover:bg-[#722F37] transition-colors"
           >
             Coba Lagi
@@ -349,10 +283,12 @@ const Select = () => {
               {selectedFilter
                 ? (() => {
                     const ukmForDay = (ukm ?? []).find(
-                      (item) => item.dateDay === selectedFilter || item.dayId === selectedFilter
+                      (item) =>
+                        item.dateDay === selectedFilter ||
+                        item.dayId === selectedFilter
                     );
                     return ukmForDay
-                      ? (ukmForDay.date || getDateByDayId(ukmForDay.dayId))
+                      ? ukmForDay.date || getDateByDayId(ukmForDay.dayId)
                       : `Hari ke-${selectedFilter}`;
                   })()
                 : `13 - 17 Agustus 1945`}
@@ -368,19 +304,24 @@ const Select = () => {
                   <UkmCard
                     key={item.id}
                     stateId={item.id}
-                    stateName={item.name || item.nama || 'Unknown State'}
-                    stateDate={item.date || getDateByDayId(item.dayId || item.dateDay || 1)}
-                    stateLocation={item.location || 'Unknown Location'}
+                    stateName={item.name || item.nama || "Unknown State"}
+                    stateDate={
+                      item.date ||
+                      getDateByDayId(item.dayId || item.dateDay || 1)
+                    }
+                    stateLocation={item.location || "Unknown Location"}
                     stateCapacity={item.capacity || item.quota || 0}
                     currentFilledCapacity={item.filledCapacity || 0}
-                    ukmLogo={item.logo || '/default-logo.png'}
+                    ukmLogo={item.logo || "/default-logo.png"}
                   />
                 );
               })
             ) : (
               <div className="col-span-full text-center">
                 <p className="text-white text-lg">
-                  {ukm && ukm.length > 0 ? "No items match your filter/search" : "No data available"}
+                  {ukm && ukm.length > 0
+                    ? "No items match your filter/search"
+                    : "No data available"}
                 </p>
                 <p className="text-white text-sm mt-2">
                   Raw data count: {ukm?.length || 0}
