@@ -1,45 +1,24 @@
 import React from "react";
 import useApi, { type ApiResponse } from "@/hooks/useApi";
 import { useQuery } from "@tanstack/react-query";
-
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useAuth from "@/hooks/useAuth";
+import { format, parseISO } from "date-fns";
+import { id as localeId } from "date-fns/locale";
 import "./state.css";
 
 // Asset imports
 import backgroundImage from "@/assets/images/background_state.webp";
-import acesLogoImage from "@/assets/images/logoUkm/aces.webp";
+import stateLogo from "@/assets/images/state.webp";
 
 //State Card Slot configuration
 import EmptyCard from "@/components/state/EmptyState";
 import FilledCard from "@/components/state/FilledState";
 
 //Dummy State
-const dummyStates = [
-  {
-    cardSlot: 1,
-    stateName: "ACES",
-    stateLocation: "Barak Militer",
-    stateDate: "17 Agustus 1945",
-    ukmLogo: acesLogoImage,
-  },
-  {
-    cardSlot: 2,
-    stateName: "",
-    stateLocation: "",
-    stateDate: "",
-    ukmLogo: "",
-  },
-  {
-    cardSlot: 3,
-    stateName: "",
-    stateLocation: "",
-    stateDate: "",
-    ukmLogo: "",
-  },
-];
 
 //Get Registered State
-type RegisteredState = {
+interface RegisteredState {
   id: number;
   absenAwal: string;
   absenAkhir: string;
@@ -47,12 +26,28 @@ type RegisteredState = {
   createdAt: string;
   updatedAt: string;
   stateId: number;
+  state: {
+    id: number;
+    nama: string;
+    logo: string | null;
+    deskripsi: string | null;
+    quota: number;
+    location: string;
+    createdAt: string;
+    updatedAt: string;
+    dayId: number;
+    day: {
+      id: number;
+      date: string;
+    };
+  };
   mahasiswaUUID: string;
-};
+}
 
 const State: React.FC = () => {
   const api = useApi();
   const auth = useAuth();
+  const queryClient = useQueryClient();
   const {
     data: States,
     isLoading,
@@ -69,6 +64,15 @@ const State: React.FC = () => {
     },
 
     staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  const dropMutation = useMutation({
+    mutationFn: async (stateId: number) => {
+      await api.delete(`/state/peserta/state/registration/${stateId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["states"]);
+    },
   });
 
   if (isLoading) {
@@ -91,6 +95,21 @@ const State: React.FC = () => {
 
   //Debug
   console.log("States:", States);
+
+  const stateRenders = Array.from({ length: 3 }, (_, index) => {
+    const state = States?.data[index];
+    return {
+      cardSlot: index + 1,
+      stateName: state?.state.nama || "",
+      stateLocation: state?.state.location || "",
+      stateDate: state
+        ? format(parseISO(state.state.day.date), "EEEE dd MMMM yyyy", {
+            locale: localeId,
+          })
+        : "",
+      ukmLogo: state?.state.logo || stateLogo,
+    };
+  });
 
   return (
     <div
@@ -128,11 +147,11 @@ const State: React.FC = () => {
 
         {/* Cards Section */}
         <div className="entrance grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 max-w-7xl w-full">
-          {dummyStates.map((state) =>
+          {stateRenders.map((state) =>
             state.stateName ? (
               <FilledCard key={state.cardSlot} {...state} />
             ) : (
-              <EmptyCard key={state.cardSlot} cardSlot={state.cardSlot} />
+              <EmptyCard key={state.cardSlot} cardSlot={state.cardSlot} stateDateSelected={stateRenders.map(s => s.stateDate)} />
             )
           )}
         </div>

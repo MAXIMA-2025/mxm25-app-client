@@ -3,19 +3,18 @@ import useApi, { type ApiResponse } from "@/hooks/useApi";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@/router";
 import type { AxiosError } from "axios";
+import { useLocation } from "react-router-dom";
 import useAuth, { type UserMahasiswa } from "@/hooks/useAuth";
+import { format, parseISO } from "date-fns";
+import { id as localeId } from "date-fns/locale";
 import "./state.css";
 
 // Assets Import
 import backgroundImage from "@/assets/images/background_state.webp";
+import stateLogo from "@/assets/images/state.webp";
 
 // Components
 import UkmCard from "@/components/state/UkmCard";
-
-//Data UKM
-import acesLogoImage from "@/assets/images/logoUkm/aces.webp";
-import teaterKatakLogo from "@/assets/images/logoUkm/katak.webp";
-import kspmLogo from "@/assets/images/logoUkm/kspm.webp";
 
 // Define Ukm type - Updated to match actual database structure
 interface Ukm {
@@ -82,7 +81,9 @@ const DateFilter: React.FC<DateFilterProps> = ({
                 } ${!isAvailable ? "disabled" : ""}`}
                 onClick={() => isAvailable && handleDayClick(day.number)}
                 disabled={!isAvailable}
-                title={isAvailable ? day.label : `${day.label} - Tidak tersedia`}
+                title={
+                  isAvailable ? day.label : `${day.label} - Tidak tersedia`
+                }
                 aria-label={day.label}
               >
                 {day.number}
@@ -95,12 +96,19 @@ const DateFilter: React.FC<DateFilterProps> = ({
   );
 };
 
-const Select = () => {
+interface SelectProps {
+  stateTerpilih: String[];
+}
+
+const Select: React.FC<SelectProps> = ({ stateTerpilih }) => {
   const api = useApi();
   const auth = useAuth();
 
   const [selectedFilter, setSelectedFilter] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
+
+  const location = useLocation();
+  const selectedDate = stateTerpilih || location.state;
 
   const {
     data: ukmResponse,
@@ -111,7 +119,35 @@ const Select = () => {
     queryKey: ["ukm"],
     queryFn: async () => {
       const resp = await api.get<ApiResponse<Ukm[]>>("/state/");
-      return resp.data;
+      // Format tanggal pada setiap item UKM
+      const formattedData =
+        resp.data.data?.map((item) => {
+          let formattedDate = item.day?.date;
+          if (formattedDate) {
+            try {
+              const parsed = parseISO(formattedDate);
+              formattedDate = format(parsed, "EEEE dd MMMM yyyy", {
+                locale: localeId,
+              });
+              // Capitalize first letter (karena format dari date-fns lowercase)
+              formattedDate =
+                formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+            } catch {
+              // fallback jika gagal parsing
+            }
+          }
+          return {
+            ...item,
+            day: {
+              ...item.day,
+              date: formattedDate,
+            },
+          };
+        }) ?? [];
+      return {
+        ...resp.data,
+        data: formattedData,
+      };
     },
   });
 
@@ -121,7 +157,7 @@ const Select = () => {
   // Get available days from the actual data
   const availableDays = useMemo(() => {
     if (!Array.isArray(ukm)) return [];
-    const days = [...new Set(ukm.map(item => item.dayId))].sort();
+    const days = [...new Set(ukm.map((item) => item.dayId))].sort();
     return days;
   }, [ukm]);
 
@@ -129,7 +165,7 @@ const Select = () => {
   const getDateByDayId = (dayId: number): string => {
     const dates = {
       1: "13 Agustus 1945",
-      2: "14 Agustus 1945", 
+      2: "14 Agustus 1945",
       3: "15 Agustus 1945",
       4: "16 Agustus 1945",
       5: "17 Agustus 1945",
@@ -142,42 +178,21 @@ const Select = () => {
 
   // useMemo untuk filtered data
   const filteredUkm = useMemo(() => {
-    console.log("=== FILTERING DEBUG ===");
-    console.log("Raw ukm data:", ukm);
-    console.log("Selected filter:", selectedFilter);
-    console.log("Search term:", searchTerm);
-
     let filtered = Array.isArray(ukm) ? ukm : [];
-    console.log("Initial filtered array:", filtered);
 
     // Filter by day
     if (selectedFilter !== null) {
-      const beforeFilter = filtered.length;
-      filtered = filtered.filter((item) => {
-        const matchesDayId = item.dayId === selectedFilter;
-        console.log(
-          `Item ${item.id} (${item.nama}): dayId=${item.dayId}, matches=${matchesDayId}`
-        );
-        return matchesDayId;
-      });
-      console.log(`Day filter: ${beforeFilter} -> ${filtered.length} items`);
+      filtered = filtered.filter((item) => item.dayId === selectedFilter);
     }
 
     // Filter by search term
     if (searchTerm.trim() !== "") {
-      const beforeSearch = filtered.length;
       filtered = filtered.filter((item) => {
         const name = item.nama || "";
-        const matches = name.toLowerCase().includes(searchTerm.toLowerCase());
-        console.log(
-          `Item ${item.id} name="${name}" matches search "${searchTerm}": ${matches}`
-        );
-        return matches;
+        return name.toLowerCase().includes(searchTerm.toLowerCase());
       });
-      console.log(`Search filter: ${beforeSearch} -> ${filtered.length} items`);
     }
 
-    console.log("Final filtered result:", filtered);
     return filtered;
   }, [selectedFilter, searchTerm, ukm]);
 
@@ -187,14 +202,14 @@ const Select = () => {
 
   // Get the date string for selected filter
   const getSelectedDateString = () => {
-    if (!selectedFilter) return "13 - 20 Agustus 1945";
-    
+    if (!selectedFilter) return "28 Agustus - 09 September 2025";
+
     // Find an item with the selected dayId to get the actual date
-    const ukmForDay = filteredUkm.find(item => item.dayId === selectedFilter);
+    const ukmForDay = filteredUkm.find((item) => item.dayId === selectedFilter);
     if (ukmForDay && ukmForDay.day?.date) {
       return ukmForDay.day.date;
     }
-    
+
     return getDateByDayId(selectedFilter);
   };
 
@@ -260,7 +275,7 @@ const Select = () => {
         <div className="content-overlay w-full h-full absolute inset-0"></div>
 
         {/* Konten utama */}
-        <div className="relative z-10 px-6 py-8 md:px-12 md:py-16 flex flex-col justify-center items-center min-h-[80vh]">
+        <div className="relative z-10 px-6 py-8 md:px-12 md:py-16 flex flex-col justify-center items-center min-h-[80vh] -mt-10">
           {/* Header Section */}
           <header className="text-center mt-15 md:mb-8">
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-4 tracking-tight title-shadow">
@@ -323,10 +338,16 @@ const Select = () => {
           </div>
 
           {/* Cards Section */}
-          <div className="entrance grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 w-full max-w-6xl">
+          <div
+            className="entrance grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 w-full max-w-6xl"
+            style={{
+              maxHeight: "60vh",
+              overflowY: "auto",
+              background: "transparent",
+            }}
+          >
             {filteredUkm && filteredUkm.length > 0 ? (
               filteredUkm.map((item) => {
-                console.log("Rendering UkmCard for:", item);
                 return (
                   <UkmCard
                     key={item.id}
@@ -336,20 +357,19 @@ const Select = () => {
                     stateLocation={item.location}
                     stateQuota={item.quota}
                     currentFilledCapacity={item.filledCapacity || 0}
-                    ukmLogo={item.logo}
+                    ukmLogo={item.logo || stateLogo}
                     stateDescription={item.deskripsi}
                     onPilihState={(stateId) => {
                       // Handle pilih state - you can implement navigation or modal here
-                      console.log('Pilih state:', stateId);
                       // Example: navigate to state detail or show confirmation
                       // navigate(`/state/${stateId}/confirm`);
                     }}
                     onInfoState={(stateId) => {
                       // Handle info state - you can implement modal or navigation here
-                      console.log('Info state:', stateId);
                       // Example: show modal with state details
                       // showStateInfoModal(stateId);
                     }}
+                    selectedStateDate={selectedDate}
                   />
                 );
               })
@@ -357,20 +377,18 @@ const Select = () => {
               <div className="col-span-full text-center">
                 <div className="bg-white bg-opacity-90 backdrop-blur-md rounded-xl p-8 shadow-lg">
                   <p className="text-xl text-gray-600 mb-2">
-                    {searchTerm && selectedFilter 
+                    {searchTerm && selectedFilter
                       ? `Tidak ada STATE yang cocok dengan pencarian "${searchTerm}" pada Hari ke-${selectedFilter}`
-                      : searchTerm 
+                      : searchTerm
                       ? `Tidak ada STATE yang cocok dengan pencarian "${searchTerm}"`
                       : selectedFilter
                       ? `Tidak ada STATE pada Hari ke-${selectedFilter}`
-                      : "Belum ada STATE yang tersedia"
-                    }
+                      : "Belum ada STATE yang tersedia"}
                   </p>
                   <p className="text-gray-500">
-                    {searchTerm || selectedFilter 
+                    {searchTerm || selectedFilter
                       ? "Coba ubah kriteria pencarian atau filter hari"
-                      : "Data STATE akan muncul ketika sudah tersedia"
-                    }
+                      : "Data STATE akan muncul ketika sudah tersedia"}
                   </p>
                   {(searchTerm || selectedFilter) && (
                     <button
