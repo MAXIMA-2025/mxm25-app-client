@@ -26,10 +26,10 @@ const Oauth = () => {
           { params: { code }, withCredentials: true }
         );
 
+        console.log(res);
+
         toast.success(res.data.message);
         localStorage.removeItem("google-login-role");
-        setIsLoggedOut(false);
-        nav("/main");
 
         // ✅ Verify login by fetching the logged-in user
         // const userRes = await axios.get(
@@ -54,7 +54,9 @@ const Oauth = () => {
             config: err.config,
           });
           toast.error(
-            err.response?.data?.message || `Google login failed: ${err.message}`
+            err.response?.data?.message ||
+              `Google login failed: ${err.message}`,
+            { id: "googleLoginFailed" }
           );
         } else {
           console.error("Unexpected error:", err);
