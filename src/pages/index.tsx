@@ -5,7 +5,7 @@ import AboutSection from "@/components/landing/AboutSection"
 
 const index = () => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col overflow-x-hidden">
       <LoaderWrapper>
         <HeroSection />
         <AboutSection />
