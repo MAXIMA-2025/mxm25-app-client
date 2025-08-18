@@ -1,9 +1,8 @@
 import React from "react";
 import useApi, { type ApiResponse } from "@/hooks/useApi";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "@/router";
-import type { AxiosError } from "axios";
-import useAuth, { type UserMahasiswa } from "@/hooks/useAuth";
+
+import useAuth from "@/hooks/useAuth";
 import "./state.css";
 
 // Asset imports
@@ -63,21 +62,12 @@ const State: React.FC = () => {
     queryKey: ["states"],
     queryFn: async () => {
       if (!auth.user) throw new Error("User not authenticated");
-      const response = await api.get<ApiResponse<RegisteredState[]>>("/state/registration");
+      const response = await api.get<ApiResponse<RegisteredState[]>>(
+        "/state/peserta/state/registration"
+      );
       return response.data;
     },
-    retry: (failureCount, error: AxiosError) => {
-      // Don't retry on 404, 400, or 204 - these are not network errors
-      if (
-        error?.response?.status === 404 ||
-        error?.response?.status === 400 ||
-        error?.response?.status === 204
-      ) {
-        return false;
-      }
-      // Only retry on actual network errors, max 1 retry
-      return failureCount < 1;
-    },
+
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
@@ -113,7 +103,6 @@ const State: React.FC = () => {
         backgroundAttachment: "fixed",
       }}
     >
-
       {/* Background Pattern Overlay */}
       <div className="pattern-overlay absolute inset-0 z-0"></div>
 
