@@ -63,7 +63,7 @@ const State: React.FC = () => {
     queryKey: ["states"],
     queryFn: async () => {
       if (!auth.user) throw new Error("User not authenticated");
-      const response = await api.get<ApiResponse<RegisteredState[]>>("/state/");
+      const response = await api.get<ApiResponse<RegisteredState[]>>("/state/registration");
       return response.data;
     },
     retry: (failureCount, error: AxiosError) => {
