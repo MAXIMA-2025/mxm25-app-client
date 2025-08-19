@@ -1,5 +1,5 @@
 import React from 'react'
-import Background from '@/assets/asset_maxlearn/BACKGROUND 1.png'
+import Background from '@/assets/asset_maxlearn/BG MAXLEARN-02 1.png'
 import { useNavigate } from 'react-router-dom'
 
 const Index = () => {
@@ -12,7 +12,7 @@ const Index = () => {
     >
       {/* Title */}
       <div className="text-center mb-8 sm:mb-10 md:mb-12 lg:mb-16">
-        <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-black tracking-wide leading-tight">
+        <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white tracking-wide leading-tight">
           CHALLENGE MAXIMA
         </h1>
       </div>
@@ -46,13 +46,6 @@ const Index = () => {
           Challenge Lainnya
         </button>
 
-      </div>
-
-      {/* Optional: Footer text for very small screens */}
-      <div className="mt-8 sm:mt-12 text-center">
-        <p className="text-xs sm:text-sm text-black opacity-70">
-          Pilih challenge yang ingin kamu ikuti
-        </p>
       </div>
     </div>
   )

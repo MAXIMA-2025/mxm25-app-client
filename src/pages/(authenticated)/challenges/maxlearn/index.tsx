@@ -1,6 +1,7 @@
 import React from 'react'
-import Background from '@/assets/asset_maxlearn/BACKGROUND 1.png'
+import Background from '@/assets/asset_maxlearn/BG MAXLEARN-02 1.png'
 import HandbookPdf from '@/assets/asset_maxlearn/HANDBOOK RAW MAXLEARN.pdf'
+import Kertas from '@/assets/asset_maxlearn/KERTAS MAXLEARN 1.png'
 import { useNavigate } from 'react-router-dom'
 
 const Index = () => {
@@ -12,18 +13,26 @@ const Index = () => {
       style={{ backgroundImage: `url(${Background})` }}
     >
       {/* Header */}
-      <div className="text-center mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-black mb-2">
+      <div className="text-center">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2">
           MAXLEARN
         </h1>
-        <p className="text-sm sm:text-base md:text-lg text-black">handbook</p>
+        <p className="text-sm sm:text-base md:text-lg text-white">handbook</p>
       </div>
 
-      {/* PDF Viewer Container */}
-      <div className="w-full max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-5xl">
-        <div className="aspect-[4/3] sm:aspect-[16/10] md:aspect-[2/1] rounded-lg sm:rounded-xl overflow-hidden bg-white bg-opacity-80 shadow-lg sm:shadow-2xl ring-1 ring-gray-300 backdrop-blur mb-6 sm:mb-8">
+      {/* PDF di atas kertas */}
+      <div className="relative w-[95%] max-w-6xl mx-auto">
+        {/* Kertas Background */}
+        <img 
+          src={Kertas} 
+          alt="Kertas" 
+          className="w-full h-auto relative z-0" 
+        />
+
+        {/* PDF Embed - ukurannya stabil */}
+        <div className="absolute top-[28%] left-1/2 transform -translate-x-1/2 w-[60%] h-[50%] z-10">
           <embed
-            src={`${HandbookPdf}#zoom=100&toolbar=1&scrollbar=1`}
+            src={`${HandbookPdf}#zoom=80&toolbar=0&scrollbar=1`}
             type="application/pdf"
             className="w-full h-full"
           />
