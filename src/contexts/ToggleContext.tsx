@@ -1,6 +1,5 @@
 // src/context/ToggleContext.tsx
 import React, { createContext, useContext } from "react";
-import type { ApiResponse } from "@/hooks/useApi";
 
 type Toggle = {
   id: number;

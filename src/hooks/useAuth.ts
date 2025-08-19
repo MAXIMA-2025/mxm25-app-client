@@ -101,7 +101,7 @@ const useAuth = () => {
       }
     },
     staleTime: Infinity, // data akan basi setelah 5 mnt
-    retry: 1,
+    retry: 10,
     enabled: !isLoggedOut, // biar pas udah logout dia ga fetch lagi !! anjir gua debug ini berhari2 dan solusinya se simple ini tai emg
     refetchInterval: (query) => {
       const user = query.state.data?.data;

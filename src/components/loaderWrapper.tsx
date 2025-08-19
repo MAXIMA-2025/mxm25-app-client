@@ -1,6 +1,5 @@
 // LoaderWrapper.tsx
 import React, { useEffect, useRef, useState } from "react";
-import { Card } from "./ui/card";
 
 type Props = {
   children: React.ReactNode;
@@ -60,21 +59,19 @@ const LoaderWrapper = ({ children }: Props) => {
       {!allLoaded && (
         <>
           <div className="fixed inset-0 bg-black/80 z-[9999] flex flex-col items-center justify-center transition-opacity">
-              <h1 className="text-2xl text-white font-fraunces font-bold mb-2">
-                ~ Loading ~
-              </h1>
-              <div className="w-64 h-2 border-white border-1 bg-gray-300 rounded overflow-hidden">
-                <div
-                  className="h-full bg-primary transition-all duration-300"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
+            <h1 className="text-2xl text-white font-fraunces font-bold mb-2">
+              ~ Loading ~
+            </h1>
+            <div className="w-64 h-2 border-white border-1 bg-gray-300 rounded overflow-hidden">
+              <div
+                className="h-full bg-primary transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
           </div>
         </>
       )}
-      <div ref={containerRef}>
-        {children}
-      </div>
+      <div ref={containerRef}>{children}</div>
     </>
   );
 };
