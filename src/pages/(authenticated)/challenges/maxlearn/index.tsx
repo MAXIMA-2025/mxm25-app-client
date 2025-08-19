@@ -33,7 +33,7 @@ const Index = () => {
         <div className="absolute top-[28%] left-1/2 transform -translate-x-1/2 w-[60%] h-[50%] z-10">
           <embed
             src={`${HandbookPdf}#zoom=80&toolbar=0&scrollbar=1`}
-            type="application/pdf"
+            type="application/pdf" 
             className="w-full h-full"
           />
         </div>
