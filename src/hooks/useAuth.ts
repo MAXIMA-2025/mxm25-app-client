@@ -6,6 +6,7 @@ import {
 import useApi, { type ApiResponse } from "./useApi";
 import useErrorHandler from "./useErrorHandler";
 import useAuthContext from "./useAuthContext";
+import type { MaxlearnStatus } from "@/pages/(authenticated)/challenges/maxlearn/game";
 
 export type Auth<
   T = UserPanitia | UserOrganisator | UserEksternal | UserMahasiswa
@@ -77,6 +78,7 @@ export type UserMahasiswa = {
   whatsapp: string;
   lineId: string;
   role: string;
+  isFinishedMaxlearn: MaxlearnStatus;
 };
 
 const useAuth = () => {

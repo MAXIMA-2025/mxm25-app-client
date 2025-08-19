@@ -34,6 +34,7 @@ const Layout = () => {
     }
   }, [nav, isLoggedOut]);
 
+
   // Call useQuery ALWAYS, but control execution via enabled flag
   const { data: toggleAcara, status: toggleStatus } = useQuery({
     queryKey: ["toggles"],
@@ -62,6 +63,8 @@ const Layout = () => {
   //   return null;
   // }
 
+  // Map react-query status to ToggleContextType status
+  const mappedStatus = status === "pending" ? "loading" : status;
   const mappedStatus = toggleStatus === "pending" ? "loading" : toggleStatus;
 
   return (
