@@ -1,7 +1,6 @@
 import HeroSection from "@/components/landing/HeroSection";
 import LoaderWrapper from "@/components/loaderWrapper";
-import AboutSection from "@/components/landing/AboutSection"
-
+import AboutSection from "@/components/landing/AboutSection";
 
 const index = () => {
   return (

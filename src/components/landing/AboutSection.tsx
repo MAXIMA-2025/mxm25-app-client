@@ -6,7 +6,7 @@ import about2 from "@/assets/images/hero/about/about2.webp";
 import about3 from "@/assets/images/hero/about/about3.webp";
 import about4 from "@/assets/images/hero/about/about4.webp";
 import { useNavigate } from "react-router";
-import { Separator } from "@radix-ui/react-menubar";
+import { Accordion, AccordionItem, AccordionContent, AccordionTrigger } from "@/components/ui/accordion";
 
 const AboutSection = () => {
   const navigate = useNavigate();
@@ -14,13 +14,14 @@ const AboutSection = () => {
     navigate("/login");
   };
   return (
-    <section className="w-dvw h-[300dvh] flex justify-center items-start pt-64 overflow-hidden relative -top-50 z-10">
+    <section className="w-dvw h-[350dvh] sm:h-[380dvh] md:h-[300dvh] flex justify-center items-start pt-60 overflow-hidden relative -top-50 sm:-top-56 md:-top-50 z-10">
       <img
         src={backgroundImg}
         className="absolute h-full inset-0 w-full object-cover z-10 object-top"
         alt="Hero Background"
       />
       <div className="z-20 flex flex-col items-center justify-center">
+        {/* APA ITU MAXIMA */}
         <h1
           className="font-fraunces text-center text-4xl font-semibold  drop-shadow-xl mb-4
              [text-shadow:1px_1px_0_white,_-1px_-1px_0_white,_1px_-1px_0_white,_-1px_1px_0_white]"
@@ -95,34 +96,70 @@ const AboutSection = () => {
             Bergabung Bersama!
           </Button>
         </div>
+
+        {/* FAQ MAXIMA */}
+        <div className="mt-20 w-full flex flex-col items-center justify-center">
+          <h1
+            className="font-fraunces text-center text-4xl font-semibold  drop-shadow-xl mb-4
+             [text-shadow:1px_1px_0_white,_-1px_-1px_0_white,_1px_-1px_0_white,_-1px_1px_0_white]"
+          >
+            Frequently Asked Questions
+          </h1>
+          <Accordion type="single" className="bg-white md:w-2/3 font-futura px-6 py-4 rounded-xl drop-shadow-2xl border-4 border-primary-foreground m-4" collapsible>
+            <AccordionItem value="item-1">
+              <AccordionTrigger>Is it accessible?</AccordionTrigger>
+              <AccordionContent>
+                Yes. It adheres to the WAI-ARIA design pattern.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger>Is it accessible?</AccordionTrigger>
+              <AccordionContent>
+                Yes. It adheres to the WAI-ARIA design pattern.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-3">
+              <AccordionTrigger>Is it accessible?</AccordionTrigger>
+              <AccordionContent>
+                Yes. It adheres to the WAI-ARIA design pattern.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-4">
+              <AccordionTrigger>Is it accessible?</AccordionTrigger>
+              <AccordionContent>
+                Yes. It adheres to the WAI-ARIA design pattern.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
       </div>
       <style>{`
-@keyframes wiggle {
-  0%, 100% { transform: rotate(0deg) translateX(0px) translateY(0px); }
-  25% { transform: rotate(1deg) translateX(2px) translateY(-1px); }
-  50% { transform: rotate(-1deg) translateX(-2px) translateY(1px); }
-  75% { transform: rotate(0.5deg) translateX(1px) translateY(0px); }
-}
+        @keyframes wiggle {
+          0%, 100% { transform: rotate(0deg) translateX(0px) translateY(0px); }
+          25% { transform: rotate(1deg) translateX(2px) translateY(-1px); }
+          50% { transform: rotate(-1deg) translateX(-2px) translateY(1px); }
+          75% { transform: rotate(0.5deg) translateX(1px) translateY(0px); }
+        }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
-}
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-6px); }
+        }
 
-@keyframes tilt {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(1deg) translateX(1px); }
-  50% { transform: rotate(-1deg) translateX(-1px); }
-  75% { transform: rotate(0.5deg) translateX(0.5px); }
-}
+        @keyframes tilt {
+          0%, 100% { transform: rotate(0deg); }
+          25% { transform: rotate(1deg) translateX(1px); }
+          50% { transform: rotate(-1deg) translateX(-1px); }
+          75% { transform: rotate(0.5deg) translateX(0.5px); }
+        }
 
-@keyframes drift {
-  0%, 100% { transform: translateX(0px) translateY(0px); }
-  25% { transform: translateX(3px) translateY(-2px); }
-  50% { transform: translateX(-3px) translateY(2px); }
-  75% { transform: translateX(1px) translateY(-1px); }
-}
-`}</style>
+        @keyframes drift {
+          0%, 100% { transform: translateX(0px) translateY(0px); }
+          25% { transform: translateX(3px) translateY(-2px); }
+          50% { transform: translateX(-3px) translateY(2px); }
+          75% { transform: translateX(1px) translateY(-1px); }
+        }
+      `}</style>
     </section>
   );
 };

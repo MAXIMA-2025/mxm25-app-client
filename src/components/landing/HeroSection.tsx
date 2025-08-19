@@ -29,7 +29,7 @@ const HeroSection = () => {
         className="absolute -right-0  top-0 w-full h-full object-cover z-0 "
         alt="Hero Foreground Xima"
       />
-      <div className="-mt-30 flex flex-col-reverse justify-center items-center">
+      <div className="-mt-34 flex flex-col-reverse justify-center items-center">
         <div className="flex flex-col gap-2 z-1 p-5 items-center text-center">
           <h1 className="font-fraunces font-semibold text-3xl md:text-4xl">
             Explore with Curiosity,
