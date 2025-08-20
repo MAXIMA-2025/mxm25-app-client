@@ -9,6 +9,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useApi from "@/hooks/useApi";
 import useAuth, { type Auth, type UserMahasiswa } from "@/hooks/useAuth";
 import { useNavigate } from "@/router";
+import bgImage from "@/assets/asset_maxlearn/logo/bg.png";
 
 export type StateData = {
   id: number;
@@ -223,196 +224,366 @@ const GamePage: React.FC = () => {
 
   return (
     <>
+      {/* Cheat Detection Modal */}
       {showCheatModal && (
         <Dialog.Root open={showCheatModal} onOpenChange={setShowCheatModal}>
           <Dialog.Portal>
-            <Dialog.Overlay className="fixed inset-0 bg-black/50" />
-            <Dialog.Content className="fixed left-1/2 top-1/2 w-[90vw] max-w-md -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg p-6 shadow-lg focus:outline-none">
-              <Dialog.Title className="text-lg font-bold">
-                ⚠️ Hayooo Kamu terdeteksi Curang! ⚠️
-              </Dialog.Title>
-              <Dialog.Description className="text-black italic mb-4">
-                Karena terdeteksi curang, Kamu dianggap gagal di challenge
-                MAXLEARN 😜
-              </Dialog.Description>
-              <div className="flex justify-end">
-                <Dialog.Close asChild>
-                  <Button
-                    onClick={async () => await handleCheatingModalClose()}
-                  >
-                    Yahhhhhh ... :(
-                  </Button>
-                </Dialog.Close>
+            <Dialog.Overlay className="fixed inset-0 bg-black/70 backdrop-blur-sm animate-in fade-in-0 duration-200" />
+            <Dialog.Content className="fixed left-1/2 top-1/2 w-[90vw] max-w-md -translate-x-1/2 -translate-y-1/2 animate-in zoom-in-95 fade-in-0 duration-200">
+              <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-red-200/50">
+                <Dialog.Title className="text-xl font-bold text-red-600 mb-3 flex items-center gap-2">
+                  <span className="text-2xl">⚠️</span>
+                  Curang Terdeteksi!
+                </Dialog.Title>
+                <Dialog.Description className="text-gray-700 mb-5 text-sm leading-relaxed">
+                  Sistem mendeteksi aktivitas tidak wajar. Challenge MAXLEARN
+                  dinyatakan gagal.
+                </Dialog.Description>
+                <div className="flex justify-end">
+                  <Dialog.Close asChild>
+                    <Button
+                      onClick={async () => await handleCheatingModalClose()}
+                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl font-medium shadow-lg transition-all duration-200 hover:scale-105"
+                    >
+                      Tutup
+                    </Button>
+                  </Dialog.Close>
+                </div>
               </div>
             </Dialog.Content>
           </Dialog.Portal>
         </Dialog.Root>
       )}
 
-      <div className="p-8">
-        {!selectedCategory ? (
-          <>
-            <h1 className="text-2xl font-extrabold mb-4">Pilih Kategori</h1>
-            <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-6 mb-6">
-              {categories.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategory(cat.id)}
-                  className="p-4 w-35 aspect-square bg-gray-200 rounded shadow hover:bg-gray-300"
+      {/* Background Container */}
+      <div
+        className="fixed inset-0 overflow-auto"
+        style={{
+          backgroundImage: `url(${bgImage})`,
+          backgroundSize: "100% 100%",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        {/* Minimal overlay untuk readability */}
+        <div className="absolute inset-0 bg-black/10 pointer-events-none"></div>
+
+        {/* Content Wrapper */}
+        <div className="relative z-10 min-h-screen">
+          {!selectedCategory ? (
+            /* ===== CATEGORY SELECTION VIEW ===== */
+            <div className="flex flex-col min-h-screen p-4 sm:p-6">
+              {/* Header Section */}
+              <div className="text-center py-6 mb-4">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-white drop-shadow-2xl animate-in slide-in-from-top duration-300">
+                  Pilih Kategori Challenge
+                </h1>
+                <div className="w-16 h-1 bg-white/80 mx-auto rounded-full shadow-lg"></div>
+              </div>
+
+              {/* Back Button */}
+              <div className="mb-6 animate-in slide-in-from-left duration-300">
+                <Button
+                  className="bg-white/95 hover:bg-white text-gray-800 backdrop-blur-sm shadow-xl border-0 px-5 py-2.5 rounded-xl font-semibold transition-all duration-200 hover:scale-105 hover:shadow-2xl"
+                  onClick={() => nav("/main/challenges/maxlearn")}
                 >
-                  <span className="font-semibold">{cat.name}</span>
-                </button>
-              ))}
-            </div>
-            {finished && (
-              <>
-                <Dialog.Root>
-                  <Dialog.Trigger asChild>
-                    <Button>Selesai</Button>
-                  </Dialog.Trigger>
-                  <Dialog.Portal>
-                    <Dialog.Overlay className="fixed inset-0 bg-black/50" />
-                    <Dialog.Content className="fixed left-1/2 top-1/2 w-[90vw] max-w-md -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg p-6 shadow-lg focus:outline-none">
-                      <Dialog.Title className="text-lg font-bold mb-2">
-                        Selamat, {(auth as Auth<UserMahasiswa>).user?.nama},
-                        Anda telah menyelesaikan MAXLEARN!
-                      </Dialog.Title>
-                      <Dialog.Description className="text-black italic mb-4">
-                        Silahkan screenshot halaman ini dan post di Instagram
-                        Anda!
-                      </Dialog.Description>
+                  <span className="flex items-center gap-2">
+                    <span>←</span>
+                    Kembali ke Menu Utama
+                  </span>
+                </Button>
+              </div>
 
-                      <div className="flex justify-end gap-2">
-                        <Dialog.Close asChild>
-                          <button className="px-4 py-2 rounded bg-gray-300">
-                            Tutup
-                          </button>
-                        </Dialog.Close>
-                      </div>
-                    </Dialog.Content>
-                  </Dialog.Portal>
-                </Dialog.Root>
-              </>
-            )}
-          </>
-        ) : (
-          <>
-            <Button className="mb-2" onClick={() => setSelectedCategory(null)}>
-              Kembali
-            </Button>
+              {/* Categories Grid */}
+              <div className="flex-1 flex items-center justify-center px-4">
+                <div className="w-full max-w-6xl mx-auto">
+                  {/* Main 3x3 Grid */}
+                  <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-4 justify-items-center">
+                    {categories.slice(0, 9).map((cat, index) => (
+                      <div
+                        key={cat.id}
+                        className="w-full max-w-sm animate-in fade-in-0 slide-in-from-bottom-4 duration-300"
+                        style={{ animationDelay: `${index * 50}ms` }}
+                      >
+                        <button
+                          onClick={() => setSelectedCategory(cat.id)}
+                          className="group relative overflow-hidden w-full h-16 sm:h-18 lg:h-20 rounded-xl bg-white/15 hover:bg-white/25 backdrop-blur-lg border border-white/30 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] cursor-pointer"
+                        >
+                          {/* Gradient overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-br from-blue-300/30 to-purple-300/30 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
 
-            {/* <button
-              onClick={() => setSelectedCategory(null)}
-              className="mb-4 px-3 py-1 bg-gray-300 rounded"
-            >
-              ← Kembali
-            </button> */}
-
-            <h2 className="text-xl font-bold  mb-4">{currentCategory?.name}</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-3">
-              {currentCategory?.organizations.map((org) => {
-                const stateLogo = logoMap[org.id];
-                const isUnlocked = unlocked.has(org.id);
-
-                return (
-                  <Dialog.Root key={org.id}>
-                    <Card className="border-gray-600 bg-white w-55 aspect-square p-4 rounded shadow text-center">
-                      <img
-                        src={stateLogo}
-                        alt={org.name}
-                        className={`w-full h-24 object-contain transition-all ${
-                          isUnlocked || finished ? "" : "blur-xs"
-                        }`}
-                      />
-                      {isUnlocked || finished ? (
-                        <p className="mt-2 font-semibold">{org.name}</p>
-                      ) : (
-                        <p className="mt-2 font-semibold">? ? ?</p>
-                      )}
-
-                      <Dialog.Trigger asChild>
-                        <Button>Lihat Info</Button>
-                      </Dialog.Trigger>
-                    </Card>
-
-                    <Dialog.Portal>
-                      <Dialog.Overlay className="fixed inset-0 bg-black/50" />
-                      {!isUnlocked && !finished ? (
-                        <Dialog.Content className="fixed left-1/2 top-1/2 w-[90vw] max-w-md -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg p-6 shadow-lg focus:outline-none">
-                          <Dialog.Title className="text-lg font-bold">
-                            Petunjuk
-                          </Dialog.Title>
-                          <Dialog.Description className="text-black italic mb-4">
-                            "{org.clue}"
-                          </Dialog.Description>
-
-                          <input
-                            type="password"
-                            value={passwordInput}
-                            placeholder="Password"
-                            onChange={(e) => setPasswordInput(e.target.value)}
-                            className="w-full border rounded px-3 py-2 mb-4"
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") {
-                                handlePasswordSubmit(
-                                  currentCategory.id,
-                                  org,
-                                  (e.target as HTMLInputElement).value
-                                );
-                              }
-                            }}
-                          />
-
-                          <div className="flex justify-end gap-2">
-                            <Dialog.Close asChild>
-                              <button className="px-4 py-2 rounded bg-gray-300">
-                                Batal
-                              </button>
-                            </Dialog.Close>
-                            <Dialog.Close asChild>
-                              <button
-                                className="px-4 py-2 rounded bg-blue-600 text-white"
-                                onClick={() =>
-                                  handlePasswordSubmit(
-                                    currentCategory.id,
-                                    org,
-                                    passwordInput
-                                  )
-                                }
-                              >
-                                Submit
-                              </button>
-                            </Dialog.Close>
+                          {/* Content */}
+                          <div className="relative z-10 h-full flex items-center justify-center px-3">
+                            <span className="font-bold text-white drop-shadow-lg text-sm sm:text-base text-center leading-tight">
+                              {cat.name}
+                            </span>
                           </div>
-                        </Dialog.Content>
-                      ) : (
-                        <Dialog.Content className="fixed left-1/2 top-1/2 w-[90vw] max-w-md -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg p-6 shadow-lg focus:outline-none">
-                          <Dialog.Title className="text-lg font-bold mb-2">
-                            {org.name}
-                          </Dialog.Title>
-                          <Dialog.Description className="text-black italic mb-4">
-                            {org.desc}
-                          </Dialog.Description>
 
-                          <div className="flex justify-end gap-2">
+                          {/* Shine effect */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500 rounded-xl"></div>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Bottom Row */}
+                  {categories.length > 9 && (
+                    <div className="flex justify-center">
+                      <div className="grid grid-cols-2 gap-3 sm:gap-4 w-full max-w-3xl justify-items-center">
+                        {categories.slice(9).map((cat, index) => (
+                          <div
+                            key={cat.id}
+                            className="w-full max-w-sm animate-in fade-in-0 slide-in-from-bottom-4 duration-300"
+                            style={{ animationDelay: `${(index + 9) * 50}ms` }}
+                          >
+                            <button
+                              onClick={() => setSelectedCategory(cat.id)}
+                              className="group relative overflow-hidden w-full h-16 sm:h-18 lg:h-20 rounded-xl bg-white/15 hover:bg-white/25 backdrop-blur-lg border border-white/30 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] cursor-pointer"
+                            >
+                              {/* Gradient overlay */}
+                              <div className="absolute inset-0 bg-gradient-to-br from-green-300/30 to-teal-300/30 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+
+                              {/* Content */}
+                              <div className="relative z-10 h-full flex items-center justify-center px-3">
+                                <span className="font-bold text-white drop-shadow-lg text-sm sm:text-base text-center leading-tight">
+                                  {cat.name}
+                                </span>
+                              </div>
+
+                              {/* Shine effect */}
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500 rounded-xl"></div>
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Finish Button */}
+              {finished && (
+                <div className="text-center py-8 animate-in slide-in-from-bottom duration-300">
+                  <Dialog.Root>
+                    <Dialog.Trigger asChild>
+                      <Button className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white px-8 py-3 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-200 hover:scale-110">
+                        <span className="flex items-center gap-3">
+                          <span>🎉</span>
+                          Challenge Selesai!
+                          <span>✨</span>
+                        </span>
+                      </Button>
+                    </Dialog.Trigger>
+                    <Dialog.Portal>
+                      <Dialog.Overlay className="fixed inset-0 bg-black/70 backdrop-blur-sm animate-in fade-in-0 duration-200" />
+                      <Dialog.Content className="fixed left-1/2 top-1/2 w-[90vw] max-w-lg -translate-x-1/2 -translate-y-1/2 animate-in zoom-in-95 fade-in-0 duration-200">
+                        <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-emerald-200/50">
+                          <Dialog.Title className="text-2xl font-bold text-emerald-600 mb-4 flex items-center gap-3">
+                            <span className="text-3xl">🎉</span>
+                            Selamat, {(auth as Auth<UserMahasiswa>).user?.nama}!
+                          </Dialog.Title>
+                          <Dialog.Description className="text-gray-700 mb-6 text-base leading-relaxed bg-emerald-50 p-4 rounded-xl border border-emerald-100">
+                            Anda telah menyelesaikan MAXLEARN dengan sempurna!
+                            Silahkan screenshot dan bagikan pencapaian Anda!
+                          </Dialog.Description>
+                          <div className="flex justify-end">
                             <Dialog.Close asChild>
-                              <button className="px-4 py-2 rounded bg-gray-300">
+                              <button className="px-6 py-3 rounded-xl bg-gray-500 hover:bg-gray-600 text-white font-medium transition-all duration-200 hover:scale-105">
                                 Tutup
                               </button>
                             </Dialog.Close>
                           </div>
-                        </Dialog.Content>
-                      )}
+                        </div>
+                      </Dialog.Content>
                     </Dialog.Portal>
                   </Dialog.Root>
-                );
-              })}
+                </div>
+              )}
             </div>
-          </>
-        )}
+          ) : (
+            /* ===== ORGANIZATION VIEW ===== */
+            <div className="flex flex-col min-h-screen p-4 sm:p-6">
+              {/* Back Button */}
+              <div className="mb-4 animate-in slide-in-from-left duration-200">
+                <Button
+                  className="bg-white/95 hover:bg-white text-gray-800 backdrop-blur-sm shadow-xl border-0 px-5 py-2.5 rounded-xl font-semibold transition-all duration-200 hover:scale-105 hover:shadow-2xl"
+                  onClick={() => setSelectedCategory(null)}
+                >
+                  <span className="flex items-center gap-2">
+                    <span>←</span>
+                    Kembali ke Kategori
+                  </span>
+                </Button>
+              </div>
+
+              {/* Category Title */}
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-6 text-white drop-shadow-2xl text-center animate-in slide-in-from-top duration-300">
+                {currentCategory?.name}
+              </h2>
+
+              {/* Organizations Grid */}
+              <div className="flex-1 pb-6">
+                <div className="flex justify-center px-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 max-w-7xl w-full justify-items-center">
+                    {currentCategory?.organizations.map((org, index) => {
+                      const stateLogo = logoMap[org.id];
+                      const isUnlocked = unlocked.has(org.id);
+
+                      return (
+                        <div
+                          key={org.id}
+                          className="w-full max-w-xs animate-in fade-in-0 slide-in-from-bottom-4 duration-200"
+                          style={{ animationDelay: `${index * 30}ms` }}
+                        >
+                          <Dialog.Root>
+                            <Card className="group relative overflow-hidden aspect-[4/5] bg-white/15 hover:bg-white/25 backdrop-blur-lg border border-white/30 shadow-lg hover:shadow-xl rounded-2xl p-4 transition-all duration-200 hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98]">
+                              {/* Gradient overlay */}
+                              <div className="absolute inset-0 bg-gradient-to-br from-blue-300/30 to-purple-300/30 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+
+                              <div className="relative z-10 h-full flex flex-col">
+                                {/* Logo Section */}
+                                <div className="flex-1 flex items-center justify-center mb-3">
+                                  <div className="relative">
+                                    <img
+                                      src={stateLogo}
+                                      alt={org.name}
+                                      className={`w-full h-16 sm:h-20 object-contain transition-all duration-200 ${
+                                        isUnlocked || finished
+                                          ? "group-hover:scale-110"
+                                          : "blur-sm opacity-40"
+                                      }`}
+                                      loading="lazy"
+                                    />
+                                    {/* Status Indicator */}
+                                    <div
+                                      className={`absolute -top-1 -right-1 w-3 h-3 rounded-full transition-all duration-200 ${
+                                        isUnlocked || finished
+                                          ? "bg-green-400 shadow-lg shadow-green-400/50"
+                                          : "bg-gray-400"
+                                      }`}
+                                    ></div>
+                                  </div>
+                                </div>
+
+                                {/* Organization Name */}
+                                <div className="text-center mb-3">
+                                  {isUnlocked || finished ? (
+                                    <p className="font-bold text-white drop-shadow-lg text-xs sm:text-sm leading-tight group-hover:text-white transition-colors duration-200">
+                                      {org.name}
+                                    </p>
+                                  ) : (
+                                    <p className="font-bold text-white/70 text-xs sm:text-sm">
+                                      ???
+                                    </p>
+                                  )}
+                                </div>
+
+                                {/* Action Button */}
+                                <Dialog.Trigger asChild>
+                                  <Button className="bg-white/20 hover:bg-white/30 text-white border border-white/30 hover:border-white/50 text-xs sm:text-sm py-2.5 px-4 rounded-xl font-medium shadow-lg transition-all duration-200 w-full group-hover:scale-105 backdrop-blur-sm">
+                                    {isUnlocked || finished
+                                      ? "Lihat Info"
+                                      : "Tebak"}
+                                  </Button>
+                                </Dialog.Trigger>
+                              </div>
+
+                              {/* Shine effect */}
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500 rounded-2xl"></div>
+                            </Card>
+
+                            {/* Dialog */}
+                            <Dialog.Portal>
+                              <Dialog.Overlay className="fixed inset-0 bg-black/70 backdrop-blur-sm animate-in fade-in-0 duration-200" />
+                              {!isUnlocked && !finished ? (
+                                <Dialog.Content className="fixed left-1/2 top-1/2 w-[90vw] max-w-lg -translate-x-1/2 -translate-y-1/2 animate-in zoom-in-95 fade-in-0 duration-200">
+                                  <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-blue-200/50">
+                                    <Dialog.Title className="text-xl font-bold text-blue-600 mb-4 flex items-center gap-2">
+                                      <span className="text-2xl">🔍</span>
+                                      Petunjuk
+                                    </Dialog.Title>
+                                    <Dialog.Description className="text-gray-700 mb-5 text-sm bg-blue-50 p-4 rounded-xl border border-blue-100 italic leading-relaxed">
+                                      "{org.clue}"
+                                    </Dialog.Description>
+
+                                    <input
+                                      type="password"
+                                      value={passwordInput}
+                                      placeholder="🔐 Masukkan password..."
+                                      onChange={(e) =>
+                                        setPasswordInput(e.target.value)
+                                      }
+                                      className="w-full border-2 border-blue-200 focus:border-blue-400 rounded-xl px-4 py-3 mb-5 focus:outline-none focus:ring-2 focus:ring-blue-400/20 text-sm transition-all duration-200 bg-white"
+                                      onKeyDown={(e) => {
+                                        if (e.key === "Enter") {
+                                          handlePasswordSubmit(
+                                            currentCategory.id,
+                                            org,
+                                            (e.target as HTMLInputElement).value
+                                          );
+                                          setPasswordInput("");
+                                        }
+                                      }}
+                                    />
+
+                                    <div className="flex justify-end gap-3">
+                                      <Dialog.Close asChild>
+                                        <button className="px-5 py-2.5 rounded-xl bg-gray-500 hover:bg-gray-600 text-white font-medium transition-all duration-200 hover:scale-105">
+                                          Batal
+                                        </button>
+                                      </Dialog.Close>
+                                      <Dialog.Close asChild>
+                                        <button
+                                          className="px-5 py-2.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-medium transition-all duration-200 hover:scale-105"
+                                          onClick={() => {
+                                            handlePasswordSubmit(
+                                              currentCategory.id,
+                                              org,
+                                              passwordInput
+                                            );
+                                            setPasswordInput("");
+                                          }}
+                                        >
+                                          Submit
+                                        </button>
+                                      </Dialog.Close>
+                                    </div>
+                                  </div>
+                                </Dialog.Content>
+                              ) : (
+                                <Dialog.Content className="fixed left-1/2 top-1/2 w-[90vw] max-w-lg -translate-x-1/2 -translate-y-1/2 animate-in zoom-in-95 fade-in-0 duration-200">
+                                  <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-emerald-200/50">
+                                    <Dialog.Title className="text-xl font-bold text-emerald-600 mb-4 flex items-center gap-2">
+                                      <span className="text-2xl">✨</span>
+                                      {org.name}
+                                    </Dialog.Title>
+                                    <Dialog.Description className="text-gray-700 mb-5 text-sm leading-relaxed bg-emerald-50 p-4 rounded-xl border border-emerald-100">
+                                      {org.desc}
+                                    </Dialog.Description>
+
+                                    <div className="flex justify-end">
+                                      <Dialog.Close asChild>
+                                        <button className="px-5 py-2.5 rounded-xl bg-gray-500 hover:bg-gray-600 text-white font-medium transition-all duration-200 hover:scale-105">
+                                          Tutup
+                                        </button>
+                                      </Dialog.Close>
+                                    </div>
+                                  </div>
+                                </Dialog.Content>
+                              )}
+                            </Dialog.Portal>
+                          </Dialog.Root>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </>
   );
 };
-
 export default GamePage;
