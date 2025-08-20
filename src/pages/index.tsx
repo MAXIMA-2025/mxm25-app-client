@@ -1,6 +1,7 @@
 import HeroSection from "@/components/landing/HeroSection";
 import LoaderWrapper from "@/components/loaderWrapper";
 import AboutSection from "@/components/landing/AboutSection";
+import Footer from "@/components/Footer";
 
 const index = () => {
   return (
@@ -8,6 +9,7 @@ const index = () => {
       <LoaderWrapper>
         <HeroSection />
         <AboutSection />
+        <Footer/>
       </LoaderWrapper>
     </div>
   );
