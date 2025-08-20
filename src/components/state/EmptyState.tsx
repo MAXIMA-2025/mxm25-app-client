@@ -34,12 +34,12 @@ const EmptyState: React.FC<EmptyStateProps> = ({
           Slot Kosong
         </h3>
         <p className="text-sm text-gray-500 mb-4">
-          Pilih STATE untuk slot {cardSlot}
+          Silahkan Pilih STATE 
         </p>
 
         <button
           className="cursor-pointer w-full bg-gray-300 hover:bg-gray-400 text-gray-600 hover:text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105"
-          onClick={() => nav("select", { state: stateDateSelected })}
+          onClick={() => nav("select", { state: { state: stateDateSelected, slotState: cardSlot } })}
         >
           + Pilih STATE
         </button>
@@ -47,7 +47,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
         <Routes>
           <Route
             path="select"
-            element={<Select stateTerpilih={stateDateSelected} />}
+            element={<Select stateTerpilih={stateDateSelected}/>}
           />
         </Routes>
       </div>

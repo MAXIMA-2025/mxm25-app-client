@@ -26,7 +26,6 @@ const FilledState: React.FC<FilledStateProps> = ({ cardSlot, stateName, stateLoc
               </div>
 
               <div className="space-y-1 mb-6">
-                <p className="font-semibold">Slot {cardSlot}</p>
                 <p className="text-sm text-gray-700">
                   <span className="font-semibold">Tanggal:</span> {stateDate}
                 </p>

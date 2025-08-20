@@ -1,4 +1,5 @@
 import React from "react";
+import RegisterButton from "./RegisterButton";
 
 interface UkmCardProps {
   stateId: number;
@@ -9,7 +10,6 @@ interface UkmCardProps {
   currentFilledCapacity: number;
   ukmLogo: string | null;
   stateDescription?: string | null;
-  onPilihState?: (stateId: number) => void;
   onInfoState?: (stateId: number) => void;
   selectedStateDate: string[];
 }
@@ -23,7 +23,6 @@ const UkmCard: React.FC<UkmCardProps> = ({
   currentFilledCapacity,
   ukmLogo,
   stateDescription,
-  onPilihState,
   onInfoState,
   selectedStateDate,
 }) => {
@@ -44,11 +43,6 @@ const UkmCard: React.FC<UkmCardProps> = ({
     return "text-green-600";
   };
 
-  const handlePilihState = () => {
-    if (onPilihState && !isFullCapacity && !isSelected) {
-      onPilihState(stateId);
-    }
-  };
 
   const handleInfoState = () => {
     if (onInfoState && !isSelected) {
@@ -149,42 +143,12 @@ const UkmCard: React.FC<UkmCardProps> = ({
 
         {/* Action Buttons */}
         <div className="text-sm flex flex-col sm:flex-row gap-3">
-          <button
-            onClick={handlePilihState}
-            disabled={isFullCapacity || isSelected}
-            className={`cursor-pointer flex-1 font-bold py-3 px-9 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 ${
-              isFullCapacity || isSelected
-                ? "bg-gray-400 text-gray-600 cursor-not-allowed"
-                : "bg-red-800 hover:bg-red-900 text-white hover:shadow-lg"
-            }`}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <line
-                x1="12"
-                y1="5"
-                x2="12"
-                y2="19"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-              <line
-                x1="5"
-                y1="12"
-                x2="19"
-                y2="12"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
-            <span>{isFullCapacity ? "Penuh" : "Pilih State"}</span>
-          </button>
-
+          <RegisterButton
+            stateId={stateId}
+            isFullCapacity={isFullCapacity}
+            isSelected={isSelected}
+          />
+ 
           <button
             onClick={handleInfoState}
             disabled={isSelected}
