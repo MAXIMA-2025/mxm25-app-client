@@ -287,10 +287,9 @@ const Onboarding: React.FC = () => {
 
   return (
     <section
-      className="min-h-screen w-screen bg-black/40 flex flex-col gap-4 items-center justify-center px-4"
+      className="min-h-screen md:bg-cover w-screen bg-black/40 flex flex-col gap-4 items-center justify-center px-4"
       style={{
         backgroundImage: `url(${backgroundImg})`,
-        backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundBlendMode: "darken",
       }}
