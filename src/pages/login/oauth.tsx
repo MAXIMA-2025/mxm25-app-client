@@ -31,6 +31,7 @@ const Oauth = () => {
         toast.success(res.data.message);
         localStorage.removeItem("google-login-role");
         setIsLoggedOut(false);
+        nav("/main");
 
         // ✅ Verify login by fetching the logged-in user
         // const userRes = await axios.get(
