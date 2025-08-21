@@ -93,7 +93,7 @@ const AboutSection = () => {
   };
   return (
 <section
-  className="w-dvw h-auto relative -top-50 sm:-top-56 md:-top-50 -mb-50 sm:-mb-56 md:-mb-50  z-10 flex justify-center items-start pt-60 overflow-hidden"
+  className="w-dvw h-auto relative -top-64 md:-top-50 -mb-64 md:-mb-50  z-10 flex justify-center items-start pt-74 overflow-hidden"
   style={{
     backgroundImage: `url(${backgroundImg})`,
     backgroundSize: "cover",
@@ -185,7 +185,7 @@ const AboutSection = () => {
           >
             Frequently Asked Questions
           </h1>
-          <p className="font-futura font-medium text-xl drop-shadow-2xl bg-white/55 px-4 py-2 rounded-lg shadow-2xl">
+          <p className="font-futura text-center mx-4 font-medium text-xl drop-shadow-2xl bg-white/55 px-4 py-2 rounded-lg shadow-2xl">
             Pertanyaan-pertanyaan yang sering ditanyakan seputar MAXIMA 2025
           </p>
 
