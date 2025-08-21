@@ -27,7 +27,7 @@ const ChallengeMaxima = () => {
       }}
     >
       {/* Title & Badge */}
-      <div className="flex flex-col items-center text-center z-20">
+      <div className="flex flex-col items-center text-center z-20 mt-20 md:mb-12">
         <h1
           className="font-fraunces text-4xl md:text-6xl font-semibold drop-shadow-xl
           [text-shadow:2px_1px_0_white,_-2px_-1px_0_white,_2px_-1px_0_white,_-2px_1px_0_white]"
@@ -42,9 +42,9 @@ const ChallengeMaxima = () => {
       </div>
 
       {/* Content Area */}
-      <div className="relative flex flex-col md:flex-row items-center md:items-start w-full max-w-6xl mt-8">
+      <div className="relative flex flex-col md:flex-row items-center md:items-start w-full max-w-6xl md:mt-8">
         {/* Card */}
-        <Card className="font-futura z-20 drop-shadow-2xl w-2/3 md:w-1/2 py-0 pb-2 bg-gradient-to-r from-white to-yellow-200 border-7 border-[#90171a] rounded-2xl overflow-hidden flex flex-col">
+        <Card className="font-futura z-20 drop-shadow-2xl w-full md:w-1/2 py-0 pb-2 bg-gradient-to-r from-white to-yellow-200 border-7 border-[#90171a] rounded-2xl overflow-hidden flex flex-col">
           <div className="flex flex-col h-full">
             <CardHeader className="p-4 sm:p-6 space-y-3">
               <CardTitle className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-[#2B2B2B] leading-tight">
@@ -57,7 +57,7 @@ const ChallengeMaxima = () => {
               </CardDescription>
             </CardHeader>
             <CardFooter className="px-4 sm:px-6 pb-4 flex flex-col md:flex-row w-full">
-              <Link to="/challenges">
+              <Link to="/challenges" className="w-full">
                 <Button variant="clay" className="w-full md:w-auto">
                   Baca Handbook <ArrowRight />
                 </Button>

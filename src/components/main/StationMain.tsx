@@ -79,7 +79,7 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
           </h2>
         </div>
       </div>
-      <Card className="font-futura w-3/4 py-2 bg-[#f2ca45] border-7 border-[#90171a] rounded-2xl overflow-hidden">
+      <Card className="font-futura w-full md:w-3/4 py-2 bg-[#f2ca45] border-7 border-[#90171a] rounded-2xl overflow-hidden">
         <div className="flex flex-col-reverse lg:flex-row">
           {/* Left Content Section */}
           <div className="flex-1 p-4 sm:p-6 md:p-8">
