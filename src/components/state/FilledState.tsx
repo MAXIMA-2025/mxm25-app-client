@@ -54,7 +54,7 @@ const FilledState: React.FC<FilledStateProps> = ({
           <h4 className="text-lg font-bold text-gray-900 mb-2">{stateName}</h4>
           {/* ACES Logo */}
           <div className="w-40 h-40 mx-auto mb-6 flex items-center justify-center">
-            <img src={ukmLogo} alt="ACES Logo" className="object-contain" />
+            <img src={`${import.meta.env.VITE_R2_URL}/${ukmLogo}`} alt={`${stateName} Logo`} className="object-contain" />
           </div>
         </div>
 
@@ -108,8 +108,8 @@ const FilledState: React.FC<FilledStateProps> = ({
                 <div className="flex flex-col items-center mb-4">
                   <div className="w-24 h-24 mb-2 flex items-center justify-center rounded-full bg-gray-100 overflow-hidden">
                     <img
-                      src={ukmLogo}
-                      alt="ACES Logo"
+                      src={`${import.meta.env.VITE_R2_URL}/${ukmLogo}`}
+                      alt={`${stateName} Logo`}
                       className="object-contain w-full h-full"
                     />
                   </div>
