@@ -15,78 +15,95 @@ import Maxsnap from "@/assets/asset_maxlearn/HANDBOOK MAXSNAP.png";
 import Photobooth from "@/assets/asset_maxlearn/Photobooth Challenge .png";
 import Maxtivity from "@/assets/asset_maxlearn/HANDBOOK MAXTIVITY.png";
 import CardSwap, { Card as Cardrousel } from "./CardSwap/CardSwap";
+import { Badge } from "../ui/badge";
+import { Link } from "react-router";
 
 const ChallengeMaxima = () => {
   return (
     <section
-      className=" overflow-hidden min-h-dvh w-full flex flex-col items-center gap-4 justify-center px-2 py-32 sm:px-4 md:px-8 bg-cover bg-center relative"
+      className="relative overflow-hidden min-h-lvh w-full flex flex-col items-center justify-center gap-6 px-4 py-24 sm:px-8 bg-cover bg-center"
       style={{
         backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
       }}
     >
-      <div className="h-auto">
-        <CardSwap
-          cardDistance={100}
-          verticalDistance={100}
-          delay={5000}
-          pauseOnHover={false}
+      {/* Title & Badge */}
+      <div className="flex flex-col items-center text-center z-20">
+        <h1
+          className="font-fraunces text-4xl md:text-6xl font-semibold drop-shadow-xl
+          [text-shadow:2px_1px_0_white,_-2px_-1px_0_white,_2px_-1px_0_white,_-2px_1px_0_white]"
         >
-          <Cardrousel>
-            <h3>Cardrousel 1</h3>
-            <p>Your content here</p>
-          </Cardrousel>
-          <Cardrousel>
-            <h3>Cardrousel 2</h3>
-            <p>Your content here</p>
-          </Cardrousel>
-          <Cardrousel>
-            <h3>Cardrousel 3</h3>
-            <p>Your content here</p>
-          </Cardrousel>
-          <Cardrousel>
-            <h3>Cardrousel 3</h3>
-            <p>Your content here</p>
-          </Cardrousel>
-        </CardSwap>
-      </div>
-
-      <div className="flex flex-col lg:flex-row items-center justify-start w-3/4">
-        {/* <img className="size-30 lg:size-50 " src={LogoStation} /> */}
-        <div className="flex flex-col items-center lg:items-start gap-2 w-3/4 mt-4">
-          <h1 className="font-fraunces text-center text-4xl lg:text-start lg:text-6xl font-medium text-shadow-lg">
-            CHALLENGES
-          </h1>
-          <h2 className="font-futura font-medium text-xl lg:text-2xl text-center lg:text-start">
+          CHALLENGES
+        </h1>
+        <Badge className="mt-2 shadow-2xl">
+          <h2 className="font-futura font-medium text-xl lg:text-2xl drop-shadow-2xl">
             Berkreasi bersama MAXIMA!
           </h2>
-        </div>
+        </Badge>
       </div>
 
-      <Card className="font-futura w-2/3 py-2 bg-gradient-to-r from-white to-yellow-200 border-7 border-[#90171a] rounded-2xl overflow-hidden flex flex-col">
-        <div className="flex flex-col-reverse lg:flex-row h-full">
-          <div className="flex-1 p-4 sm:p-6 md:p-8 flex flex-col justify-between">
-            <CardHeader className="p-0 space-y-2 sm:space-y-3">
-              <div>
-                <CardTitle className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-[#2B2B2B] mb-1 sm:mb-2 leading-tight">
-                  Berkesempatan untuk mendapatkan SKKM!
-                </CardTitle>
-                <CardDescription className="text-[#2B2B2B] text-sm sm:text-base lg:text-lg leading-relaxed">
-                  Belajar bersama MAXLEARN, mengabadikan momen dengan MAXSNAP,
-                  berkreasi bersama MAXTIVITY, hingga foto bersama teman-temanmu
-                  di Photobooth! Jangan lewatkan kesempatan ini, MAXIMERS!
-                </CardDescription>
-              </div>
+      {/* Content Area */}
+      <div className="relative flex flex-col md:flex-row items-center md:items-start w-full max-w-6xl mt-8">
+        {/* Card */}
+        <Card className="font-futura z-20 drop-shadow-2xl w-2/3 md:w-1/2 py-0 pb-2 bg-gradient-to-r from-white to-yellow-200 border-7 border-[#90171a] rounded-2xl overflow-hidden flex flex-col">
+          <div className="flex flex-col h-full">
+            <CardHeader className="p-4 sm:p-6 space-y-3">
+              <CardTitle className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-[#2B2B2B] leading-tight">
+                Berkesempatan untuk mendapatkan SKKM!
+              </CardTitle>
+              <CardDescription className="text-[#2B2B2B] text-sm sm:text-base lg:text-lg leading-relaxed">
+                Belajar bersama MAXLEARN, mengabadikan momen dengan MAXSNAP,
+                berkreasi bersama MAXTIVITY, hingga foto bersama teman-temanmu
+                di Photobooth! Jangan lewatkan kesempatan ini, MAXIMERS!
+              </CardDescription>
             </CardHeader>
-            <CardFooter className="px-0 flex flex-col md:flex-row">
-              <Button variant="clay">
-                Baca Handbook <ArrowRight />
-              </Button>
+            <CardFooter className="px-4 sm:px-6 pb-4 flex flex-col md:flex-row w-full">
+              <Link to="/challenges">
+                <Button variant="clay" className="w-full md:w-auto">
+                  Baca Handbook <ArrowRight />
+                </Button>
+              </Link>
             </CardFooter>
           </div>
+        </Card>
+
+        {/* Carousel (absolute on the right for md+) */}
+        <div className="hidden md:block absolute right-24 bottom-1/5 -translate-y-1/2">
+          <CardSwap
+            width={340}
+            height={420}
+            skewAmount={2.5}
+            cardDistance={120}
+            verticalDistance={-20}
+            delay={5000}
+            easing="elastic"
+          >
+            <Cardrousel>
+              <img
+                src={Maxlearn}
+                className="rounded-2xl border-4 border-white"
+              />
+            </Cardrousel>
+            <Cardrousel>
+              <img
+                src={Maxsnap}
+                className="rounded-2xl border-4 border-white"
+              />
+            </Cardrousel>
+            <Cardrousel>
+              <img
+                src={Maxtivity}
+                className="rounded-2xl border-4 border-white"
+              />
+            </Cardrousel>
+            <Cardrousel>
+              <img
+                src={Photobooth}
+                className="rounded-2xl border-4 border-white"
+              />
+            </Cardrousel>
+          </CardSwap>
         </div>
-      </Card>
+      </div>
     </section>
   );
 };
