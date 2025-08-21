@@ -30,7 +30,7 @@ interface RegisteredState {
     id: number;
     nama: string;
     logo: string | null;
-    description: string | null;
+    deskripsi: string | null;
     quota: number;
     location: string;
     createdAt: string;
@@ -39,6 +39,10 @@ interface RegisteredState {
     day: {
       id: number;
       date: string;
+    };
+    gallery: {
+      id: number;
+      url: string;
     };
   };
   mahasiswaUUID: string;
@@ -66,15 +70,6 @@ const State: React.FC = () => {
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  const dropMutation = useMutation({
-    mutationFn: async (stateId: number) => {
-      await api.delete(`/state/peserta/state/registration/${stateId}`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["states"]);
-    },
-  });
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -93,9 +88,6 @@ const State: React.FC = () => {
       </p>
     );
 
-  //Debug
-  console.log("States:", States);
-
   const stateRenders = Array.from({ length: 3 }, (_, index) => {
     const state = States?.data[index];
     return {
@@ -107,8 +99,8 @@ const State: React.FC = () => {
             locale: localeId,
           })
         : "",
-      stateDescription: state?.state.description || null,
       ukmLogo: state?.state.logo || stateLogo,
+      stateGallery: state?.state.gallery,
     };
   });
 
@@ -150,7 +142,7 @@ const State: React.FC = () => {
         <div className="entrance grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 max-w-7xl w-full">
           {stateRenders.map((state) =>
             state.stateName ? (
-              <FilledCard key={state.cardSlot} {...state} />
+              <FilledCard key={state.cardSlot} {...state} stateGallery={state.stateGallery} />
             ) : (
               <EmptyCard
                 key={state.cardSlot}

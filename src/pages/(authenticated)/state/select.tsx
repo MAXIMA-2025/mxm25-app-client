@@ -31,8 +31,14 @@ interface Ukm {
     id: number;
     date: string;
   };
-  filledCapacity?: number; // This might need to be calculated
+  gallery: {
+    id: number;
+    url: string;
+  };
+  registrationCount: number;
 }
+
+//Define State gallery
 
 //Filter Feature
 interface DateFilterProps {
@@ -360,7 +366,7 @@ const Select: React.FC<SelectProps> = ({ stateTerpilih, slotState }) => {
                 stateDate={item.day?.date || getDateByDayId(item.dayId)}
                 stateLocation={item.location}
                 stateQuota={item.quota}
-                currentFilledCapacity={item.filledCapacity || 0}
+                registrationCount={item.registrationCount || 0}
                 ukmLogo={item.logo || stateLogo}
                 stateDescription={item.description}
                 // onPilihState={() => {
@@ -372,6 +378,7 @@ const Select: React.FC<SelectProps> = ({ stateTerpilih, slotState }) => {
                 //   // showStateInfoModal(stateId);
                 // }}
                 selectedStateDate={selectedDate}
+                stateGallery={item.gallery || []}
                 />
               );
               })

@@ -30,7 +30,7 @@ interface FilledStateProps {
   stateDate?: string;
   ukmLogo?: string;
   stateDescription?: string | null;
-  stateGallery?: string[] | null;
+  stateGallery: (string | undefined)[];
 }
 
 const FilledState: React.FC<FilledStateProps> = ({
@@ -40,12 +40,10 @@ const FilledState: React.FC<FilledStateProps> = ({
   stateDate,
   ukmLogo,
   stateDescription,
-  stateGallery = [
-    "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
-    "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80",
-    "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
-  ],
+  stateGallery,
 }) => {
+  console.log(stateGallery);
+
   return (
     <div className="card-hover bg-white rounded-2xl p-6 md:p-8 shadow-2xl border-4 border-[#A01C1C] md:col-span-2 xl:col-span-1">
       <div className="text-center">
@@ -158,21 +156,21 @@ const FilledState: React.FC<FilledStateProps> = ({
                       <CarouselContent>
                         <CarouselItem>
                           <img
-                            src={stateGallery[0]}
+                            src={stateGallery[0]?.url}
                             alt={`Gallery image ${0}`}
                             className="object-cover w-full h-48 rounded-lg"
                           />
                         </CarouselItem>
                         <CarouselItem>
                           <img
-                            src={stateGallery[1]}
+                            src={stateGallery[1]?.url}
                             alt={`Gallery image ${1}`}
                             className="object-cover w-full h-48 rounded-lg"
                           />
                         </CarouselItem>
                         <CarouselItem>
                           <img
-                            src={stateGallery[2]}
+                            src={stateGallery[2]?.url}
                             alt={`Gallery image ${2}`}
                             className="object-cover w-full h-48 rounded-lg"
                           />

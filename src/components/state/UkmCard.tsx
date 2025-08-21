@@ -1,5 +1,7 @@
 import React from "react";
 import RegisterButton from "./RegisterButton";
+import useApi, { type ApiResponse } from "@/hooks/useApi";
+import { useQuery } from "@tanstack/react-query";
 
 interface UkmCardProps {
   stateId: number;
@@ -7,12 +9,12 @@ interface UkmCardProps {
   stateDate: string;
   stateLocation: string;
   stateQuota: number;
-  currentFilledCapacity: number;
+  registrationCount: number;
   ukmLogo: string | null;
   stateDescription?: string | null;
   onInfoState?: (stateId: number) => void;
   selectedStateDate: string[];
-  stateGallery?: string[] | null;
+  stateGallery: (string | undefined)[];
 }
 
 //Import Components
@@ -43,25 +45,22 @@ const UkmCard: React.FC<UkmCardProps> = ({
   stateDate,
   stateLocation,
   stateQuota,
-  currentFilledCapacity,
+  registrationCount,
   ukmLogo,
   stateDescription,
   selectedStateDate,
-  stateGallery = [
-    "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
-    "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80",
-    "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
-  ],
+  stateGallery,
 }) => {
+
   // Calculate remaining capacity
-  const remainingCapacity = stateQuota - currentFilledCapacity;
+  const remainingCapacity = stateQuota - registrationCount;
   const isFullCapacity = remainingCapacity <= 0;
 
   // Check if this card is selected
   const isSelected = selectedStateDate.includes(stateDate);
 
   // Calculate capacity percentage for visual indicator
-  const capacityPercentage = (currentFilledCapacity / stateQuota) * 100;
+  const capacityPercentage = (registrationCount / stateQuota) * 100;
 
   // Get capacity status color
   const getCapacityColor = () => {
@@ -125,7 +124,7 @@ const UkmCard: React.FC<UkmCardProps> = ({
             <div className="flex justify-between items-center mb-1">
               <span className="font-semibold">Kapasitas:</span>
               <span className={`font-bold ${getCapacityColor()}`}>
-                {currentFilledCapacity} / {stateQuota}
+                {registrationCount} / {stateQuota}
               </span>
             </div>
             {/* Capacity Bar */}
@@ -200,7 +199,13 @@ const UkmCard: React.FC<UkmCardProps> = ({
             </AlertDialogTrigger>
             <AlertDialogContent
               className="max-w-lg w-full p-6 rounded-xl"
-              style={{ width: "90vw", maxWidth: "600px", maxHeight: "80vh", overflowY: "auto", overflowX: "hidden" }}
+              style={{
+                width: "90vw",
+                maxWidth: "600px",
+                maxHeight: "80vh",
+                overflowY: "auto",
+                overflowX: "hidden",
+              }}
             >
               <AlertDialogHeader>
                 {/* Section 1: Tentang State */}
@@ -257,21 +262,21 @@ const UkmCard: React.FC<UkmCardProps> = ({
                       <CarouselContent>
                         <CarouselItem>
                           <img
-                            src={stateGallery[0]}
+                            src={stateGallery[0]?.url}
                             alt={`Gallery image ${0}`}
                             className="object-cover w-full h-48 rounded-lg"
                           />
                         </CarouselItem>
                         <CarouselItem>
                           <img
-                            src={stateGallery[1]}
+                            src={stateGallery[1]?.url}
                             alt={`Gallery image ${1}`}
                             className="object-cover w-full h-48 rounded-lg"
                           />
                         </CarouselItem>
                         <CarouselItem>
                           <img
-                            src={stateGallery[2]}
+                            src={stateGallery[2]?.url}
                             alt={`Gallery image ${2}`}
                             className="object-cover w-full h-48 rounded-lg"
                           />
