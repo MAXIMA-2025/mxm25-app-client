@@ -11,6 +11,7 @@ import {
 import { Button } from "../ui/button";
 import { Link, useNavigate } from "react-router";
 import {
+  Gamepad,
   HomeIcon,
   LogOutIcon,
   Ticket,
@@ -31,6 +32,7 @@ const Navbar = () => {
   const api = useApi();
   const nav = useNavigate();
   const target = toggleAcara?.find((t) => t.nama === "Station");
+  const targetMaxlearn = toggleAcara?.find((t) => t.nama === "Maxlearn");
   const mutation = useMutation({
     mutationFn: async () => {
       const res = await api.post("/auth/logout");
@@ -48,7 +50,7 @@ const Navbar = () => {
     <nav className="fixed bottom-4 z-50">
       <Menubar className="shadow-2xl/100 ">
         <MenubarMenu>
-          <MenubarTrigger>
+          <MenubarTrigger className="shadow-2xl bg-slate-50 hover:cursor-pointer">
             <Link to="/main">
               <img src={logo} className="size-5 object-contain" />
             </Link>
@@ -68,7 +70,7 @@ const Navbar = () => {
           <>
             <MenubarMenu>
               <Link to="/tickets">
-                <MenubarTrigger>
+                <MenubarTrigger className="shadow-2xl bg-slate-50 hover:cursor-pointer">
                   <TicketCheck className="size-5 mr-1" />
                   TIKET
                 </MenubarTrigger>
@@ -77,27 +79,24 @@ const Navbar = () => {
           </MenubarContent> */}
             </MenubarMenu>
             <MenubarMenu>
-              <MenubarTrigger>
+              <MenubarTrigger className="shadow-2xl bg-slate-50 hover:cursor-pointer">
                 <Link to={"/station"}>STATION</Link>
               </MenubarTrigger>
-              {/* <MenubarContent>
-            <MenubarItem>
-              New Tab <MenubarShortcut>⌘T</MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem>New Window</MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem>Share</MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem>Print</MenubarItem>
-          </MenubarContent> */}
             </MenubarMenu>
           </>
         )}
+        {!targetMaxlearn?.isOn && (
+          <MenubarMenu>
+            <MenubarTrigger className="shadow-2xl bg-slate-50 hover:cursor-pointer">
+              <Link to={"/challenges"} className="flex flex-row gap-2"><Gamepad className="size-5 object-contain"/>CHALLENGES</Link>
+            </MenubarTrigger>
+          </MenubarMenu>
+        )}
         <MenubarMenu>
-          <MenubarTrigger>
+          <MenubarTrigger className="shadow-2xl bg-black hover:cursor-pointer">
             <div
               onClick={() => mutation.mutate()}
-              className="flex gap-1 items-center justify-center hover:cursor-pointer"
+              className="flex gap-1 items-center justify-center invert-100"
             >
               <LogOutIcon className="size-5" />
               Log Out
