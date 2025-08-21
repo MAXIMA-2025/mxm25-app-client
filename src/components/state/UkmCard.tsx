@@ -12,6 +12,7 @@ interface UkmCardProps {
   stateDescription?: string | null;
   onInfoState?: (stateId: number) => void;
   selectedStateDate: string[];
+  stateGallery?: string[] | null;
 }
 
 //Import Components
@@ -27,6 +28,15 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/carousel";
+
 const UkmCard: React.FC<UkmCardProps> = ({
   stateId,
   stateName,
@@ -37,6 +47,11 @@ const UkmCard: React.FC<UkmCardProps> = ({
   ukmLogo,
   stateDescription,
   selectedStateDate,
+  stateGallery = [
+    "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
+    "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80",
+    "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
+  ],
 }) => {
   // Calculate remaining capacity
   const remainingCapacity = stateQuota - currentFilledCapacity;
@@ -60,6 +75,9 @@ const UkmCard: React.FC<UkmCardProps> = ({
       className={`card-hover bg-white rounded-2xl p-6 md:p-8 shadow-2xl border-4 border-[#A01C1C] md:col-span-2 xl:col-span-1 ${
         isSelected ? "opacity-50 pointer-events-none" : ""
       }`}
+      style={{
+        overflowY: "auto",
+      }}
     >
       <div className="text-center">
         {/* State Header */}
@@ -180,29 +198,101 @@ const UkmCard: React.FC<UkmCardProps> = ({
                 <span>Info</span>
               </button>
             </AlertDialogTrigger>
-            <AlertDialogContent>
+            <AlertDialogContent
+              className="max-w-lg w-full p-6 rounded-xl"
+              style={{ width: "90vw", maxWidth: "600px", maxHeight: "80vh", overflowY: "auto", overflowX: "hidden" }}
+            >
               <AlertDialogHeader>
-                <div className="w-30 h-30 mx-auto mb-6 flex items-center justify-center">
-                  <img
-                    src={ukmLogo}
-                    alt="ACES Logo"
-                    className="object-contain"
-                  />
+                {/* Section 1: Tentang State */}
+                <div className="flex flex-col items-center mb-4">
+                  <div className="w-24 h-24 mb-2 flex items-center justify-center rounded-full bg-gray-100 overflow-hidden">
+                    <img
+                      src={ukmLogo}
+                      alt="ACES Logo"
+                      className="object-contain w-full h-full"
+                    />
+                  </div>
+                  <AlertDialogTitle className="text-xl text-primary font-bold text-center">
+                    {stateName}
+                  </AlertDialogTitle>
                 </div>
-                <AlertDialogTitle>{stateName}</AlertDialogTitle>
-                <AlertDialogDescription>
-                  <p>{stateDescription}</p>
-                  <p className="text-sm text-gray-700 mt-5">
-                    <span className="font-semibold">Tanggal:</span> {stateDate}
-                  </p>
-                  <p className="text-sm text-gray-700">
-                    <span className="font-semibold">Tempat:</span>{" "}
-                    {stateLocation}
-                  </p>
-                </AlertDialogDescription>
+                <div className="mb-6">
+                  <div className="flex items-center gap-3 mb-2">
+                    <AlertDialogTitle className="text-lg font-bold">
+                      Tentang {stateName}
+                    </AlertDialogTitle>
+                  </div>
+                  <div className="flex text-gray-700 text-sm">
+                    {stateDescription ? (
+                      <p>{stateDescription}</p>
+                    ) : (
+                      <p className="italic text-gray-400">
+                        Tidak ada deskripsi.
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Section 2: Jadwal & Lokasi */}
+                <div className="mb-6">
+                  <div className="flex items-center gap-3 mb-2">
+                    <h5 className="text-lg font-bold">Jadwal & Lokasi</h5>
+                  </div>
+                  <div className="flex sm:flex-col gap-1 text-sm text-gray-700">
+                    <div>
+                      <span className="font-semibold"></span> {stateDate},{" "}
+                      {stateLocation}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section 3: Galeri State */}
+                <div>
+                  <div className="flex items-center gap-3 mb-5">
+                    <h5 className="text-lg font-bold">Galeri State</h5>
+                  </div>
+                  <div className="flex flex-wrap gap-2 justify-center pl-9 pr-9">
+                    {/* Contoh gambar, ganti dengan data dinamis jika ada */}
+                    <Carousel>
+                      <CarouselContent>
+                        <CarouselItem>
+                          <img
+                            src={stateGallery[0]}
+                            alt={`Gallery image ${0}`}
+                            className="object-cover w-full h-48 rounded-lg"
+                          />
+                        </CarouselItem>
+                        <CarouselItem>
+                          <img
+                            src={stateGallery[1]}
+                            alt={`Gallery image ${1}`}
+                            className="object-cover w-full h-48 rounded-lg"
+                          />
+                        </CarouselItem>
+                        <CarouselItem>
+                          <img
+                            src={stateGallery[2]}
+                            alt={`Gallery image ${2}`}
+                            className="object-cover w-full h-48 rounded-lg"
+                          />
+                        </CarouselItem>
+                      </CarouselContent>
+                      <CarouselPrevious />
+                      <CarouselNext />
+                    </Carousel>
+                  </div>
+                </div>
+                <br />
+                <RegisterButton
+                  stateId={stateId}
+                  isFullCapacity={isFullCapacity}
+                  isSelected={isSelected}
+                />
               </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Tutup</AlertDialogCancel>
+              <AlertDialogFooter className="mt-6">
+                <AlertDialogCancel className="absolute top-2 right-2">
+                  X
+                </AlertDialogCancel>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>

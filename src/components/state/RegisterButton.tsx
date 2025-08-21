@@ -74,7 +74,7 @@ function RegisterButton({
       setTimeout(() => {
         nav("/state", { replace: true });
         window.location.reload();
-      }, 3000);
+      }, 2400);
     },
     onError: (err: any) => {
       setShowFailedAlert(true);
@@ -108,7 +108,7 @@ function RegisterButton({
             disabled={
               isFullCapacity || isSelected || registerMutation.isPending
             }
-            className={`cursor-pointer flex-1 font-bold py-5.5 px-9 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2
+            className={`cursor-pointer py-3 px-4 h-[100%] flex-1 font-bold rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center
             ${
               isFullCapacity || isSelected
                 ? "bg-gray-400 text-gray-600 cursor-not-allowed"
@@ -211,7 +211,7 @@ function RegisterButton({
               Maaf, pendaftaran state ini gagal. Silakan coba lagi.
               <br />
               Kamu akan diarahkan ke halaman berikutnya dalam{" "}
-              <Countdown seconds={3} trigger={showFailedAlert} /> detik.
+              <Countdown seconds={2.4} trigger={showFailedAlert} /> detik.
             </AlertDialogDescription>
           </AlertDialogHeader>
         </AlertDialogContent>
