@@ -30,7 +30,7 @@ interface RegisteredState {
     id: number;
     nama: string;
     logo: string | null;
-    deskripsi: string | null;
+    description: string | null;
     quota: number;
     location: string;
     createdAt: string;
@@ -107,6 +107,7 @@ const State: React.FC = () => {
             locale: localeId,
           })
         : "",
+      stateDescription: state?.state.description || null,
       ukmLogo: state?.state.logo || stateLogo,
     };
   });
@@ -151,7 +152,11 @@ const State: React.FC = () => {
             state.stateName ? (
               <FilledCard key={state.cardSlot} {...state} />
             ) : (
-              <EmptyCard key={state.cardSlot} cardSlot={state.cardSlot} stateDateSelected={stateRenders.map(s => s.stateDate)} />
+              <EmptyCard
+                key={state.cardSlot}
+                cardSlot={state.cardSlot}
+                stateDateSelected={stateRenders.map((s) => s.stateDate)}
+              />
             )
           )}
         </div>

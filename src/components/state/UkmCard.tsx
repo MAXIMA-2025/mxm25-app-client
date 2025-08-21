@@ -14,6 +14,19 @@ interface UkmCardProps {
   selectedStateDate: string[];
 }
 
+//Import Components
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 const UkmCard: React.FC<UkmCardProps> = ({
   stateId,
   stateName,
@@ -23,7 +36,6 @@ const UkmCard: React.FC<UkmCardProps> = ({
   currentFilledCapacity,
   ukmLogo,
   stateDescription,
-  onInfoState,
   selectedStateDate,
 }) => {
   // Calculate remaining capacity
@@ -41,12 +53,6 @@ const UkmCard: React.FC<UkmCardProps> = ({
     if (capacityPercentage >= 90) return "text-red-600";
     if (capacityPercentage >= 70) return "text-yellow-600";
     return "text-green-600";
-  };
-
-  const handleInfoState = () => {
-    if (onInfoState && !isSelected) {
-      onInfoState(stateId);
-    }
   };
 
   return (
@@ -131,14 +137,6 @@ const UkmCard: React.FC<UkmCardProps> = ({
           <p className="text-sm text-gray-700">
             <span className="font-semibold">Tempat:</span> {stateLocation}
           </p>
-
-          {/* Description if available */}
-          {stateDescription && (
-            <p className="text-xs text-gray-600 bg-gray-50 p-2 rounded-md">
-              <span className="font-semibold">Deskripsi:</span>{" "}
-              {stateDescription}
-            </p>
-          )}
         </div>
 
         {/* Action Buttons */}
@@ -148,43 +146,66 @@ const UkmCard: React.FC<UkmCardProps> = ({
             isFullCapacity={isFullCapacity}
             isSelected={isSelected}
           />
-
-          <button
-            onClick={handleInfoState}
-            disabled={isSelected}
-            className={`flex-1 bg-gray-200 border-2 border-[#A01C1C] text-red-800 font-bold py-3 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 hover:shadow-lg ${
-              isSelected
-                ? "cursor-not-allowed opacity-70"
-                : "cursor-pointer hover:bg-gray-300 hover:text-red-800"
-            }`}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <circle cx="12" cy="12" r="10" strokeWidth="2" />
-              <line
-                x1="12"
-                y1="8"
-                x2="12"
-                y2="8"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-              <line
-                x1="12"
-                y1="12"
-                x2="12"
-                y2="16"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
-            <span>Info</span>
-          </button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button
+                disabled={isSelected}
+                className="cursor-pointer border-2 flex-1 bg-white hover:bg-red-800 text-red-800 font-bold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 hover:text-white"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <circle cx="12" cy="12" r="10" strokeWidth="2" />
+                  <line
+                    x1="12"
+                    y1="8"
+                    x2="12"
+                    y2="8"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                  <line
+                    x1="12"
+                    y1="12"
+                    x2="12"
+                    y2="16"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <span>Info</span>
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <div className="w-30 h-30 mx-auto mb-6 flex items-center justify-center">
+                  <img
+                    src={ukmLogo}
+                    alt="ACES Logo"
+                    className="object-contain"
+                  />
+                </div>
+                <AlertDialogTitle>{stateName}</AlertDialogTitle>
+                <AlertDialogDescription>
+                  <p>{stateDescription}</p>
+                  <p className="text-sm text-gray-700 mt-5">
+                    <span className="font-semibold">Tanggal:</span> {stateDate}
+                  </p>
+                  <p className="text-sm text-gray-700">
+                    <span className="font-semibold">Tempat:</span>{" "}
+                    {stateLocation}
+                  </p>
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Tutup</AlertDialogCancel>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
 
         {/* Status Badge */}

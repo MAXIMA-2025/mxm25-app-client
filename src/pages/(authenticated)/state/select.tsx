@@ -21,7 +21,7 @@ interface Ukm {
   id: number;
   nama: string;
   logo: string | null;
-  deskripsi: string | null;
+  description: string | null;
   quota: number;
   location: string;
   createdAt: string;
@@ -362,7 +362,7 @@ const Select: React.FC<SelectProps> = ({ stateTerpilih, slotState }) => {
                 stateQuota={item.quota}
                 currentFilledCapacity={item.filledCapacity || 0}
                 ukmLogo={item.logo || stateLogo}
-                stateDescription={item.deskripsi}
+                stateDescription={item.description}
                 // onPilihState={() => {
                 //   // Handle state selection
                 // }}
