@@ -24,11 +24,13 @@ import { useToggle } from "@/contexts/ToggleContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useApi from "@/hooks/useApi";
 import useAuthContext from "@/hooks/useAuthContext";
+import useAuth from "@/hooks/useAuth";
 
 const Navbar = () => {
   const { toggleAcara } = useToggle();
   const queryClient = useQueryClient();
   const auth = useAuthContext();
+  const authUser = useAuth();
   const api = useApi();
   const nav = useNavigate();
   const target = toggleAcara?.find((t) => t.nama === "Station");
@@ -85,7 +87,7 @@ const Navbar = () => {
             </MenubarMenu>
           </>
         )}
-        {!targetMaxlearn?.isOn && (
+        {(targetMaxlearn?.isOn && authUser.user?.role === "mahasiswa") && (
           <MenubarMenu>
             <MenubarTrigger className="shadow-2xl bg-slate-50 hover:cursor-pointer">
               <Link to={"/challenges"} className="flex flex-row gap-2"><Gamepad className="size-5 object-contain"/>CHALLENGES</Link>
