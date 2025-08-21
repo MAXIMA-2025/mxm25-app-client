@@ -1,13 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import logo from "../../assets/images/logo.png";
+import backgroundImg from "@/assets/images/onboarding.webp";
+import backdropLogo from "@/assets/images/LogoBackdrop.webp";
+import logo from "@/assets/images/logo.png"
 import Google from "../../assets/images/google-icon-logo-svgrepo-com.svg";
 import { Card, CardFooter, CardTitle } from "@/components/ui/card";
-import backgroundImg from "../../assets/images/hero/BACKGROUND.webp";
 import axios from "axios";
-import {toast} from "sonner";
-
+import { toast } from "sonner";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -16,9 +16,12 @@ const LoginPage = () => {
     navigate("/login/mahasiswa");
   };
 
-  const handleGoogleClick = async () => {
+  const handleGoogleClick = async (role: string) => {
+    localStorage.setItem("google-login-role", role);
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/auth/google`);
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/auth/google`
+      );
       const url = res.data?.data?.authUrl;
       console.log(url);
       window.location.href = url; // Redirect to Google OAuth
@@ -29,15 +32,28 @@ const LoginPage = () => {
 
   return (
     <section
-      className="min-h-screen w-screen bg-white flex flex-col gap-4 items-center justify-center px-4"
+      className="min-h-screen w-screen bg-black/40 flex flex-col gap-4 items-center justify-center px-4"
       style={{
         backgroundImage: `url(${backgroundImg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
+        backgroundBlendMode: "darken", // <-- key line
       }}
     >
       {/* Logo */}
-      <img src={logo} alt="MAXIMA Logo" className="size-40 object-contain" />
+      <div
+        className="p-4 drop-shadow-2xl"
+        style={{
+          backgroundImage: `url(${backdropLogo})`,
+          backgroundSize: "cover",
+        }}
+      >
+        <img
+          src={logo}
+          alt="MAXIMA Logo"
+          className="size-30 object-contain drop-shadow-2xl"
+        />
+      </div>
       <Card className="flex flex-col items-center">
         <CardTitle className="px-4 font-futura text-xl font-semibold text-center">
           Apakah anda merupakan Mahasiswa Baru UMN 2025?
@@ -50,14 +66,14 @@ const LoginPage = () => {
             variant="clay"
             className="w-full md:w-1/2"
           >
-            YES
+            Mahasiswa Baru UMN 2025
           </Button>
           <Button
-            onClick={handleGoogleClick}
+            onClick={async () => await handleGoogleClick("eksternal")}
             variant="outline"
             className="w-full md:w-1/2"
           >
-            NO, <img className="size-5" src={Google} /> Sign in with Google
+            <img src={Google} className="size-5"/>Login <p className="underline">Eksternal</p>
           </Button>
         </CardFooter>
       </Card>
