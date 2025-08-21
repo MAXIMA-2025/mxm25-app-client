@@ -5,25 +5,27 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import useApi from "@/hooks/useApi";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import useApi, { type ApiResponse } from "@/hooks/useApi";
 import useAuth, { type Auth, type UserMahasiswa } from "@/hooks/useAuth";
 import { useNavigate } from "@/router";
 import bgImage from "@/assets/asset_maxlearn/logo/bg.png";
 
 export type StateData = {
   id: number;
+  nama: string;
   logo: string;
 };
 
 export type Organization = {
-  id: string;
+  id: number;
   name: string;
   clue: string;
   desc: string;
   password: string;
   enteredPassword?: string; // password yang diinput user
   james?: "maxibel" | "ximasud";
+  fallbackLogo?: string;
 };
 
 export type Category = {
@@ -91,12 +93,12 @@ const checkCheating = (): boolean => {
   return false;
 };
 
-const getProgress = (orgId: string) => {
+const getProgress = (orgId: number) => {
   return localStorage.getItem(STORAGE_PREFIX + orgId) === STATUS_TRUE;
 };
 
 const setProgress = (
-  orgId: string,
+  orgId: number,
   status: typeof STATUS_TRUE | typeof STATUS_FALSE
 ) => {
   localStorage.setItem(STORAGE_PREFIX + orgId, status);
@@ -119,7 +121,7 @@ const resetProgress = () => {
 
 const GamePage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-  const [unlocked, setUnlocked] = useState<Set<string>>(new Set());
+  const [unlocked, setUnlocked] = useState<Set<number>>(new Set());
   const [showCheatModal, setShowCheatModal] = useState(false);
   const [finished, setFinished] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
@@ -127,6 +129,20 @@ const GamePage: React.FC = () => {
   const auth = useAuth();
   const nav = useNavigate();
   const queryClient = useQueryClient();
+
+  const { data: stateData } = useQuery({
+    queryKey: ["stateData"],
+    queryFn: async () => {
+      const resp = await api.get<ApiResponse<StateData[]>>("/state/");
+      const updatedResp = resp.data.data.map((val) => ({
+        id: val.id,
+        nama: val.nama,
+        logo: val.logo,
+      }));
+
+      return updatedResp;
+    },
+  });
 
   const { mutateAsync: finishChallenge } = useMutation({
     mutationFn: async (status: MaxlearnStatus) => {
@@ -153,8 +169,22 @@ const GamePage: React.FC = () => {
     if (!auth.isLoading) {
       const mhs = auth as Auth<UserMahasiswa>;
 
-      if (mhs.user?.isFinishedMaxlearn === "Menang") {
-        setFinished(true);
+      // if (mhs.user?.isFinishedMaxlearn === "Menang") {
+      //   setFinished(true);
+      // }
+      switch (mhs.user?.isFinishedMaxlearn) {
+        case "Belum": {
+          setFinished(false);
+          break;
+        }
+        case "Kalah": {
+          setFinished(true);
+          break;
+        }
+        case "Menang": {
+          setFinished(true);
+          break;
+        }
       }
 
       if (!finished && checkCompletion()) {
@@ -175,7 +205,7 @@ const GamePage: React.FC = () => {
 
   // Ambil progress dari localStorage saat awal
   useEffect(() => {
-    const opened = new Set<string>();
+    const opened = new Set<number>();
     categories.forEach((cat) => {
       cat.organizations.forEach((org) => {
         if (getProgress(org.id)) {
@@ -190,7 +220,7 @@ const GamePage: React.FC = () => {
     await finishChallenge("Kalah");
     resetProgress();
     // Reset state juga (supaya UI langsung update)
-    setUnlocked(new Set());
+    // setUnlocked(new Set());
   };
 
   const handlePasswordSubmit = (
@@ -198,9 +228,10 @@ const GamePage: React.FC = () => {
     org: Organization,
     password: string
   ) => {
-    if (password === org.password) {
+    if (password.toUpperCase() === org.password) {
       // ✅ Simpan status solved untuk org ini
       setProgress(org.id, STATUS_TRUE);
+      toast.success("Password benar!");
 
       // ✅ Cari kategori sesuai id (bukan index array)
       const category = categories.find((c) => c.id === catId);
@@ -217,6 +248,7 @@ const GamePage: React.FC = () => {
     } else {
       // Kalau salah, simpan status false
       setProgress(org.id, STATUS_FALSE);
+      toast.error("Password salah!");
     }
   };
 
@@ -276,16 +308,16 @@ const GamePage: React.FC = () => {
               {/* Header Section */}
               <div className="text-center py-6 mb-4">
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-white drop-shadow-2xl animate-in slide-in-from-top duration-300">
-                  Pilih Kategori Challenge
+                  Pilih Kategori
                 </h1>
                 <div className="w-16 h-1 bg-white/80 mx-auto rounded-full shadow-lg"></div>
               </div>
 
               {/* Back Button */}
-              <div className="mb-6 animate-in slide-in-from-left duration-300">
+              <div className="animate-in slide-in-from-left duration-300">
                 <Button
                   className="bg-white/95 hover:bg-white text-gray-800 backdrop-blur-sm shadow-xl border-0 px-5 py-2.5 rounded-xl font-semibold transition-all duration-200 hover:scale-105 hover:shadow-2xl"
-                  onClick={() => nav("/main/challenges/maxlearn")}
+                  onClick={() => nav("/challenges/maxlearn")}
                 >
                   <span className="flex items-center gap-2">
                     <span>←</span>
@@ -307,14 +339,14 @@ const GamePage: React.FC = () => {
                       >
                         <button
                           onClick={() => setSelectedCategory(cat.id)}
-                          className="group relative overflow-hidden w-full h-16 sm:h-18 lg:h-20 rounded-xl bg-white/15 hover:bg-white/25 backdrop-blur-lg border border-white/30 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] cursor-pointer"
+                          className="group relative overflow-hidden w-full min-h-16 sm:min-h-18 lg:min-h-20 rounded-xl bg-white/15 hover:bg-white/25 backdrop-blur-lg border border-white/30 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] cursor-pointer"
                         >
                           {/* Gradient overlay */}
                           <div className="absolute inset-0 bg-gradient-to-br from-blue-300/30 to-purple-300/30 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
 
                           {/* Content */}
-                          <div className="relative z-10 h-full flex items-center justify-center px-3">
-                            <span className="font-bold text-white drop-shadow-lg text-sm sm:text-base text-center leading-tight">
+                          <div className="relative z-10 h-full flex items-center justify-center px-4 sm:px-3">
+                            <span className="font-bold text-white drop-shadow-lg text-sm sm:text-base text-center leading-tight whitespace-normal break-words">
                               {cat.name}
                             </span>
                           </div>
@@ -362,43 +394,59 @@ const GamePage: React.FC = () => {
               </div>
 
               {/* Finish Button */}
-              {finished && (
-                <div className="text-center py-8 animate-in slide-in-from-bottom duration-300">
-                  <Dialog.Root>
-                    <Dialog.Trigger asChild>
-                      <Button className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white px-8 py-3 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-200 hover:scale-110">
-                        <span className="flex items-center gap-3">
-                          <span>🎉</span>
-                          Challenge Selesai!
-                          <span>✨</span>
-                        </span>
-                      </Button>
-                    </Dialog.Trigger>
-                    <Dialog.Portal>
-                      <Dialog.Overlay className="fixed inset-0 bg-black/70 backdrop-blur-sm animate-in fade-in-0 duration-200" />
-                      <Dialog.Content className="fixed left-1/2 top-1/2 w-[90vw] max-w-lg -translate-x-1/2 -translate-y-1/2 animate-in zoom-in-95 fade-in-0 duration-200">
-                        <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-emerald-200/50">
-                          <Dialog.Title className="text-2xl font-bold text-emerald-600 mb-4 flex items-center gap-3">
-                            <span className="text-3xl">🎉</span>
-                            Selamat, {(auth as Auth<UserMahasiswa>).user?.nama}!
-                          </Dialog.Title>
-                          <Dialog.Description className="text-gray-700 mb-6 text-base leading-relaxed bg-emerald-50 p-4 rounded-xl border border-emerald-100">
-                            Anda telah menyelesaikan MAXLEARN dengan sempurna!
-                            Silahkan screenshot dan bagikan pencapaian Anda!
-                          </Dialog.Description>
-                          <div className="flex justify-end">
-                            <Dialog.Close asChild>
-                              <button className="px-6 py-3 rounded-xl bg-gray-500 hover:bg-gray-600 text-white font-medium transition-all duration-200 hover:scale-105">
-                                Tutup
-                              </button>
-                            </Dialog.Close>
+              {finished &&
+                (auth as Auth<UserMahasiswa>).user?.isFinishedMaxlearn !==
+                  "Kalah" && (
+                  <div className="text-center py-8 animate-in slide-in-from-bottom duration-300">
+                    <Dialog.Root>
+                      <Dialog.Trigger asChild>
+                        <Button className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white px-8 py-3 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-200 hover:scale-110">
+                          <span className="flex items-center gap-3">
+                            <span>🎉</span>
+                            Challenge Selesai!
+                            <span>✨</span>
+                          </span>
+                        </Button>
+                      </Dialog.Trigger>
+                      <Dialog.Portal>
+                        <Dialog.Overlay className="fixed inset-0 bg-black/70 backdrop-blur-sm animate-in fade-in-0 duration-200" />
+                        <Dialog.Content className="fixed left-1/2 top-1/2 w-[90vw] max-w-lg -translate-x-1/2 -translate-y-1/2 animate-in zoom-in-95 fade-in-0 duration-200">
+                          <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-emerald-200/50">
+                            <Dialog.Title className="text-2xl font-bold text-emerald-600 mb-4 flex items-center gap-3">
+                              <span className="text-3xl">🎉</span>
+                              Selamat,{" "}
+                              {(auth as Auth<UserMahasiswa>).user?.nama}!
+                            </Dialog.Title>
+                            <Dialog.Description className="grid grid-cols-1 text-gray-700 mb-6 text-base leading-relaxed bg-emerald-50 p-4 rounded-xl border border-emerald-100">
+                              <span className="mb-1">
+                                Anda telah menyelesaikan MAXLEARN dengan
+                                sempurna! Silahkan screenshot dan bagikan
+                                pencapaian Anda!
+                              </span>
+                              <span className="mb-1 font-bold">
+                                NIM: {(auth as Auth<UserMahasiswa>).user?.nim}
+                              </span>
+                              <span className="mb-1 font-bold">
+                                Nama: {(auth as Auth<UserMahasiswa>).user?.nama}
+                              </span>
+                              <span className="mb-1 font-bold">
+                                Prodi:{" "}
+                                {(auth as Auth<UserMahasiswa>).user?.prodi}
+                              </span>
+                            </Dialog.Description>
+                            <div className="flex justify-end">
+                              <Dialog.Close asChild>
+                                <button className="px-6 py-3 rounded-xl bg-gray-500 hover:bg-gray-600 text-white font-medium transition-all duration-200 hover:scale-105">
+                                  Tutup
+                                </button>
+                              </Dialog.Close>
+                            </div>
                           </div>
-                        </div>
-                      </Dialog.Content>
-                    </Dialog.Portal>
-                  </Dialog.Root>
-                </div>
-              )}
+                        </Dialog.Content>
+                      </Dialog.Portal>
+                    </Dialog.Root>
+                  </div>
+                )}
             </div>
           ) : (
             /* ===== ORGANIZATION VIEW ===== */
@@ -426,8 +474,14 @@ const GamePage: React.FC = () => {
                 <div className="flex justify-center px-4">
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 max-w-7xl w-full justify-items-center">
                     {currentCategory?.organizations.map((org, index) => {
-                      const stateLogo = logoMap[org.id];
                       const isUnlocked = unlocked.has(org.id);
+                      const fetchedData = stateData?.find(
+                        (val) => val.id === org.id
+                      );
+
+                      const logo =
+                        org.fallbackLogo ||
+                        `${import.meta.env.VITE_R2_URL}/${fetchedData?.logo}`;
 
                       return (
                         <div
@@ -436,7 +490,7 @@ const GamePage: React.FC = () => {
                           style={{ animationDelay: `${index * 30}ms` }}
                         >
                           <Dialog.Root>
-                            <Card className="group relative overflow-hidden aspect-[4/5] bg-white/15 hover:bg-white/25 backdrop-blur-lg border border-white/30 shadow-lg hover:shadow-xl rounded-2xl p-4 transition-all duration-200 hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98]">
+                            <Card className="group relative overflow-hidden aspect-[4/5] bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/30 shadow-lg hover:shadow-xl rounded-2xl p-4 transition-all duration-200 hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98]">
                               {/* Gradient overlay */}
                               <div className="absolute inset-0 bg-gradient-to-br from-blue-300/30 to-purple-300/30 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
 
@@ -445,12 +499,15 @@ const GamePage: React.FC = () => {
                                 <div className="flex-1 flex items-center justify-center mb-3">
                                   <div className="relative">
                                     <img
-                                      src={stateLogo}
+                                      src={logo}
                                       alt={org.name}
                                       className={`w-full h-16 sm:h-20 object-contain transition-all duration-200 ${
-                                        isUnlocked || finished
+                                        isUnlocked ||
+                                        finished ||
+                                        (auth as Auth<UserMahasiswa>).user
+                                          ?.isFinishedMaxlearn !== "Belum"
                                           ? "group-hover:scale-110"
-                                          : "blur-sm opacity-40"
+                                          : "blur-xs opacity-40"
                                       }`}
                                       loading="lazy"
                                     />
@@ -554,7 +611,6 @@ const GamePage: React.FC = () => {
                                 <Dialog.Content className="fixed left-1/2 top-1/2 w-[90vw] max-w-lg -translate-x-1/2 -translate-y-1/2 animate-in zoom-in-95 fade-in-0 duration-200">
                                   <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-emerald-200/50">
                                     <Dialog.Title className="text-xl font-bold text-emerald-600 mb-4 flex items-center gap-2">
-                                      <span className="text-2xl">✨</span>
                                       {org.name}
                                     </Dialog.Title>
                                     <Dialog.Description className="text-gray-700 mb-5 text-sm leading-relaxed bg-emerald-50 p-4 rounded-xl border border-emerald-100">
