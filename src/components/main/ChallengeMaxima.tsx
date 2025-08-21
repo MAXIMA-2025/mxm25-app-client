@@ -27,14 +27,14 @@ const ChallengeMaxima = () => {
       }}
     >
       {/* Title & Badge */}
-      <div className="flex flex-col items-center text-center z-20 mt-20 md:mb-12">
+      <div className="flex flex-col items-center text-center z-20 mt-20 md:mb-8">
         <h1
           className="font-fraunces text-4xl md:text-6xl font-semibold drop-shadow-xl
           [text-shadow:2px_1px_0_white,_-2px_-1px_0_white,_2px_-1px_0_white,_-2px_1px_0_white]"
         >
           CHALLENGES
         </h1>
-        <Badge className="mt-2 shadow-2xl">
+        <Badge className="mt-2 shadow-2xl rounded-4xl px-4">
           <h2 className="font-futura font-medium text-xl lg:text-2xl drop-shadow-2xl">
             Berkreasi bersama MAXIMA!
           </h2>
@@ -42,7 +42,7 @@ const ChallengeMaxima = () => {
       </div>
 
       {/* Content Area */}
-      <div className="relative flex flex-col md:flex-row items-center md:items-start w-full max-w-6xl md:mt-8">
+      <div className="relative flex flex-col md:flex-row items-center md:items-start w-full max-w-6xl">
         {/* Card */}
         <Card className="font-futura z-20 drop-shadow-2xl w-full md:w-1/2 py-0 pb-2 bg-gradient-to-r from-white to-yellow-200 border-7 border-[#90171a] rounded-2xl overflow-hidden flex flex-col">
           <div className="flex flex-col h-full">
@@ -67,10 +67,10 @@ const ChallengeMaxima = () => {
         </Card>
 
         {/* Carousel (absolute on the right for md+) */}
-        <div className="hidden md:block absolute right-24 bottom-1/5 -translate-y-1/2">
+        <div className="hidden md:block absolute md:right-24 lg:right-42 bottom-1/5 -translate-y-1/2">
           <CardSwap
-            width={340}
-            height={420}
+            width={260}
+            height={340}
             skewAmount={2.5}
             cardDistance={120}
             verticalDistance={-20}
