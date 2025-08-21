@@ -5,12 +5,12 @@ import { Outlet, useNavigate } from "react-router";
 const Layout = () => {
   const nav = useNavigate();
   const { isLoggedOut } = useAuthContext();
-  useEffect(() => {
-    console.log(isLoggedOut);
-    if (!isLoggedOut) {
-      nav("/main");
-    }
-  }, [isLoggedOut, nav]);
+  // useEffect(() => {
+  //   console.log(isLoggedOut);
+  //   if (!isLoggedOut) {
+  //     nav("/main");
+  //   }
+  // }, [isLoggedOut, nav]);
 
   return (
     <div>

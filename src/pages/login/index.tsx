@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import backgroundImg from "@/assets/images/onboarding.webp";
@@ -7,9 +7,20 @@ import logo from "@/assets/images/logo.png"
 import { Card, CardFooter, CardTitle } from "@/components/ui/card";
 import axios from "axios";
 import { toast } from "sonner";
+import useAuthContext from "@/hooks/useAuthContext";
 
 const LoginPage = () => {
+  const {isLoggedOut}= useAuthContext();
   const navigate = useNavigate();
+  
+useEffect(() => {
+  if (typeof isLoggedOut === "boolean") {
+    if (!isLoggedOut) {
+      navigate("/main");
+    }
+  }
+}, [isLoggedOut, navigate]);
+
 
   const handleYesClick = () => {
     navigate("/login/mahasiswa");

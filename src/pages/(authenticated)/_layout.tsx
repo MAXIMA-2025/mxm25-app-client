@@ -20,6 +20,15 @@ const Layout = () => {
   const api = useApi();
   const { isLoggedOut } = useAuthContext();
   console.log(isLoggedOut);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (typeof isLoggedOut === "boolean") {
+      if (isLoggedOut) {
+        navigate("/login");
+      }
+    }
+  }, [isLoggedOut, navigate]);
   // const {
   //   user,
   //   isLoading: authLoading,

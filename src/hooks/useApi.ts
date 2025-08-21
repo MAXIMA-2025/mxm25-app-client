@@ -57,6 +57,7 @@ const setupInterceptors = (
           queryClient.removeQueries({ queryKey: ["authUser"] });
           setIsLoggedOut(true);
           handleError(err);
+          
           return Promise.reject(err);
         }
       }
