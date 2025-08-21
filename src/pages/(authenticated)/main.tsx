@@ -22,7 +22,7 @@ const Main = () => {
         </div>
         <StationMain sectionRef={stationRef} />
 
-        {target && (
+        {target?.isOn && (
           <>
             <div className="relative z-1">
               <img
