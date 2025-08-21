@@ -67,12 +67,12 @@ const ChallengeMaxima = () => {
         </Card>
 
         {/* Carousel (absolute on the right for md+) */}
-        <div className="hidden md:block absolute md:right-24 lg:right-42 bottom-1/5 -translate-y-1/2">
+        <div className="hidden md:block absolute md:right-24 lg:right-52 bottom-1/5 -translate-y-1/2">
           <CardSwap
             width={260}
             height={340}
             skewAmount={2.5}
-            cardDistance={120}
+            cardDistance={212}
             verticalDistance={-20}
             delay={5000}
             easing="elastic"
