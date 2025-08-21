@@ -141,7 +141,7 @@ const State: React.FC = () => {
             STATE
           </h1>
           <p className="text-lg md:text-xl text-blue-100 max-w-md mx-auto leading-relaxed">
-            Lorem Dolor Ipsum Amet Sit, Haha hihi wow!
+            Daftar STATE yang telah kamu pilih
           </p>
         </header>
 

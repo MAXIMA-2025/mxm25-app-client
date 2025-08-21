@@ -5,6 +5,8 @@ import { useNavigate } from "react-router";
 
 //Assets
 import Yakin from "@/assets/images/yakin.gif";
+import Success from "@/assets/images/success.gif";
+import Failed from "@/assets/images/failed.gif";
 
 //Components
 import {
@@ -18,6 +20,32 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+
+function Countdown({
+  seconds,
+  trigger,
+}: {
+  seconds: number;
+  trigger: boolean;
+}) {
+  const [count, setCount] = React.useState(seconds);
+
+  React.useEffect(() => {
+    if (!trigger) {
+      setCount(seconds);
+      return;
+    }
+    setCount(seconds);
+    const interval = setInterval(() => {
+      setCount((prev) => (prev > 1 ? prev - 1 : 1));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [trigger, seconds]);
+
+  return <span className="font-bold">{count}</span>;
+}
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 import { Button } from "@/components/ui/button";
 
@@ -33,6 +61,8 @@ function RegisterButton({
   const api = useApi();
   const nav = useNavigate();
   const [showModal, setShowModal] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showFailedAlert, setShowFailedAlert] = useState(false);
 
   const registerMutation = useMutation({
     mutationFn: async () => {
@@ -40,12 +70,18 @@ function RegisterButton({
       return resp.data;
     },
     onSuccess: (data) => {
-      alert("Berhasil mendaftar state!");
-      nav("/state", { replace: true });
-      window.location.reload();
+      setShowSuccessAlert(true);
+      setTimeout(() => {
+        nav("/state", { replace: true });
+        window.location.reload();
+      }, 3000);
     },
     onError: (err: any) => {
-      alert(err.response?.data?.message || "Gagal mendaftar state!");
+      setShowFailedAlert(true);
+      setTimeout(() => {
+        nav("/state", { replace: true });
+        window.location.reload();
+      }, 3000);
     },
   });
 
@@ -63,7 +99,7 @@ function RegisterButton({
   };
 
   return (
-    <>  
+    <>
       <AlertDialog>
         <AlertDialogTrigger asChild>
           <Button
@@ -80,29 +116,29 @@ function RegisterButton({
             }`}
           >
             <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-5 h-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <line
-            x1="12"
-            y1="5"
-            x2="12"
-            y2="19"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-          <line
-            x1="5"
-            y1="12"
-            x2="19"
-            y2="12"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-        </svg>
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <line
+                x1="12"
+                y1="5"
+                x2="12"
+                y2="19"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+              <line
+                x1="5"
+                y1="12"
+                x2="19"
+                y2="12"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
             <span>
               {isFullCapacity
                 ? "Penuh"
@@ -129,9 +165,55 @@ function RegisterButton({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={handleCancel}>Tidak Jadi</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirm} disabled={registerMutation.isPending} className="cursor-pointer">Yakin</AlertDialogAction>
+            <AlertDialogCancel onClick={handleCancel}>
+              Tidak Jadi
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirm}
+              disabled={registerMutation.isPending}
+              className="cursor-pointer"
+            >
+              Yakin
+            </AlertDialogAction>
           </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={showSuccessAlert} onOpenChange={setShowSuccessAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <img
+              src={Success}
+              alt="Are you sure emoji GIF"
+              loading="lazy"
+              className="w-32 h-32 object-contain mx-auto mb-4"
+            />
+            <AlertDialogTitle className="text-center">Yeay Berhasil Mendaftar State!</AlertDialogTitle>
+            <AlertDialogDescription className="text-center">
+              Kamu akan diarahkan kembali ke halaman daftar state dalam {" "}
+              <Countdown seconds={3} trigger={showSuccessAlert} /> detik.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={showFailedAlert} onOpenChange={setShowFailedAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <img
+              src={Failed}
+              alt="Are you sure emoji GIF"
+              loading="lazy"
+              className="w-32 h-32 object-contain mx-auto mb-4"
+            />
+            <AlertDialogTitle>Gagal Mendaftar State!</AlertDialogTitle>
+            <AlertDialogDescription>
+              Maaf, pendaftaran state ini gagal. Silakan coba lagi.
+              <br />
+              Kamu akan diarahkan ke halaman berikutnya dalam{" "}
+              <Countdown seconds={3} trigger={showFailedAlert} /> detik.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
         </AlertDialogContent>
       </AlertDialog>
     </>
