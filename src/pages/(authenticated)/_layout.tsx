@@ -19,6 +19,7 @@ const Layout = () => {
   // const nav = useNavigate();
   const api = useApi();
   const { isLoggedOut } = useAuthContext();
+  console.log(isLoggedOut);
   // const {
   //   user,
   //   isLoading: authLoading,
