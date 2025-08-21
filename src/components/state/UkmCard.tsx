@@ -43,7 +43,6 @@ const UkmCard: React.FC<UkmCardProps> = ({
     return "text-green-600";
   };
 
-
   const handleInfoState = () => {
     if (onInfoState && !isSelected) {
       onInfoState(stateId);
@@ -136,7 +135,8 @@ const UkmCard: React.FC<UkmCardProps> = ({
           {/* Description if available */}
           {stateDescription && (
             <p className="text-xs text-gray-600 bg-gray-50 p-2 rounded-md">
-              <span className="font-semibold">Deskripsi:</span> {stateDescription}
+              <span className="font-semibold">Deskripsi:</span>{" "}
+              {stateDescription}
             </p>
           )}
         </div>
@@ -148,12 +148,14 @@ const UkmCard: React.FC<UkmCardProps> = ({
             isFullCapacity={isFullCapacity}
             isSelected={isSelected}
           />
- 
+
           <button
             onClick={handleInfoState}
             disabled={isSelected}
             className={`flex-1 bg-gray-200 border-2 border-[#A01C1C] text-red-800 font-bold py-3 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 hover:shadow-lg ${
-              isSelected ? "cursor-not-allowed opacity-70" : "cursor-pointer hover:bg-gray-300 hover:text-red-800"
+              isSelected
+                ? "cursor-not-allowed opacity-70"
+                : "cursor-pointer hover:bg-gray-300 hover:text-red-800"
             }`}
           >
             <svg
@@ -189,7 +191,11 @@ const UkmCard: React.FC<UkmCardProps> = ({
         {isFullCapacity && (
           <div className="mt-4">
             <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-              <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                className="w-3 h-3 mr-1"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path
                   fillRule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"

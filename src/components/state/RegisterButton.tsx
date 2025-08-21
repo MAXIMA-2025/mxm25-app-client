@@ -4,7 +4,22 @@ import useApi from "@/hooks/useApi";
 import { useNavigate } from "react-router";
 
 //Assets
-import Yakin from '@/assets/images/yakin.gif';
+import Yakin from "@/assets/images/yakin.gif";
+
+//Components
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
+import { Button } from "@/components/ui/button";
 
 function RegisterButton({
   stateId,
@@ -48,19 +63,23 @@ function RegisterButton({
   };
 
   return (
-    <>
-      <button
-        onClick={handleClick}
-        disabled={isFullCapacity || isSelected || registerMutation.isPending}
-        className={`cursor-pointer flex-1 font-bold py-3 px-9 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2
+    <>  
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button
+            variant="outline"
+            onClick={handleClick}
+            disabled={
+              isFullCapacity || isSelected || registerMutation.isPending
+            }
+            className={`cursor-pointer flex-1 font-bold py-5.5 px-9 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2
             ${
               isFullCapacity || isSelected
                 ? "bg-gray-400 text-gray-600 cursor-not-allowed"
-                : "bg-red-800 hover:bg-red-900 text-white hover:shadow-lg"
+                : "bg-red-800 text-white hover:shadow-lg"
             }`}
-      >
-        {/* Ikon + */}
-        <svg
+          >
+            <svg
           xmlns="http://www.w3.org/2000/svg"
           className="w-5 h-5"
           fill="none"
@@ -84,50 +103,37 @@ function RegisterButton({
             strokeLinecap="round"
           />
         </svg>
-        <span>
-          {isFullCapacity
-            ? "Penuh"
-            : isSelected
-            ? "Terdaftar"
-            : registerMutation.isPending
-            ? "Mendaftar..."
-            : "Pilih State"}
-        </span>
-      </button>
-
-      {/* Modal Konfirmasi */}
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-          <div className="bg-white rounded-lg shadow-lg w-full h-full max-w-none max-h-none flex flex-col justify-center items-center m-0 p-0">
-            <div className="flex flex-col justify-center items-center w-full h-full p-8">
-              <div className="mb-4 text-center w-full justify-center">
-                <img
-                  src={Yakin}
-                  alt="Are you sure emoji GIF"
-                  loading="lazy"
-                  className="w-32 h-32 object-contain mx-auto mb-4"
-                />
-                <p>Yakin pilih state ini?</p>
-              </div>
-              <div className="flex gap-2 w-full justify-center items-center align-center">
-                <button
-                  onClick={handleCancel}
-                  className="cursor-pointer px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800"
-                >
-                  Batal
-                </button>
-                <button
-                  onClick={handleConfirm}
-                  className="cursor-pointer px-4 py-2 rounded bg-red-800 hover:bg-red-900 text-white"
-                  disabled={registerMutation.isPending}
-                >
-                  Ya, Daftar
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+            <span>
+              {isFullCapacity
+                ? "Penuh"
+                : isSelected
+                ? "Terdaftar"
+                : registerMutation.isPending
+                ? "Mendaftar..."
+                : "Pilih State"}
+            </span>
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <img
+              src={Yakin}
+              alt="Are you sure emoji GIF"
+              loading="lazy"
+              className="w-32 h-32 object-contain mx-auto mb-4"
+            />
+            <AlertDialogTitle>Kamu Yakin Pilih State Ini?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Setelah kamu mendaftar state ini, kamu tidak dapat membatalkan
+              pendaftarannya.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={handleCancel}>Tidak Jadi</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirm} disabled={registerMutation.isPending} className="cursor-pointer">Yakin</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
