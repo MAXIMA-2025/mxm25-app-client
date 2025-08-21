@@ -40,6 +40,7 @@ const Navbar = () => {
     },
     onSuccess: () => {
       queryClient.removeQueries({ queryKey: ["authUser"] });
+      console.log("Di navbar");
       auth.setIsLoggedOut(true);
       nav("/");
     },

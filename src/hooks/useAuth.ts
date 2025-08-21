@@ -7,7 +7,9 @@ import useApi, { type ApiResponse } from "./useApi";
 import useErrorHandler from "./useErrorHandler";
 import useAuthContext from "./useAuthContext";
 
-export type Auth<T = UserPanitia | UserOrganisator | UserEksternal | UserMahasiswa> = {
+export type Auth<
+  T = UserPanitia | UserOrganisator | UserEksternal | UserMahasiswa
+> = {
   user: T | undefined;
   status: "error" | "success" | "pending";
   isLoading: boolean;
@@ -17,7 +19,9 @@ export type Auth<T = UserPanitia | UserOrganisator | UserEksternal | UserMahasis
     options?: RefetchOptions
   ) => Promise<
     QueryObserverResult<
-      ApiResponse<UserPanitia | UserOrganisator | UserEksternal| UserMahasiswa>,
+      ApiResponse<
+        UserPanitia | UserOrganisator | UserEksternal | UserMahasiswa
+      >,
       Error
     >
   >;
@@ -95,7 +99,7 @@ const useAuth = () => {
       }
     },
     staleTime: Infinity, // data akan basi setelah 5 mnt
-    retry: 1,
+    retry: 10,
     enabled: !isLoggedOut, // biar pas udah logout dia ga fetch lagi !! anjir gua debug ini berhari2 dan solusinya se simple ini tai emg
     refetchInterval: (query) => {
       const user = query.state.data?.data;

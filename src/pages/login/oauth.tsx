@@ -1,12 +1,13 @@
-import React from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
 import Loading from "@/components/loading";
+import useAuthContext from "@/hooks/useAuthContext";
 
 const Oauth = () => {
   const nav = useNavigate();
+  const { setIsLoggedOut } = useAuthContext();
 
   useEffect(() => {
     const handleGoogleCallback = async () => {
@@ -19,33 +20,57 @@ const Oauth = () => {
         return;
       }
       try {
-        // Send the code to your backend
         const res = await axios.post(
           `${import.meta.env.VITE_API_URL}/auth/google/callback`,
-          {
-            role,
-          },
-          {
-            params: { code },
-            withCredentials: true, // if backend sets cookies
-          }
+          { role },
+          { params: { code }, withCredentials: true }
         );
 
-        const { message } = res.data;
-        toast.success(message);
-        // Redirect to dashboard or homepage
-        localStorage.removeItem("google-login-role"); // Bersihkan
-        nav("/main");
+        console.log(res);
+
+        toast.success(res.data.message);
+        localStorage.removeItem("google-login-role");
+        setIsLoggedOut(false);
+
+        // ✅ Verify login by fetching the logged-in user
+        // const userRes = await axios.get(
+        //   `${import.meta.env.VITE_API_URL}/auth/me`,
+        //   { withCredentials: true }
+        // );
+
+        // if (userRes.data?.status === "success") {
+        //   nav("/main");
+        // } else {
+        //   toast.error("Login verification failed.");
+        //   nav("/login");
+        // }
       } catch (err) {
-        console.error(err);
-        toast.error("Google login failed");
-        localStorage.removeItem("google-login-role"); // Bersihkan
+        console.log("ada error");
+        if (axios.isAxiosError(err)) {
+          console.error("Google login failed:", {
+            message: err.message,
+            status: err.response?.status,
+            data: err.response?.data,
+            headers: err.response?.headers,
+            config: err.config,
+          });
+          toast.error(
+            err.response?.data?.message ||
+              `Google login failed: ${err.message}`,
+            { id: "googleLoginFailed" }
+          );
+        } else {
+          console.error("Unexpected error:", err);
+          toast.error("An unexpected error occurred during Google login");
+        }
+
+        localStorage.removeItem("google-login-role");
         nav("/login");
       }
     };
 
     handleGoogleCallback();
-  }, [nav]);
+  }, [nav, setIsLoggedOut]);
   return <Loading />;
 };
 

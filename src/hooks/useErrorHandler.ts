@@ -34,8 +34,9 @@ const useErrorHandler = (queryKey?: string[]) => {
       switch (statusCode) {
         case 401:
           queryClient.removeQueries({ queryKey: queryKey || ["authUser"] });
-          nav("/login");
+          // nav("/login");
           toast.error("Sesi habis. Silakan login ulang.", {
+            id: "sessionExpired",
             description: "unauthorized",
           });
           resetErrorToast(hasShownErrorRef);
@@ -43,14 +44,20 @@ const useErrorHandler = (queryKey?: string[]) => {
 
         case 403:
           nav("/login");
-          toast.error(errorMessage, { description: "forbidden" });
+          toast.error(errorMessage, {
+            id: "forbidden",
+            description: "forbidden",
+          });
           resetErrorToast(hasShownErrorRef);
           return;
 
         case 422:
           errorMessage =
             apiError.response?.data.errorDetails?.[0] || errorMessage;
-          toast.error(errorMessage, { description: "validationError" });
+          toast.error(errorMessage, {
+            id: "validationError",
+            description: "validationError",
+          });
           resetErrorToast(hasShownErrorRef);
           return;
       }
@@ -58,7 +65,10 @@ const useErrorHandler = (queryKey?: string[]) => {
       errorMessage = error.message;
     }
 
-    toast.error(errorMessage, { description: "internalServerError" });
+    toast.error(errorMessage, {
+      id: "internalServerError",
+      description: "internalServerError",
+    });
     console.error("ErrorHandler Log: ", error);
     resetErrorToast(hasShownErrorRef);
   };

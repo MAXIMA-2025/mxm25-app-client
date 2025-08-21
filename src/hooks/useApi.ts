@@ -18,6 +18,7 @@ const api = axios.create({
 const refreshToken = async () => {
   try {
     const response = await api.get("/auth/refresh", { withCredentials: true });
+
     return response;
   } catch {
     throw new Error("Failed to refresh token");
@@ -27,43 +28,42 @@ const refreshToken = async () => {
 const setupInterceptors = (
   queryClient: QueryClient,
   handleError: (error: unknown) => void,
-  isLoggedOut: boolean,
+  isLoggedOutRef: React.RefObject<boolean>,
   setIsLoggedOut: (val: boolean) => void
 ) => {
   api.interceptors.response.use(
-    (response) => response,
+    (res) => {
+      return res;
+    },
     async (error: AxiosError) => {
       const originalRequest = error.config;
 
-      // 👉 Cegah infinite loop: jangan retry untuk request ke /auth/refresh
       if (originalRequest?.url?.includes("/auth/refresh")) {
         return Promise.reject(error);
       }
 
-      // cek status isLoggedOut
-      if (isLoggedOut) {
-        handleError(error);
-        return Promise.reject(error);
-      }
-
-      // cek response nya 401 ga
       if (
         error.response?.status === 401 &&
         originalRequest &&
         !originalRequest._retry
       ) {
-        console.log("Interceptor triggered for 401, isLoggedOut:", isLoggedOut);
-        originalRequest._retry = true;
+        originalRequest._retry = true; // hanya untuk 1x percobaan
         try {
           await refreshToken();
-          // return api(originalRequest);
-          return;
-        } catch (error) {
+          // 👉 hapus flag sebelum retry
+          delete originalRequest._retry;
+          return api(originalRequest);
+        } catch (err) {
           queryClient.removeQueries({ queryKey: ["authUser"] });
           setIsLoggedOut(true);
-          handleError(error);
-          return Promise.reject(error);
+          handleError(err);
+          return Promise.reject(err);
         }
+      }
+
+      if (isLoggedOutRef.current) {
+        handleError(error);
+        return Promise.reject(error);
       }
 
       handleError(error);
@@ -78,12 +78,22 @@ const useApi = () => {
   const { isLoggedOut, setIsLoggedOut } = useAuthContext();
   const isInterceptorSet = useRef(false);
 
+  const isLoggedOutRef = useRef(isLoggedOut);
+  useEffect(() => {
+    isLoggedOutRef.current = isLoggedOut;
+  }, [isLoggedOut]);
+
   useEffect(() => {
     if (!isInterceptorSet.current) {
-      setupInterceptors(queryClient, handleError, isLoggedOut, setIsLoggedOut);
+      setupInterceptors(
+        queryClient,
+        handleError,
+        isLoggedOutRef,
+        setIsLoggedOut
+      );
       isInterceptorSet.current = true;
     }
-  }, [queryClient, handleError, isLoggedOut, setIsLoggedOut]);
+  }, [queryClient, handleError, setIsLoggedOut]);
 
   return api;
 };

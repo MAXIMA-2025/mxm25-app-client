@@ -15,6 +15,7 @@ import StationCollage from "@/assets/images/main/carousel/StationCollage.webp";
 import LogoStation from "@/assets/images/main/logoRangkaian/LogoSTATION.webp";
 import { useToggle } from "@/contexts/ToggleContext";
 import useAuth from "@/hooks/useAuth";
+import Loading from "../loading";
 
 interface StationMainProps {
   sectionRef: React.RefObject<HTMLElement>;
@@ -38,7 +39,7 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
   const handleLihatClick = () => {
     nav("/tickets");
   };
-  return (
+  return !auth.isLoading ? (
     <section
       ref={sectionRef}
       className="min-h-lvh w-full flex flex-col items-center gap-4 justify-center px-2 py-32 sm:px-4 md:px-8 bg-cover bg-center"
@@ -151,7 +152,7 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
                   <Button
                     variant="clay"
                     onClick={handleClaimTicketClick}
-                    disabled={!target?.isOn}
+                    // disabled={!target?.isOn}
                   >
                     Klaim Tiket
                     <ArrowRight
@@ -187,6 +188,8 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
         </div>
       </Card>
     </section>
+  ) : (
+    <Loading />
   );
 };
 

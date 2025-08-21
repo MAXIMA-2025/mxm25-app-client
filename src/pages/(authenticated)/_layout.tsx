@@ -1,14 +1,13 @@
 import Navbar from "@/components/main/Navbar";
-import React, { useEffect } from "react";
-import { Outlet } from "react-router";
-import { useNavigate } from "react-router";
-import useAuth from "@/hooks/useAuth";
-import useAuthContext from "@/hooks/useAuthContext";
+import { Outlet, useNavigate } from "react-router-dom";
 import useApi, { type ApiResponse } from "@/hooks/useApi";
 import { useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
-import useErrorHandler from "@/hooks/useErrorHandler";
 import { ToggleProvider } from "@/contexts/ToggleContext";
+import { useEffect } from "react";
+import useAuthContext from "@/hooks/useAuthContext";
+import { toast } from "sonner";
+// import useAuth from "@/hooks/useAuth";
+// import Loading from "@/components/loading";
 
 type Toggle = {
   id: number;
@@ -16,38 +15,59 @@ type Toggle = {
   isOn: boolean;
 };
 
-const _layout = () => {
-  const auth = useAuth();
-  const nav = useNavigate();
-  const { isLoggedOut } = useAuthContext();
+const Layout = () => {
+  // const nav = useNavigate();
   const api = useApi();
+  const { isLoggedOut } = useAuthContext();
+  // const {
+  //   user,
+  //   isLoading: authLoading,
+  //   error: authError,
+  //   status: authStatus,
+  // } = useAuth();
 
-  const { data: toggleAcara, status, error } = useQuery({
+  // useEffect(() => {
+  //   if (isLoggedOut) {
+  //     console.log("No jwt tokens, logging out ...");
+  //     toast.error("Session berakhir. Silahkan login lagi");
+  //     // nav("/login");
+  //   }
+  // }, [nav, isLoggedOut]);
+
+  // Call useQuery ALWAYS, but control execution via enabled flag
+  const { data: toggleAcara, status: toggleStatus } = useQuery({
     queryKey: ["toggles"],
     queryFn: async () => {
       const resp = await api.get<ApiResponse<Toggle[]>>("/toggle");
       return resp.data;
     },
+    enabled: !isLoggedOut, // won't fetch until user exists
   });
 
-  const errorHandler = useErrorHandler();
-  errorHandler.useHandleQueryError({ error, status });
+  // Redirect after auth check
+  // useEffect(() => {
+  //   if (!authLoading && (authStatus === "error" || !user)) {
+  //     toast.error("Silahkan login terlebih dahulu");
+  //     nav("/login");
+  //   }
+  // }, [authLoading, authStatus, user, nav]);
 
-  useEffect(() => {
-    if (isLoggedOut) {
-      toast.error("Silahkan login terlebih dahulu");
-      nav("/login");
-    }
-  }, [nav, isLoggedOut, auth]);
+  // // Show loading until auth finishes
+  // if (authLoading) {
+  //   return <Loading />;
+  // }
 
-  // Map react-query status to ToggleContextType status
-  const mappedStatus =
-    status === "pending"
-      ? "loading"
-      : status;
+  // // Block render until redirect happens
+  // if (authStatus === "error" || !user) {
+  //   return null;
+  // }
+
+  const mappedStatus = toggleStatus === "pending" ? "loading" : toggleStatus;
 
   return (
-    <ToggleProvider value={{ toggleAcara: toggleAcara?.data, status: mappedStatus }}>
+    <ToggleProvider
+      value={{ toggleAcara: toggleAcara?.data, status: mappedStatus }}
+    >
       <div className="flex flex-col items-center">
         <Outlet />
         <Navbar />
@@ -56,4 +76,4 @@ const _layout = () => {
   );
 };
 
-export default _layout;
+export default Layout;
