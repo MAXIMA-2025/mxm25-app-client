@@ -152,7 +152,7 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
                   <Button
                     variant="clay"
                     onClick={handleClaimTicketClick}
-                    disabled={!target?.isOn}
+                    // disabled={!target?.isOn}
                   >
                     Klaim Tiket
                     <ArrowRight

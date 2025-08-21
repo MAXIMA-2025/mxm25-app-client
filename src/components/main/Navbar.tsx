@@ -20,24 +20,25 @@ import {
 } from "lucide-react";
 import logo from "/favicon.png";
 import { useToggle } from "@/contexts/ToggleContext";
-import {  useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useApi from "@/hooks/useApi";
 import useAuthContext from "@/hooks/useAuthContext";
 
 const Navbar = () => {
   const { toggleAcara } = useToggle();
-  const queryClient = useQueryClient(); 
+  const queryClient = useQueryClient();
   const auth = useAuthContext();
   const api = useApi();
-  const nav = useNavigate(); 
+  const nav = useNavigate();
   const target = toggleAcara?.find((t) => t.nama === "Station");
-    const mutation = useMutation({
+  const mutation = useMutation({
     mutationFn: async () => {
       const res = await api.post("/auth/logout");
       if (res.status !== 200) throw new Error("Gagal logout!");
     },
     onSuccess: () => {
       queryClient.removeQueries({ queryKey: ["authUser"] });
+      console.log("Di navbar");
       auth.setIsLoggedOut(true);
       nav("/");
     },
@@ -92,11 +93,17 @@ const Navbar = () => {
             </MenubarMenu>
           </>
         )}
-            <MenubarMenu>
-              <MenubarTrigger >
-                <div onClick={() => mutation.mutate()} className="flex gap-1 items-center justify-center hover:cursor-pointer"><LogOutIcon className="size-5"/>Log Out</div>
-              </MenubarTrigger>
-              {/* <MenubarContent>
+        <MenubarMenu>
+          <MenubarTrigger>
+            <div
+              onClick={() => mutation.mutate()}
+              className="flex gap-1 items-center justify-center hover:cursor-pointer"
+            >
+              <LogOutIcon className="size-5" />
+              Log Out
+            </div>
+          </MenubarTrigger>
+          {/* <MenubarContent>
             <MenubarItem>
               New Tab <MenubarShortcut>⌘T</MenubarShortcut>
             </MenubarItem>
@@ -106,7 +113,7 @@ const Navbar = () => {
             <MenubarSeparator />
             <MenubarItem>Print</MenubarItem>
           </MenubarContent> */}
-            </MenubarMenu>
+        </MenubarMenu>
       </Menubar>
     </nav>
   );

@@ -16,7 +16,7 @@ type Toggle = {
 };
 
 const Layout = () => {
-  const nav = useNavigate();
+  // const nav = useNavigate();
   const api = useApi();
   const { isLoggedOut } = useAuthContext();
   // const {
@@ -26,13 +26,13 @@ const Layout = () => {
   //   status: authStatus,
   // } = useAuth();
 
-  useEffect(() => {
-    if (isLoggedOut) {
-      console.log("No jwt tokens, logging out ...");
-      toast.error("Session berakhir. Silahkan login lagi");
-      nav("/login");
-    }
-  }, [nav, isLoggedOut]);
+  // useEffect(() => {
+  //   if (isLoggedOut) {
+  //     console.log("No jwt tokens, logging out ...");
+  //     toast.error("Session berakhir. Silahkan login lagi");
+  //     // nav("/login");
+  //   }
+  // }, [nav, isLoggedOut]);
 
   // Call useQuery ALWAYS, but control execution via enabled flag
   const { data: toggleAcara, status: toggleStatus } = useQuery({

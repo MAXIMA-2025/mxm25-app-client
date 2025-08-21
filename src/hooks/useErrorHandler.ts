@@ -34,7 +34,7 @@ const useErrorHandler = (queryKey?: string[]) => {
       switch (statusCode) {
         case 401:
           queryClient.removeQueries({ queryKey: queryKey || ["authUser"] });
-          nav("/login");
+          // nav("/login");
           toast.error("Sesi habis. Silakan login ulang.", {
             id: "sessionExpired",
             description: "unauthorized",
