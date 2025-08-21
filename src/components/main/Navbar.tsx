@@ -17,6 +17,7 @@ import {
   Ticket,
   TicketCheck,
   TicketIcon,
+  TreeDeciduousIcon,
   UserIcon,
 } from "lucide-react";
 import logo from "/favicon.png";
@@ -57,16 +58,6 @@ const Navbar = () => {
               <img src={logo} className="size-5 object-contain" />
             </Link>
           </MenubarTrigger>
-          {/* <MenubarContent>
-            <MenubarItem>
-              New Tab <MenubarShortcut>⌘T</MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem>New Window</MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem>Share</MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem>Print</MenubarItem>
-          </MenubarContent> */}
         </MenubarMenu>
         {target?.isOn && (
           <>
@@ -77,20 +68,23 @@ const Navbar = () => {
                   TIKET
                 </MenubarTrigger>
               </Link>
-              {/* <MenubarContent>
-          </MenubarContent> */}
             </MenubarMenu>
             <MenubarMenu>
-              <MenubarTrigger className="shadow-2xl bg-slate-50 hover:cursor-pointer">
-                <Link to={"/station"}>STATION</Link>
-              </MenubarTrigger>
+              <Link to={"/station"}>
+                <MenubarTrigger className="shadow-2xl bg-slate-50 hover:cursor-pointer">
+                  <TreeDeciduousIcon className="size-5 object-contain mr-1"/> STATION
+                </MenubarTrigger>
+              </Link>
             </MenubarMenu>
           </>
         )}
-        {(targetMaxlearn?.isOn && authUser.user?.role === "mahasiswa") && (
+        {targetMaxlearn?.isOn && authUser.user?.role === "mahasiswa" && (
           <MenubarMenu>
             <MenubarTrigger className="shadow-2xl bg-slate-50 hover:cursor-pointer">
-              <Link to={"/challenges"} className="flex flex-row gap-2"><Gamepad className="size-5 object-contain"/>CHALLENGES</Link>
+              <Link to={"/challenges"} className="flex flex-row gap-2">
+                <Gamepad className="size-5 object-contain" />
+                CHALLENGES
+              </Link>
             </MenubarTrigger>
           </MenubarMenu>
         )}
@@ -104,16 +98,6 @@ const Navbar = () => {
               Log Out
             </div>
           </MenubarTrigger>
-          {/* <MenubarContent>
-            <MenubarItem>
-              New Tab <MenubarShortcut>⌘T</MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem>New Window</MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem>Share</MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem>Print</MenubarItem>
-          </MenubarContent> */}
         </MenubarMenu>
       </Menubar>
     </nav>
