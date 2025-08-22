@@ -15,6 +15,7 @@ import StationCollage from "@/assets/images/main/carousel/StationCollage.webp";
 import LogoStation from "@/assets/images/main/logoRangkaian/LogoSTATION.webp";
 import { useToggle } from "@/contexts/ToggleContext";
 import useAuth from "@/hooks/useAuth";
+import Loading from "../loading";
 
 interface StationMainProps {
   sectionRef: React.RefObject<HTMLElement>;
@@ -31,14 +32,14 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
     nav("/station");
   };
   const handleClaimTicketClick = () => {
-    nav("/station/mahasiswa")
-  }
+    nav("/station/mahasiswa");
+  };
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   const handleLihatClick = () => {
     nav("/tickets");
   };
-  return (
+  return !auth.isLoading ? (
     <section
       ref={sectionRef}
       className="min-h-lvh w-full flex flex-col items-center gap-4 justify-center px-2 py-32 sm:px-4 md:px-8 bg-cover bg-center"
@@ -79,7 +80,7 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
           </h2>
         </div>
       </div>
-      <Card className="font-futura w-3/4 py-2 bg-[#f2ca45] border-7 border-[#90171a] rounded-2xl overflow-hidden">
+      <Card className="font-futura w-full md:w-3/4 py-2 bg-[#f2ca45] border-7 border-[#90171a] rounded-2xl overflow-hidden">
         <div className="flex flex-col-reverse lg:flex-row">
           {/* Left Content Section */}
           <div className="flex-1 p-4 sm:p-6 md:p-8">
@@ -110,9 +111,15 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
                   <div className="bg-white/20 p-1 sm:p-2 rounded-lg backdrop-blur-sm flex-shrink-0">
                     <Clock size={16} className="sm:w-4 sm:h-4" />
                   </div>
-                  <span className="text-sm sm:text-base lg:text-lg font-medium">
-                    14.00 WIB
-                  </span>
+                  {auth.user?.role === "eksternal" ? (
+                    <span className="text-sm sm:text-base lg:text-lg font-medium">
+                      16:00 WIB
+                    </span>
+                  ) : (
+                    <span className="text-sm sm:text-base lg:text-lg font-medium">
+                      14:00 WIB
+                    </span>
+                  )}
                 </div>
               </div>
               {auth.user?.role === "eksternal" ? (
@@ -145,7 +152,7 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
                   <Button
                     variant="clay"
                     onClick={handleClaimTicketClick}
-                    disabled={!target?.isOn}
+                    // disabled={!target?.isOn}
                   >
                     Klaim Tiket
                     <ArrowRight
@@ -181,6 +188,8 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
         </div>
       </Card>
     </section>
+  ) : (
+    <Loading />
   );
 };
 

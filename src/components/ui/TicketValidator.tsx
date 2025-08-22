@@ -197,16 +197,16 @@ const TicketValidator: React.FC<TicketValidatorProps> = ({ ticketId }) => {
             ) : (
               <>
                 <img
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticket.ticketId}`}
-                  alt={`QR Code for ${ticket.ticketId}`}
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticketId}`}
+                  alt={`QR Code for ${ticketId}`}
                   className="size-40 aspect-square mx-14"
                   loading="lazy"
                 />
                 <Button
                   onClick={() =>
                     handleDownloadQR(
-                      ticket.ticketId,
-                      `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticket.ticketId}`
+                      ticketId,
+                      `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticketId}`
                     )
                   }
                   className="w-10/12"
@@ -309,16 +309,16 @@ const TicketValidator: React.FC<TicketValidatorProps> = ({ ticketId }) => {
             ) : (
               <>
                 <img
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticket.ticketId}`}
-                  alt={`QR Code for ${ticket.ticketId}`}
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticketId}`}
+                  alt={`QR Code for ${ticketId}`}
                   className="size-40 aspect-square mx-14"
                   loading="lazy"
                 />
                 <Button
                   onClick={() =>
                     handleDownloadQR(
-                      ticket.ticketId,
-                      `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticket.ticketId}`
+                      ticketId,
+                      `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticketId}`
                     )
                   }
                   className="w-10/12"

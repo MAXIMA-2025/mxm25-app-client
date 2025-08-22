@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { email, z } from "zod";
+import React, { useEffect, useState } from "react";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import Bg_desktop from "@/assets/images/main/STATION.webp";
 import { Card, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
@@ -9,11 +9,18 @@ import StationLogo from "@/assets/images/main/logoRangkaian/LogoSTATION.webp";
 import alfagift from "@/assets/images/main/alfagift.webp";
 import { useMutation } from "@tanstack/react-query";
 import useApi from "@/hooks/useApi";
-import useAuth, { type UserMahasiswa } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
+import useAuth from "@/hooks/useAuth";
 
-const allowedPrefixes = ["999999", "999001", "999004", "999003", "99902000"];
+const allowedPrefixes = [
+  "999999",
+  "999001",
+  "999002",
+  "999004",
+  "999003",
+  "99902000",
+];
 
 const checkPrefix = (allowed: string[]) => (val: string) =>
   allowed.some((prefix) => val.startsWith(prefix));
@@ -26,6 +33,10 @@ const alfagiftSchema = z
   });
 
 const Index: React.FC = () => {
+  const auth = useAuth();
+  useEffect(()=>{
+    auth.user?.role==="eksternal" && nav("/station")
+  })
   const [alfagiftId, setAlfagiftId] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const api = useApi();
@@ -37,15 +48,19 @@ const Index: React.FC = () => {
   };
   const mutation = useMutation({
     mutationFn: async () => {
-      await api.post("/ticket/internal/create", {
-        alfagiftId,
-      });
+      try {
+        await api.post("/ticket/internal/create", {
+          alfagiftId,
+        });
+      } catch (error) {
+        console.error("Error: ", error);
+      }
     },
     onSuccess: () => {
       toast.success("Berhasil klaim tiket!");
-      setTimeout(()=>{
+      setTimeout(() => {
         nav("/tickets");
-      },3000)
+      }, 3000);
     },
   });
 
@@ -61,6 +76,7 @@ const Index: React.FC = () => {
 
     mutation.mutate();
   };
+
 
   return (
     <section
