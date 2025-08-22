@@ -42,30 +42,18 @@ const Index = () => {
   ]
 
   return (
-    <div
-      className="w-full min-h-screen bg-cover bg-center bg-no-repeat flex flex-col items-center justify-start px-4 sm:px-6 md:px-8 lg:px-12 pt-8 sm:pt-10 md:pt-12"
-      style={{ backgroundImage: `url(${Background})` }}
+     <section
+      className="p-4 min-h-screen min-w-screen flex flex-col items-center gap-10 justify-center"
+      style={{
+        backgroundImage: `url(${Background})`,
+        backgroundSize: "cover",
+      }}
     >
-      {/* Logo */}
-      <img
-        src={LogoStation}
-        alt="Station Challenge Logo"
-        className="w-[10%] sm:w-[10%] md:w-[10%] lg:w-[6%]"
-      />
-      
       {/* Title */}
       <h1
-        className="text-center text-black font-bold mb-8 sm:mb-10 md:mb-12"
-        style={{
-          fontFamily: "'Title Hero', sans-serif",
-          fontWeight: "700",
-          fontStyle: "normal", 
-          fontSize: "clamp(1.5rem, 4vw, 3rem)",
-          lineHeight: "120%",
-          letterSpacing: "-0.03em",
-        }}
+        className="text-center text-5xl text-black font-semibold font-fraunces text-shadow-2xl drop-shadow-2xl"
       >
-        STATION CHALLENGES
+        MAXIMA CHALLENGES
       </h1>
 
       {/* Station Cards Grid */}
@@ -106,7 +94,7 @@ const Index = () => {
           </div>
         ))}
       </div>
-    </div>
+    </section>
   )
 }
 
