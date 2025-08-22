@@ -127,7 +127,7 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
                   <Button
                     variant="clay"
                     onClick={handleBuyTicketClick}
-                    disabled={!target?.isOn}
+                    // disabled={!target?.isOn}
                   >
                     Beli Tiket
                     <ArrowRight
@@ -138,7 +138,7 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
                   <Button
                     variant="outline"
                     onClick={handleLihatClick}
-                    disabled={!target?.isOn}
+                    // disabled={!target?.isOn}
                   >
                     Lihat Tiket
                     <ArrowRight
@@ -152,7 +152,7 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
                   <Button
                     variant="clay"
                     onClick={handleClaimTicketClick}
-                    // disabled={!target?.isOn}
+                    disabled={!target?.isOn}
                   >
                     Klaim Tiket
                     <ArrowRight
@@ -163,7 +163,7 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
                   <Button
                     variant="outline"
                     onClick={handleLihatClick}
-                    disabled={!target?.isOn}
+                    // disabled={!target?.isOn}
                   >
                     Lihat Tiket
                     <ArrowRight

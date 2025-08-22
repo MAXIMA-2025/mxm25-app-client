@@ -59,8 +59,6 @@ const Navbar = () => {
             </Link>
           </MenubarTrigger>
         </MenubarMenu>
-        {target?.isOn && (
-          <>
             <MenubarMenu>
               <Link to="/tickets">
                 <MenubarTrigger className="shadow-2xl bg-slate-50 hover:cursor-pointer">
@@ -69,6 +67,8 @@ const Navbar = () => {
                 </MenubarTrigger>
               </Link>
             </MenubarMenu>
+        {target?.isOn && (
+          <>
             <MenubarMenu>
               <Link to={"/station"}>
                 <MenubarTrigger className="shadow-2xl bg-slate-50 hover:cursor-pointer">
