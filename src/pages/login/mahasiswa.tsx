@@ -66,6 +66,7 @@ const Mahasiswa = () => {
 
   const handleYesClick = () => {
     navigate("/login/onboarding");
+    navigate("/login/onboarding");
   };
 
   return (

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../node_modules/@generouted/react-router/dist/chunk-DZAGGWNQ.js"],
+  "sourcesContent": ["// src/react.js\nimport React from \"react\";\n"],
+  "mappings": ";;;;;;;;AACA,mBAAkB;",
+  "names": []
+}

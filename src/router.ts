@@ -9,6 +9,8 @@ export type Path =
   | `/challenges/maxlearn`
   | `/challenges/maxlearn/game`
   | `/challenges/maxsnap`
+  | `/challenges/maxtivity`
+  | `/challenges/photobooth`
   | `/login`
   | `/login/mahasiswa`
   | `/login/oauth`
@@ -17,7 +19,6 @@ export type Path =
   | `/main`
   | `/state`
   | `/station`
-  | `/station/mahasiswa`
   | `/ticket`
   | `/tickets`
 

@@ -73,7 +73,6 @@ const Layout = () => {
   // }
 
   const mappedStatus = toggleStatus === "pending" ? "loading" : toggleStatus;
-
   return (
     <ToggleProvider
       value={{ toggleAcara: toggleAcara?.data, status: mappedStatus }}
