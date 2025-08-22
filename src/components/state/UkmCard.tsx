@@ -51,7 +51,6 @@ const UkmCard: React.FC<UkmCardProps> = ({
   selectedStateDate,
   stateGallery,
 }) => {
-
   // Calculate remaining capacity
   const remainingCapacity = stateQuota - registrationCount;
   const isFullCapacity = remainingCapacity <= 0;
@@ -87,15 +86,11 @@ const UkmCard: React.FC<UkmCardProps> = ({
 
           {/* State Logo */}
           <div className="w-40 h-40 mx-auto mb-6 flex items-center justify-center bg-gray-50 rounded-xl overflow-hidden">
-            {ukmLogo ? (
+            {!ukmLogo?.startsWith("/src/") ? (
               <img
                 src={`${import.meta.env.VITE_R2_URL}/${ukmLogo}`}
                 alt={`${stateName} Logo`}
                 className="w-full h-full object-contain"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = "/default-logo.png";
-                }}
               />
             ) : (
               <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
@@ -252,41 +247,44 @@ const UkmCard: React.FC<UkmCardProps> = ({
                 </div>
 
                 {/* Section 3: Galeri State */}
-                <div>
-                  <div className="flex items-center gap-3 mb-5">
-                    <h5 className="text-lg font-bold">Galeri State</h5>
+                {stateGallery.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-3 mb-5">
+                      <h5 className="text-lg font-bold">Galeri State</h5>
+                    </div>
+                    <div className="flex flex-wrap gap-2 justify-center pl-9 pr-9">
+                      {/* Contoh gambar, ganti dengan data dinamis jika ada */}
+                      <Carousel>
+                        <CarouselContent>
+                          <CarouselItem>
+                            <img
+                              src={stateGallery[0]?.url}
+                              alt={`Gallery image ${0}`}
+                              className="object-cover w-full h-48 rounded-lg"
+                            />
+                          </CarouselItem>
+                          <CarouselItem>
+                            <img
+                              src={stateGallery[1]?.url}
+                              alt={`Gallery image ${1}`}
+                              className="object-cover w-full h-48 rounded-lg"
+                            />
+                          </CarouselItem>
+                          <CarouselItem>
+                            <img
+                              src={stateGallery[2]?.url}
+                              alt={`Gallery image ${2}`}
+                              className="object-cover w-full h-48 rounded-lg"
+                            />
+                          </CarouselItem>
+                        </CarouselContent>
+                        <CarouselPrevious />
+                        <CarouselNext />
+                      </Carousel>
+                    </div>
                   </div>
-                  <div className="flex flex-wrap gap-2 justify-center pl-9 pr-9">
-                    {/* Contoh gambar, ganti dengan data dinamis jika ada */}
-                    <Carousel>
-                      <CarouselContent>
-                        <CarouselItem>
-                          <img
-                            src={stateGallery[0]?.url}
-                            alt={`Gallery image ${0}`}
-                            className="object-cover w-full h-48 rounded-lg"
-                          />
-                        </CarouselItem>
-                        <CarouselItem>
-                          <img
-                            src={stateGallery[1]?.url}
-                            alt={`Gallery image ${1}`}
-                            className="object-cover w-full h-48 rounded-lg"
-                          />
-                        </CarouselItem>
-                        <CarouselItem>
-                          <img
-                            src={stateGallery[2]?.url}
-                            alt={`Gallery image ${2}`}
-                            className="object-cover w-full h-48 rounded-lg"
-                          />
-                        </CarouselItem>
-                      </CarouselContent>
-                      <CarouselPrevious />
-                      <CarouselNext />
-                    </Carousel>
-                  </div>
-                </div>
+                )}
+
                 <br />
                 <RegisterButton
                   stateId={stateId}

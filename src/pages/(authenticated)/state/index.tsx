@@ -51,7 +51,7 @@ interface RegisteredState {
 const State: React.FC = () => {
   const api = useApi();
   const auth = useAuth();
-  const queryClient = useQueryClient();
+
   const {
     data: States,
     isLoading,
@@ -142,7 +142,11 @@ const State: React.FC = () => {
         <div className="entrance grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 max-w-7xl w-full">
           {stateRenders.map((state) =>
             state.stateName ? (
-              <FilledCard key={state.cardSlot} {...state} stateGallery={state.stateGallery} />
+              <FilledCard
+                key={state.cardSlot}
+                {...state}
+                stateGallery={state.stateGallery}
+              />
             ) : (
               <EmptyCard
                 key={state.cardSlot}

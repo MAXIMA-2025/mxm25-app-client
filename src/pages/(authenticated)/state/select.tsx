@@ -103,7 +103,7 @@ const DateFilter: React.FC<DateFilterProps> = ({
 };
 
 interface SelectProps {
-  stateTerpilih: String[];
+  stateTerpilih: string[];
   slotState: number;
 }
 
@@ -348,72 +348,72 @@ const Select: React.FC<SelectProps> = ({ stateTerpilih, slotState }) => {
           </div>
 
           {/* Cards Section */}
-            <div
+          <div
             className="entrance grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 w-full max-w-6xl"
             style={{
               maxHeight: "60vh",
               overflowY: "auto",
               background: "transparent",
             }}
-            >
+          >
             {filteredUkm && filteredUkm.length > 0 ? (
               filteredUkm.map((item) => {
-              return (
-                <UkmCard
-                key={item.id}
-                stateId={item.id}
-                stateName={item.nama}
-                stateDate={item.day?.date || getDateByDayId(item.dayId)}
-                stateLocation={item.location}
-                stateQuota={item.quota}
-                registrationCount={item.registrationCount || 0}
-                ukmLogo={item.logo || stateLogo}
-                stateDescription={item.description}
-                // onPilihState={() => {
-                //   // Handle state selection
-                // }}
-                // onInfoState={(stateId) => {
-                //   // Handle info state - you can implement modal or navigation here
-                //   // Example: show modal with state details
-                //   // showStateInfoModal(stateId);
-                // }}
-                selectedStateDate={selectedDate}
-                stateGallery={item.gallery || []}
-                />
-              );
+                return (
+                  <UkmCard
+                    key={item.id}
+                    stateId={item.id}
+                    stateName={item.nama}
+                    stateDate={item.day?.date || getDateByDayId(item.dayId)}
+                    stateLocation={item.location}
+                    stateQuota={item.quota}
+                    registrationCount={item.registrationCount || 0}
+                    ukmLogo={item.logo || stateLogo}
+                    stateDescription={item.description}
+                    // onPilihState={() => {
+                    //   // Handle state selection
+                    // }}
+                    // onInfoState={(stateId) => {
+                    //   // Handle info state - you can implement modal or navigation here
+                    //   // Example: show modal with state details
+                    //   // showStateInfoModal(stateId);
+                    // }}
+                    selectedStateDate={selectedDate}
+                    stateGallery={item.gallery || []}
+                  />
+                );
               })
             ) : (
               <div className="col-span-full text-center">
-              <div className="bg-white bg-opacity-90 backdrop-blur-md rounded-xl p-8 shadow-lg">
-                <p className="text-xl text-gray-600 mb-2">
-                {searchTerm && selectedFilter
-                  ? `Tidak ada STATE yang cocok dengan pencarian "${searchTerm}" pada Hari ke-${selectedFilter}`
-                  : searchTerm
-                  ? `Tidak ada STATE yang cocok dengan pencarian "${searchTerm}"`
-                  : selectedFilter
-                  ? `Tidak ada STATE pada Hari ke-${selectedFilter}`
-                  : "Belum ada STATE yang tersedia"}
-                </p>
-                <p className="text-gray-500">
-                {searchTerm || selectedFilter
-                  ? "Coba ubah kriteria pencarian atau filter hari"
-                  : "Data STATE akan muncul ketika sudah tersedia"}
-                </p>
-                {(searchTerm || selectedFilter) && (
-                <button
-                  onClick={() => {
-                  setSearchTerm("");
-                  setSelectedFilter(null);
-                  }}
-                  className="mt-4 bg-[#90171a] text-white px-4 py-2 rounded hover:bg-[#722F37] transition-colors"
-                >
-                  Reset Filter
-                </button>
-                )}
-              </div>
+                <div className="bg-white bg-opacity-90 backdrop-blur-md rounded-xl p-8 shadow-lg">
+                  <p className="text-xl text-gray-600 mb-2">
+                    {searchTerm && selectedFilter
+                      ? `Tidak ada STATE yang cocok dengan pencarian "${searchTerm}" pada Hari ke-${selectedFilter}`
+                      : searchTerm
+                      ? `Tidak ada STATE yang cocok dengan pencarian "${searchTerm}"`
+                      : selectedFilter
+                      ? `Tidak ada STATE pada Hari ke-${selectedFilter}`
+                      : "Belum ada STATE yang tersedia"}
+                  </p>
+                  <p className="text-gray-500">
+                    {searchTerm || selectedFilter
+                      ? "Coba ubah kriteria pencarian atau filter hari"
+                      : "Data STATE akan muncul ketika sudah tersedia"}
+                  </p>
+                  {(searchTerm || selectedFilter) && (
+                    <button
+                      onClick={() => {
+                        setSearchTerm("");
+                        setSelectedFilter(null);
+                      }}
+                      className="mt-4 bg-[#90171a] text-white px-4 py-2 rounded hover:bg-[#722F37] transition-colors"
+                    >
+                      Reset Filter
+                    </button>
+                  )}
+                </div>
               </div>
             )}
-            </div>
+          </div>
         </div>
       </div>
     </div>
