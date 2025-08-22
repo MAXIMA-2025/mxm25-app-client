@@ -119,6 +119,11 @@ const resetProgress = () => {
   keysToRemove.forEach((key) => localStorage.removeItem(key));
 };
 
+// Helper to check if org is marked wrong in localStorage
+const isWrong = (orgId: number): boolean => {
+  return localStorage.getItem(STORAGE_PREFIX + orgId) === STATUS_FALSE;
+};
+
 const GamePage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [unlocked, setUnlocked] = useState<Set<number>>(new Set());
@@ -165,13 +170,28 @@ const GamePage: React.FC = () => {
     }
   }, [auth.isLoading, nav, auth.user?.role]);
 
+  // Cek apakah ada kategori yang semua organisasinya salah
+  const checkAllWrongInCategory = (): boolean => {
+    for (const cat of categories) {
+      let allWrong = true;
+      for (const org of cat.organizations) {
+        const progress = localStorage.getItem(STORAGE_PREFIX + org.id);
+        if (progress !== STATUS_FALSE) {
+          allWrong = false;
+          break;
+        }
+      }
+      if (allWrong) {
+        return true; // Ada kategori yang semua salah
+      }
+    }
+    return false;
+  };
+
   useEffect(() => {
     if (!auth.isLoading) {
       const mhs = auth as Auth<UserMahasiswa>;
 
-      // if (mhs.user?.isFinishedMaxlearn === "Menang") {
-      //   setFinished(true);
-      // }
       switch (mhs.user?.isFinishedMaxlearn) {
         case "Belum": {
           setFinished(false);
@@ -187,6 +207,16 @@ const GamePage: React.FC = () => {
         }
       }
 
+      // Cek apakah challenge kalah
+      if (!finished && checkAllWrongInCategory()) {
+        finishChallenge("Kalah").then(() => {
+          resetProgress();
+          setFinished(true);
+        });
+        return;
+      }
+
+      // Cek apakah challenge menang
       if (!finished && checkCompletion()) {
         finishChallenge("Menang").then(() => {
           resetProgress();
@@ -478,10 +508,10 @@ const GamePage: React.FC = () => {
                       const fetchedData = stateData?.find(
                         (val) => val.id === org.id
                       );
-
                       const logo =
                         org.fallbackLogo ||
                         `${import.meta.env.VITE_R2_URL}/${fetchedData?.logo}`;
+                      const wrong = isWrong(org.id);
 
                       return (
                         <div
@@ -510,12 +540,23 @@ const GamePage: React.FC = () => {
                                           : "blur-xs opacity-40"
                                       }`}
                                       loading="lazy"
+                                      // Jika salah, tetap blur
+                                      style={
+                                        wrong
+                                          ? {
+                                              filter: "blur(4px)",
+                                              opacity: 0.4,
+                                            }
+                                          : {}
+                                      }
                                     />
                                     {/* Status Indicator */}
                                     <div
                                       className={`absolute -top-1 -right-1 w-3 h-3 rounded-full transition-all duration-200 ${
                                         isUnlocked || finished
                                           ? "bg-green-400 shadow-lg shadow-green-400/50"
+                                          : wrong
+                                          ? "bg-red-400 shadow-lg shadow-red-400/50"
                                           : "bg-gray-400"
                                       }`}
                                     ></div>
@@ -536,13 +577,15 @@ const GamePage: React.FC = () => {
                                 </div>
 
                                 {/* Action Button */}
-                                <Dialog.Trigger asChild>
-                                  <Button className="bg-white/20 hover:bg-white/30 text-white border border-white/30 hover:border-white/50 text-xs sm:text-sm py-2.5 px-4 rounded-xl font-medium shadow-lg transition-all duration-200 w-full group-hover:scale-105 backdrop-blur-sm">
-                                    {isUnlocked || finished
-                                      ? "Lihat Info"
-                                      : "Tebak"}
-                                  </Button>
-                                </Dialog.Trigger>
+                                {!wrong && (
+                                  <Dialog.Trigger asChild>
+                                    <Button className="bg-white/20 hover:bg-white/30 text-white border border-white/30 hover:border-white/50 text-xs sm:text-sm py-2.5 px-4 rounded-xl font-medium shadow-lg transition-all duration-200 w-full group-hover:scale-105 backdrop-blur-sm">
+                                      {isUnlocked || finished
+                                        ? "Lihat Info"
+                                        : "Tebak"}
+                                    </Button>
+                                  </Dialog.Trigger>
+                                )}
                               </div>
 
                               {/* Shine effect */}
