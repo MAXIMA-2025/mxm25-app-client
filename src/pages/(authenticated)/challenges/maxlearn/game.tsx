@@ -711,7 +711,7 @@ const GamePage: React.FC = () => {
               {/* Back Button */}
               <div className="mb-4 animate-in slide-in-from-left duration-200">
                 <Button
-                  variant="outline"
+                  variant="default"
                   className="px-5 py-2.5 rounded-xl font-semibold shadow-xl transition-all duration-200 hover:scale-105 hover:shadow-2xl"
                   onClick={() => setSelectedCategory(null)}
                 >
