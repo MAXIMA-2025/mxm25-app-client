@@ -346,7 +346,9 @@ const GamePage: React.FC = () => {
               {/* Back Button */}
               <div className="animate-in slide-in-from-left duration-300">
                 <Button
-                  className="bg-white/95 hover:bg-white text-gray-800 backdrop-blur-sm shadow-xl border-0 px-5 py-2.5 rounded-xl font-semibold transition-all duration-200 hover:scale-105 hover:shadow-2xl"
+                  variant="outline"
+                  size="lg"
+                  className="w-full sm:w-auto font-semibold"
                   onClick={() => nav("/challenges/maxlearn")}
                 >
                   <span className="flex items-center gap-2">
@@ -484,7 +486,8 @@ const GamePage: React.FC = () => {
               {/* Back Button */}
               <div className="mb-4 animate-in slide-in-from-left duration-200">
                 <Button
-                  className="bg-white/95 hover:bg-white text-gray-800 backdrop-blur-sm shadow-xl border-0 px-5 py-2.5 rounded-xl font-semibold transition-all duration-200 hover:scale-105 hover:shadow-2xl"
+                  variant="outline"
+                  className="px-5 py-2.5 rounded-xl font-semibold shadow-xl transition-all duration-200 hover:scale-105 hover:shadow-2xl"
                   onClick={() => setSelectedCategory(null)}
                 >
                   <span className="flex items-center gap-2">
