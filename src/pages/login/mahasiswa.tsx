@@ -105,7 +105,7 @@ const Mahasiswa = () => {
         {/* Buttons */}
         <CardFooter className="flex flex-col md:flex-row gap-4 w-full justify-center">
           <Button
-            onClick={handleYesClick}
+            onClick={}
             variant="clay"
             className="w-full md:w-1/2"
           >

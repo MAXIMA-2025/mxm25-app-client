@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+  import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -19,7 +19,7 @@ import Turnstile from "react-turnstile";
 type DataMahasiswa = {
   nama: string;
   nim: string;
-  email: string;
+  // email: string;
   angkatan: string;
   prodi: string;
   whatsapp: string;
@@ -45,10 +45,11 @@ const Onboarding: React.FC = () => {
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const isRedirecting = useRef(false); // Prevent double clicks
 
-  const handleSSOLogin = async (role: string) => {
+  const handleSSOLogin = async (role: string,nim: string) => {
     // Prevent double execution
     if (isRedirecting.current || loading) return;
     localStorage.setItem("google-login-role", role);
+    localStorage.setItem("nim-maba", nim);
 
     isRedirecting.current = true;
     setLoading(true);
@@ -73,7 +74,7 @@ const Onboarding: React.FC = () => {
   const [formData, setFormData] = useState<DataMahasiswa>({
     nama: "",
     nim: "",
-    email: "",
+    // email: "",
     angkatan: "2025",
     prodi: "",
     whatsapp: "",
@@ -105,7 +106,7 @@ const Onboarding: React.FC = () => {
     const requiredFields: (keyof DataMahasiswa)[] = [
       "nama",
       "nim",
-      "email",
+      // "email",
       "angkatan",
       "prodi",
       "whatsapp",
@@ -135,14 +136,14 @@ const Onboarding: React.FC = () => {
     }
 
     // Validate email format and domain
-    const emailPattern = /^[^\s@]+@gmail\.com$/;
-    if (!emailPattern.test(formData.email)) {
-      setError({
-        message: "Format email tidak valid!",
-        fields: { email: "Email harus menggunakan domain @gmail.com" },
-      });
-      return false;
-    }
+    // const emailPattern = /^[^\s@]+@gmail\.com$/;
+    // if (!emailPattern.test(formData.email)) {
+    //   setError({
+    //     message: "Format email tidak valid!",
+    //     fields: { email: "Email harus menggunakan domain @gmail.com" },
+    //   });
+    //   return false;
+    // }
 
     // Validate prodi
     const validProdi = [
@@ -215,7 +216,6 @@ const Onboarding: React.FC = () => {
           data: {
             nim: formData.nim,
             nama: formData.nama,
-            email: formData.email,
             angkatan: parseInt(formData.angkatan),
             prodi: formData.prodi,
             whatsapp: formData.whatsapp,
@@ -234,7 +234,7 @@ const Onboarding: React.FC = () => {
           if (response.status === 200) {
             setSuccess(response.data.message);
             setTimeout(async () => {
-              await handleSSOLogin("mahasiswa");
+              await handleSSOLogin("mahasiswa",requestData.data.nim);
             }, 500);
             setIsLoading(false);
             return resolve();
@@ -320,7 +320,7 @@ const Onboarding: React.FC = () => {
               />
             </div>
 
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <label className="text-sm font-title">Email Google</label>
               <Input
                 placeholder="example@gmail.com"
@@ -329,7 +329,7 @@ const Onboarding: React.FC = () => {
                 onChange={handleInputChange("email")}
                 className={error?.fields?.email ? "border-red-500" : ""}
               />
-            </div>
+            </div> */}
 
             <div className="space-y-2">
               <label className="text-sm font-title">Prodi</label>
@@ -430,7 +430,8 @@ const Onboarding: React.FC = () => {
                 "REGISTER"
               )}
             </Button>
-            <p className="text-sm text-gray-600 text-center">
+            
+            {/* <p className="text-sm text-gray-600 text-center">
               Sudah punya akun?
               <span
                 onClick={async () => await handleSSOLogin("mahasiswa")}
@@ -438,7 +439,8 @@ const Onboarding: React.FC = () => {
               >
                 Login di sini
               </span>
-            </p>
+            </p> */}
+
           </CardContent>
         </form>
       </Card>
