@@ -14,6 +14,7 @@ const Oauth = () => {
       const params = new URLSearchParams(window.location.search);
       const code = params.get("code");
       const role = localStorage.getItem("google-login-role");
+      const nim = localStorage.getItem("nim-maba");
       if (!code) {
         toast.error("Authorization code not found.");
         nav("/login");
@@ -22,7 +23,7 @@ const Oauth = () => {
       try {
         const res = await axios.post(
           `${import.meta.env.VITE_API_URL}/auth/google/callback`,
-          { role },
+          { role, nim },
           { params: { code }, withCredentials: true }
         );
 
@@ -30,6 +31,7 @@ const Oauth = () => {
 
         toast.success(res.data.message);
         localStorage.removeItem("google-login-role");
+        localStorage.removeItem("nim-maba");
         setIsLoggedOut(false);
         nav("/main");
 
