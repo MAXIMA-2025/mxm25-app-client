@@ -66,6 +66,7 @@ const Mahasiswa = () => {
 
   const handleYesClick = () => {
     navigate("/login/onboarding");
+    navigate("/login/onboarding");
   };
 
   return (
@@ -94,6 +95,12 @@ const Mahasiswa = () => {
       </div>
       <Card className="w-5/6 md:w-4/6">
         <CardHeader>
+          <CardTitle className="font-futura text-xl font-semibold">
+            Selamat Datang di MAXIMA 2025!
+          </CardTitle>
+          <CardDescription className="font-futura">
+            Segera daftarkan dirimu !
+          </CardDescription>
           <CardTitle className="font-futura text-xl font-semibold">
             Selamat Datang di MAXIMA 2025!
           </CardTitle>
