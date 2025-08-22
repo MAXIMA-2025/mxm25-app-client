@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import Bg_desktop from "@/assets/images/main/STATION.webp";
@@ -11,6 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import useApi from "@/hooks/useApi";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
+import useAuth from "@/hooks/useAuth";
 
 const allowedPrefixes = [
   "999999",
@@ -32,6 +33,10 @@ const alfagiftSchema = z
   });
 
 const Index: React.FC = () => {
+  const auth = useAuth();
+  useEffect(()=>{
+    auth.user?.role==="eksternal" && nav("/station")
+  })
   const [alfagiftId, setAlfagiftId] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const api = useApi();
@@ -71,6 +76,7 @@ const Index: React.FC = () => {
 
     mutation.mutate();
   };
+
 
   return (
     <section
