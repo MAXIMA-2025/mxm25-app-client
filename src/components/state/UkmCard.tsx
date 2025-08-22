@@ -14,7 +14,7 @@ interface UkmCardProps {
   stateDescription?: string | null;
   onInfoState?: (stateId: number) => void;
   selectedStateDate: string[];
-  stateGallery: (string | undefined)[];
+  stateGallery: ({ id: number; url: string } | undefined)[];
 }
 
 //Import Components
