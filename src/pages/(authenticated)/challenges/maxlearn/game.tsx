@@ -324,7 +324,7 @@ const GamePage: React.FC = () => {
           backgroundImage: `url(${bgImage})`,
           backgroundSize: "100% 100%",
           backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
+          backgroundRepeat: "no-repeat ",
         }}
       >
         {/* Minimal overlay untuk readability */}
