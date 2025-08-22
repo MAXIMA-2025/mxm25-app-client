@@ -57,7 +57,7 @@ const Index = () => {
       </h1>
 
       {/* Station Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6 sm:gap-8 md:gap-10 w-full max-w-7xl">
+      <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6 sm:gap-8 md:gap-10 w-11/12 max-w-7xl">
         {stations.map((station) => (
           <div
             key={station.id}
@@ -76,9 +76,8 @@ const Index = () => {
             {/* Card Content */}
             <div className="text-center flex-shrink-0">
               <h3 
-                className="text-black font-bold text-sm sm:text-base md:text-lg mb-1"
+                className="text-black font-futura font-bold text-sm sm:text-base md:text-lg mb-1"
                 style={{
-                  fontFamily: "'Title Hero', sans-serif",
                   fontWeight: "700",
                   letterSpacing: "-0.02em",
                 }}
@@ -86,7 +85,7 @@ const Index = () => {
                 {station.title}
               </h3>
               {station.subtitle && (
-                <p className="text-xs sm:text-sm text-gray-600 font-medium">
+                <p className="text-xs font-futura sm:text-sm text-gray-600 font-medium">
                   {station.subtitle}
                 </p>
               )}

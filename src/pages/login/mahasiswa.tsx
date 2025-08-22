@@ -101,12 +101,6 @@ const Mahasiswa = () => {
           <CardDescription className="font-futura">
             Segera daftarkan dirimu !
           </CardDescription>
-          <CardTitle className="font-futura text-xl font-semibold">
-            Selamat Datang di MAXIMA 2025!
-          </CardTitle>
-          <CardDescription className="font-futura">
-            Segera daftarkan dirimu !
-          </CardDescription>
         </CardHeader>
 
         {/* Buttons */}
