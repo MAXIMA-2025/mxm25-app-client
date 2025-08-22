@@ -1,4 +1,4 @@
-  import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -45,7 +45,7 @@ const Onboarding: React.FC = () => {
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const isRedirecting = useRef(false); // Prevent double clicks
 
-  const handleSSOLogin = async (role: string,nim: string) => {
+  const handleSSOLogin = async (role: string, nim: string) => {
     // Prevent double execution
     if (isRedirecting.current || loading) return;
     localStorage.setItem("google-login-role", role);
@@ -234,7 +234,7 @@ const Onboarding: React.FC = () => {
           if (response.status === 200) {
             setSuccess(response.data.message);
             setTimeout(async () => {
-              await handleSSOLogin("mahasiswa",requestData.data.nim);
+              await handleSSOLogin("mahasiswa", requestData.data.nim);
             }, 500);
             setIsLoading(false);
             return resolve();
@@ -319,6 +319,19 @@ const Onboarding: React.FC = () => {
                 className={error?.fields?.nama ? "border-red-500" : ""}
               />
             </div>
+            <div className="flex-1 space-y-2">
+              <label className="text-sm font-title">NIM</label>
+              <Input
+                placeholder="00000123456"
+                value={formData.nim}
+                onChange={handleInputChange("nim")}
+                className={error?.fields?.nim ? "border-red-500" : ""}
+                maxLength={11}
+              />
+              {/* <p className="text-xs text-gray-500">
+                  Format: 00000XXXXXX (11 digit)
+                </p> */}
+            </div>
 
             {/* <div className="space-y-2">
               <label className="text-sm font-title">Email Google</label>
@@ -362,19 +375,6 @@ const Onboarding: React.FC = () => {
             </div>
 
             <div className="flex gap-4">
-              <div className="flex-1 space-y-2">
-                <label className="text-sm font-title">NIM</label>
-                <Input
-                  placeholder="00000123456"
-                  value={formData.nim}
-                  onChange={handleInputChange("nim")}
-                  className={error?.fields?.nim ? "border-red-500" : ""}
-                  maxLength={11}
-                />
-                {/* <p className="text-xs text-gray-500">
-                  Format: 00000XXXXXX (11 digit)
-                </p> */}
-              </div>
               {/* <div className="flex-1 space-y-2">
                 <label className="text-sm font-title">Angkatan</label>
                 <Input
@@ -408,7 +408,7 @@ const Onboarding: React.FC = () => {
                 />
               </div>
             </div>
-            <div className="pl-5">
+            <div className="pl-5 mt-4">
               <Turnstile
                 refreshExpired="auto"
                 onVerify={(t) => setTurnstileToken(t)}
@@ -430,7 +430,7 @@ const Onboarding: React.FC = () => {
                 "REGISTER"
               )}
             </Button>
-            
+
             {/* <p className="text-sm text-gray-600 text-center">
               Sudah punya akun?
               <span
@@ -440,7 +440,6 @@ const Onboarding: React.FC = () => {
                 Login di sini
               </span>
             </p> */}
-
           </CardContent>
         </form>
       </Card>
