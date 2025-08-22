@@ -38,8 +38,26 @@ type TicketData = {
   createdAt: string;
   updatedAt: string;
 };
+function formatToWIB(isoString: string) {
+  const date = new Date(isoString);
+
+  // Get UTC time and then add +7 for WIB
+  const utc = date.getTime() + date.getTimezoneOffset() * 60000;
+  const wibTime = new Date(utc + 7 * 60 * 60 * 1000);
+
+  const day = String(wibTime.getDate()).padStart(2, '0');
+  const month = String(wibTime.getMonth() + 1).padStart(2, '0');
+  const year = wibTime.getFullYear();
+
+  const hours = String(wibTime.getHours()).padStart(2, '0');
+  const minutes = String(wibTime.getMinutes()).padStart(2, '0');
+
+  return `${day}-${month}-${year} ${hours}:${minutes} WIB`;
+}
+
 
 const Tickets = () => {
+  
   const api = useApi();
   const auth = useAuth();
   const {
@@ -290,6 +308,9 @@ const Tickets = () => {
                       <CardContent className="pt-0">
                         <div className="space-y-4">
                           {/* User Details */}
+                          <p className="text-sm font-medium text-gray-400">
+                            Dibeli pada {formatToWIB(ticket.createdAt)}
+                          </p>
                           <div className="space-y-3">
                             <div className="flex items-start space-x-3">
                               <div className="bg-gray-100 p-2 rounded-lg flex-shrink-0">
