@@ -1,5 +1,6 @@
 import HeroMain from "@/components/main/HeroMain";
 import StationMain from "@/components/main/StationMain";
+import StateMain from "@/components/main/StateMain";
 import { useRef } from "react";
 import divider2 from "@/assets/images/dividers/divider2.webp";
 import LoaderWrapper from "@/components/loaderWrapper";
@@ -9,6 +10,8 @@ import useAuth from "@/hooks/useAuth";
 
 const Main = () => {
   const stationRef = useRef<HTMLElement>(null!);
+  const { toggleAcara } = useToggle();
+  const target = toggleAcara?.find((t) => t.nama === "Maxlearn");
   const auth = useAuth();
   return (
     <div className="w-full h-dvh">
@@ -21,6 +24,17 @@ const Main = () => {
           />
         </div>
         <StationMain sectionRef={stationRef} />
+        {auth.user?.role === "mahasiswa" ? (
+          <>
+            <div className="relative z-1">
+              <img
+                className="w-full h-80 -top-42 z-1 absolute object-cover drop-shadow-2xl"
+                src={divider2}
+              />
+            </div>
+            <StateMain />
+          </>
+        ) : null}
 
         {auth.user?.role === "mahasiswa" && (
           <>
