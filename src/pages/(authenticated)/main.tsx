@@ -5,11 +5,11 @@ import divider2 from "@/assets/images/dividers/divider2.webp";
 import LoaderWrapper from "@/components/loaderWrapper";
 import ChallengeMaxima from "@/components/main/ChallengeMaxima";
 import { useToggle } from "@/contexts/ToggleContext";
+import useAuth from "@/hooks/useAuth";
 
 const Main = () => {
   const stationRef = useRef<HTMLElement>(null!);
-  const { toggleAcara } = useToggle();
-  const target = toggleAcara?.find((t) => t.nama === "Maxlearn");
+  const auth = useAuth();
   return (
     <div className="w-full h-dvh">
       <LoaderWrapper>
@@ -22,7 +22,7 @@ const Main = () => {
         </div>
         <StationMain sectionRef={stationRef} />
 
-        {target?.isOn && (
+        {auth.user?.role === "mahasiswa" && (
           <>
             <div className="relative z-1">
               <img
