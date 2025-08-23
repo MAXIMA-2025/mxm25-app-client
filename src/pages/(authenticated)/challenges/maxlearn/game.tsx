@@ -11,6 +11,7 @@ import useAuth, { type Auth, type UserMahasiswa } from "@/hooks/useAuth";
 import { useNavigate } from "@/router";
 import bgImage from "@/assets/asset_maxlearn/logo/bg.png";
 import TutorialDialog from "@/components/maxlearn/TutorialDialog";
+import { Link } from "react-router";
 
 export type StateData = {
   id: number;
@@ -475,7 +476,8 @@ const GamePage: React.FC = () => {
                             </div>
                             <span className="mb-2">
                               Anda telah menyelesaikan MAXLEARN dengan sempurna!
-                              Silahkan screenshot dan bagikan pencapaian Anda!
+                              Silahkan <b>SCREENSHOT</b> dan bagikan pencapaian Anda di <b>STORY IG</b> Anda!<br/>
+                              Jangan lupa juga untuk foto Anda bersama organisator, lalu <b>POST IG DENGAN DOWNLOAD TWIBBON DIBAWAH!</b> 
                             </span>
                             <div className="bg-white/80 p-3 rounded-lg mt-3">
                               <span className="mb-1 font-bold block">
@@ -493,11 +495,16 @@ const GamePage: React.FC = () => {
                               </span>
                             </div>
                           </Dialog.Description>
-                          <div className="flex justify-center">
+                          <div className="flex items-center justify-center" >
+                              <Link target="_blank" to="https://drive.google.com/drive/folders/1MoZK_Z5SDMLA6BBJPhNN_vef81jWGKl_?usp=share_link"> 
+                            <Button className="h-full" variant="clay">
+                              DOWNLOAD TWIBBON
+                            </Button>
+                              </Link>
                             <Dialog.Close asChild>
-                              <button className="px-8 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-medium transition-all duration-200 hover:scale-105 shadow-lg">
+                              <Button className="ml-2 font-medium transition-all duration-200 hover:scale-105 shadow-lg" variant="outline">
                                 Tutup
-                              </button>
+                              </Button>
                             </Dialog.Close>
                           </div>
                         </div>
