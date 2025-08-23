@@ -1,5 +1,5 @@
 import React from 'react'
-import Background from '@/assets/asset_maxlearn/BACKGROUND CHALLENGE STATION.png'
+import Background from '@/assets/asset_maxlearn/BACKGROUND CHALLENGE STATION.webp'
 import LogoStation from '@/assets/images/main/logoRangkaian/LogoSTATION.webp'
 import Maxlearn from '@/assets/asset_maxlearn/HANDBOOK MAXLEARN.png'
 import Maxsnap from '@/assets/asset_maxlearn/HANDBOOK MAXSNAP.png'

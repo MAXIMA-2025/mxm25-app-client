@@ -1,5 +1,5 @@
 import React from "react";
-import backgroundImage from "@/assets/asset_maxlearn/BACKGROUND CHALLENGE STATION.png";
+import backgroundImage from "@/assets/asset_maxlearn/BACKGROUND CHALLENGE STATION.webp";
 import {
   Card,
   CardContent,
