@@ -1,5 +1,4 @@
 import Background from "@/assets/asset_maxlearn/BG MAXLEARN-02.webp";
-import HandbookPdf from "@/assets/asset_maxlearn/HANDBOOK MAXLEARN.pdf";
 import { useNavigate } from "react-router-dom";
 import { useToggle } from "@/contexts/ToggleContext";
 import { Button } from "@/components/ui/button";
