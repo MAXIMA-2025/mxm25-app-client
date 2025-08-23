@@ -9,7 +9,7 @@ const index = () => {
       <LoaderWrapper>
         <HeroSection />
         <AboutSection />
-        {/* <Footer/> */}
+        <Footer/>
       </LoaderWrapper>
     </div>
   );
