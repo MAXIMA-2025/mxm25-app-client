@@ -58,9 +58,9 @@ const Index: React.FC = () => {
   //  set semua field di form ini menjadi kosong, kecuali jumlahTiket harus di 1.
 
   const auth = useAuth();
-  useEffect(()=>{
-    auth.user?.role==="mahasiswa" && nav("/station/mahasiswa")
-  })
+  useEffect(() => {
+    auth.user?.role === "mahasiswa" && nav("/station/mahasiswa");
+  });
   useEffect(() => {
     const user = auth.user;
 
@@ -144,6 +144,7 @@ const Index: React.FC = () => {
         onSuccess: async () => {
           try {
             const ticketId = data.ticketId;
+            console.log("Coba sekali");
             await api.get(`/ticket/eksternal/paid/${ticketId}`);
             alert("Pembayaran berhasil");
             toast.success("Tiket anda berhasil dibayar!");
@@ -160,11 +161,11 @@ const Index: React.FC = () => {
         },
         onError: (error: any) => {
           alert("Terjadi kesalahan saat pembayaran.");
-          toast.error(error);
+          toast.error(error, { id: "kesalahanSaatPembayaran" });
           console.error(error);
         },
         onClose: () => {
-          toast.error("Pembayaran dibatalkan");
+          toast.error("Pembayaran dibatalkan", { id: "batalBayar" });
           alert("Anda menutup pembayaran tanpa menyelesaikannya.");
         },
       });
@@ -173,6 +174,7 @@ const Index: React.FC = () => {
       console.error("Gagal membuat token:", err);
       alert("Gagal membuat pembayaran. Coba lagi.");
     },
+    retry: 1,
   });
 
   const handleSubmit = (e: React.FormEvent) => {

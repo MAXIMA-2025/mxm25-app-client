@@ -23,6 +23,8 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
           STATUS: ${{ job.status }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
           if [ "$STATUS" == "success" ]; then
             COLOR=3066993 # green
@@ -30,6 +32,15 @@ jobs:
             COLOR=15158332 # red
           else
             COLOR=8359053 # yellow/other
+          fi
+
+          # pick commit message or PR title
+          if [ -n "$COMMIT_MESSAGE" ]; then
+            MESSAGE="$COMMIT_MESSAGE"
+          elif [ -n "$PR_TITLE" ]; then
+            MESSAGE="$PR_TITLE"
+          else
+            MESSAGE="No commit message found"
           fi
 
           curl -H "Content-Type: application/json" \
@@ -44,6 +55,10 @@ jobs:
                 {
                   "name": "Commit",
                   "value": "'"$GITHUB_SHA"'"
+                },
+                {
+                  "name": "Message",
+                  "value": "'"$MESSAGE"'"
                 },
                 {
                   "name": "Actor",

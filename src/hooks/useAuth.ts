@@ -6,6 +6,7 @@ import {
 import useApi, { type ApiResponse } from "./useApi";
 import useErrorHandler from "./useErrorHandler";
 import useAuthContext from "./useAuthContext";
+import type { MaxlearnStatus } from "@/pages/(authenticated)/challenges/maxlearn/game";
 
 export type Auth<
   T = UserPanitia | UserOrganisator | UserEksternal | UserMahasiswa
@@ -77,6 +78,7 @@ export type UserMahasiswa = {
   whatsapp: string;
   lineId: string;
   role: string;
+  isFinishedMaxlearn: MaxlearnStatus;
 };
 
 const useAuth = () => {
@@ -99,7 +101,7 @@ const useAuth = () => {
       }
     },
     staleTime: Infinity, // data akan basi setelah 5 mnt
-    retry: 1,
+    retry: 10,
     enabled: !isLoggedOut, // biar pas udah logout dia ga fetch lagi !! anjir gua debug ini berhari2 dan solusinya se simple ini tai emg
     refetchInterval: (query) => {
       const user = query.state.data?.data;

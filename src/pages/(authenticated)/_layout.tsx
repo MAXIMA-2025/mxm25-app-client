@@ -16,9 +16,19 @@ type Toggle = {
 };
 
 const Layout = () => {
-  const nav = useNavigate();
+  // const nav = useNavigate();
   const api = useApi();
   const { isLoggedOut } = useAuthContext();
+  console.log(isLoggedOut);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (typeof isLoggedOut === "boolean") {
+      if (isLoggedOut) {
+        navigate("/login");
+      }
+    }
+  }, [isLoggedOut, navigate]);
   // const {
   //   user,
   //   isLoading: authLoading,
@@ -26,13 +36,13 @@ const Layout = () => {
   //   status: authStatus,
   // } = useAuth();
 
-  useEffect(() => {
-    if (isLoggedOut) {
-      console.log("No jwt tokens, logging out ...");
-      toast.error("Session berakhir. Silahkan login lagi");
-      nav("/login");
-    }
-  }, [nav, isLoggedOut]);
+  // useEffect(() => {
+  //   if (isLoggedOut) {
+  //     console.log("No jwt tokens, logging out ...");
+  //     toast.error("Session berakhir. Silahkan login lagi");
+  //     // nav("/login");
+  //   }
+  // }, [nav, isLoggedOut]);
 
   // Call useQuery ALWAYS, but control execution via enabled flag
   const { data: toggleAcara, status: toggleStatus } = useQuery({
@@ -41,7 +51,7 @@ const Layout = () => {
       const resp = await api.get<ApiResponse<Toggle[]>>("/toggle");
       return resp.data;
     },
-    // enabled: !!user, // won't fetch until user exists
+    enabled: !isLoggedOut, // won't fetch until user exists
   });
 
   // Redirect after auth check
@@ -63,7 +73,6 @@ const Layout = () => {
   // }
 
   const mappedStatus = toggleStatus === "pending" ? "loading" : toggleStatus;
-
   return (
     <ToggleProvider
       value={{ toggleAcara: toggleAcara?.data, status: mappedStatus }}

@@ -1,16 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import backgroundImg from "@/assets/images/onboarding.webp";
 import backdropLogo from "@/assets/images/LogoBackdrop.webp";
 import logo from "@/assets/images/logo.png"
-import Google from "../../assets/images/google-icon-logo-svgrepo-com.svg";
 import { Card, CardFooter, CardTitle } from "@/components/ui/card";
 import axios from "axios";
 import { toast } from "sonner";
+import useAuthContext from "@/hooks/useAuthContext";
 
 const LoginPage = () => {
+  const {isLoggedOut}= useAuthContext();
   const navigate = useNavigate();
+  
+useEffect(() => {
+  if (typeof isLoggedOut === "boolean") {
+    if (!isLoggedOut) {
+      navigate("/main");
+    }
+  }
+}, [isLoggedOut, navigate]);
+
 
   const handleYesClick = () => {
     navigate("/login/mahasiswa");
@@ -64,16 +74,16 @@ const LoginPage = () => {
           <Button
             onClick={handleYesClick}
             variant="clay"
-            className="w-full md:w-1/2"
+            className="w-full md:w-3/4"
           >
-            YES
+            Mahasiswa Baru UMN 2025
           </Button>
           <Button
             onClick={async () => await handleGoogleClick("eksternal")}
             variant="outline"
-            className="w-full md:w-1/2"
+            className="w-full md:w-1/4"
           >
-            NO, <img className="size-5" src={Google} /> Sign in with Google
+            Login <p className="underline">Eksternal</p>
           </Button>
         </CardFooter>
       </Card>

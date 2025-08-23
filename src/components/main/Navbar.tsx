@@ -11,33 +11,39 @@ import {
 import { Button } from "../ui/button";
 import { Link, useNavigate } from "react-router";
 import {
+  Gamepad,
   HomeIcon,
   LogOutIcon,
   Ticket,
   TicketCheck,
   TicketIcon,
+  TreeDeciduousIcon,
   UserIcon,
 } from "lucide-react";
 import logo from "/favicon.png";
 import { useToggle } from "@/contexts/ToggleContext";
-import {  useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useApi from "@/hooks/useApi";
 import useAuthContext from "@/hooks/useAuthContext";
+import useAuth from "@/hooks/useAuth";
 
 const Navbar = () => {
   const { toggleAcara } = useToggle();
-  const queryClient = useQueryClient(); 
+  const queryClient = useQueryClient();
   const auth = useAuthContext();
+  const authUser = useAuth();
   const api = useApi();
-  const nav = useNavigate(); 
+  const nav = useNavigate();
   const target = toggleAcara?.find((t) => t.nama === "Station");
-    const mutation = useMutation({
+  const targetMaxlearn = toggleAcara?.find((t) => t.nama === "Maxlearn");
+  const mutation = useMutation({
     mutationFn: async () => {
       const res = await api.post("/auth/logout");
       if (res.status !== 200) throw new Error("Gagal logout!");
     },
     onSuccess: () => {
       queryClient.removeQueries({ queryKey: ["authUser"] });
+      console.log("Di navbar");
       auth.setIsLoggedOut(true);
       nav("/");
     },
@@ -47,66 +53,52 @@ const Navbar = () => {
     <nav className="fixed bottom-4 z-50">
       <Menubar className="shadow-2xl/100 ">
         <MenubarMenu>
-          <MenubarTrigger>
+          <MenubarTrigger className="shadow-2xl bg-slate-50 hover:cursor-pointer">
             <Link to="/main">
               <img src={logo} className="size-5 object-contain" />
             </Link>
           </MenubarTrigger>
-          {/* <MenubarContent>
-            <MenubarItem>
-              New Tab <MenubarShortcut>⌘T</MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem>New Window</MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem>Share</MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem>Print</MenubarItem>
-          </MenubarContent> */}
         </MenubarMenu>
-        {target?.isOn && (
-          <>
             <MenubarMenu>
               <Link to="/tickets">
-                <MenubarTrigger>
+                <MenubarTrigger className="shadow-2xl bg-slate-50 hover:cursor-pointer">
                   <TicketCheck className="size-5 mr-1" />
                   TIKET
                 </MenubarTrigger>
               </Link>
-              {/* <MenubarContent>
-          </MenubarContent> */}
             </MenubarMenu>
+        {target?.isOn && (
+          <>
             <MenubarMenu>
-              <MenubarTrigger>
-                <Link to={"/station"}>STATION</Link>
-              </MenubarTrigger>
-              {/* <MenubarContent>
-            <MenubarItem>
-              New Tab <MenubarShortcut>⌘T</MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem>New Window</MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem>Share</MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem>Print</MenubarItem>
-          </MenubarContent> */}
+              <Link to={"/station"}>
+                <MenubarTrigger className="shadow-2xl bg-slate-50 hover:cursor-pointer">
+                  <TreeDeciduousIcon className="size-5 object-contain mr-1"/> STATION
+                </MenubarTrigger>
+              </Link>
             </MenubarMenu>
           </>
         )}
-            <MenubarMenu>
-              <MenubarTrigger >
-                <div onClick={() => mutation.mutate()} className="flex gap-1 items-center justify-center hover:cursor-pointer"><LogOutIcon className="size-5"/>Log Out</div>
-              </MenubarTrigger>
-              {/* <MenubarContent>
-            <MenubarItem>
-              New Tab <MenubarShortcut>⌘T</MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem>New Window</MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem>Share</MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem>Print</MenubarItem>
-          </MenubarContent> */}
-            </MenubarMenu>
+        {targetMaxlearn?.isOn && authUser.user?.role === "mahasiswa" && (
+          <MenubarMenu>
+            <MenubarTrigger className="shadow-2xl bg-slate-50 hover:cursor-pointer">
+              <Link to={"/challenges"} className="flex flex-row gap-2">
+                <Gamepad className="size-5 object-contain" />
+                CHALLENGES
+              </Link>
+            </MenubarTrigger>
+          </MenubarMenu>
+        )}
+        <MenubarMenu>
+          <MenubarTrigger className="shadow-2xl bg-black hover:cursor-pointer">
+            <div
+              onClick={() => mutation.mutate()}
+              className="flex gap-1 items-center justify-center invert-100"
+            >
+              <LogOutIcon className="size-5" />
+              Log Out
+            </div>
+          </MenubarTrigger>
+        </MenubarMenu>
       </Menubar>
     </nav>
   );

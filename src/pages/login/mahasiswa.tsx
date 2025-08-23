@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import logo from "../../assets/images/logo.png";
+import Google from "../../assets/images/google-icon-logo-svgrepo-com.svg";
 import {
   Card,
   CardDescription,
@@ -65,6 +66,7 @@ const Mahasiswa = () => {
 
   const handleYesClick = () => {
     navigate("/login/onboarding");
+    navigate("/login/onboarding");
   };
 
   return (
@@ -115,7 +117,7 @@ const Mahasiswa = () => {
             variant="outline"
             className="w-full md:w-1/2"
           >
-            LOGIN
+            <img src={Google} className="size-5"/> LOGIN
           </Button>
         </CardFooter>
       </Card>
