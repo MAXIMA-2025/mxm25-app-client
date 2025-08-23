@@ -23,20 +23,8 @@ const Main = () => {
             src={divider2}
           />
         </div>
-        <StationMain sectionRef={stationRef} />
-        {auth.user?.role === "mahasiswa" ? (
-          <>
-            <div className="relative z-1">
-              <img
-                className="w-full h-80 -top-42 z-1 absolute object-cover drop-shadow-2xl"
-                src={divider2}
-              />
-            </div>
-            <StateMain />
-          </>
-        ) : null}
-
-        {auth.user?.role === "mahasiswa" && (
+        <StationMain  />
+                {auth.user?.role === "mahasiswa" && (
           <>
             <div className="relative z-1">
               <img
@@ -47,6 +35,17 @@ const Main = () => {
             <ChallengeMaxima />
           </>
         )}
+        {auth.user?.role === "mahasiswa" ? (
+          <>
+            <div className="relative z-1">
+              <img
+                className="w-full h-80 -top-42 z-1 absolute object-cover drop-shadow-2xl"
+                src={divider2}
+              />
+            </div>
+            <StateMain sectionRef={stationRef}/>
+          </>
+        ) : null}
       </LoaderWrapper>
     </div>
   );

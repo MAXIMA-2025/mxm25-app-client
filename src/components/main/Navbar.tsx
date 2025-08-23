@@ -99,7 +99,7 @@ const Navbar = () => {
               )}
             {(targetState?.isOn && authUser.user?.role === "mahasiswa") && (
                 <MenubarItem>
-                  <Link to={"/challenges"} className="flex flex-row gap-2">
+                  <Link to={"/state"} className="flex flex-row gap-2">
                     <VenetianMaskIcon className="size-5 object-contain" />
                     STATE
                   </Link>

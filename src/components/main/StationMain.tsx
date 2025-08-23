@@ -17,11 +17,8 @@ import { useToggle } from "@/contexts/ToggleContext";
 import useAuth from "@/hooks/useAuth";
 import Loading from "../loading";
 
-interface StationMainProps {
-  sectionRef: React.RefObject<HTMLElement>;
-}
 
-const StationMain = ({ sectionRef }: StationMainProps) => {
+const StationMain = () => {
   const { toggleAcara } = useToggle();
   const target = toggleAcara?.find((t) => t.nama === "Station");
   const nav = useNavigate();
@@ -41,7 +38,6 @@ const StationMain = ({ sectionRef }: StationMainProps) => {
   };
   return !auth.isLoading ? (
     <section
-      ref={sectionRef}
       className="min-h-lvh w-full flex flex-col items-center gap-4 justify-center px-2 py-32 sm:px-4 md:px-8 bg-cover bg-center"
       style={{
         backgroundImage: `url(${backgroundImage})`,

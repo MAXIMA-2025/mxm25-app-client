@@ -14,7 +14,11 @@ import artis from "@/assets/images/main/Poster.webp";
 import StationCollage from "@/assets/images/main/carousel/StationCollage.webp";
 import StateLogo from "@/assets/images/state.webp";
 
-const StateMain = () => {
+interface StationMainProps {
+  sectionRef: React.RefObject<HTMLElement>;
+}
+
+const StateMain = ({ sectionRef }: StationMainProps) => {
   const nav = useNavigate();
 
   const handleState = () => {
@@ -24,11 +28,13 @@ const StateMain = () => {
   return (
     // State Content
     <section
-      className="min-h-lvh w-full flex flex-col items-center gap-4 justify-center px-2 py-32 sm:px-4 md:px-8 bg-cover bg-center"
+      ref={sectionRef}
+      className="bg-black/40 min-h-lvh w-full flex flex-col items-center gap-4 justify-center px-2 py-32 sm:px-4 md:px-8 bg-cover bg-center"
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",
         backgroundPosition: "top",
+        backgroundBlendMode: "darken"
       }}
     >
       {/* Station Content */}
@@ -90,9 +96,7 @@ const StateMain = () => {
             </CardContent>
           </div>
           {/* Right Image Section */}
-          <div className="relative flex p-6 md:pl-0 h-full justify-center items-center">
-            
-          </div>
+          {/* <div className="relative flex p-6 md:pl-0 h-full justify-center items-center"></div> */}
         </div>
       </Card>
     </section>

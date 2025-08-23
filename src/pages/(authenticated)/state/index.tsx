@@ -127,13 +127,14 @@ const State: React.FC = () => {
 
   return (
     <div
-      className="bg-image min-h-screen w-full relative overflow-x-hidden"
+      className="bg-image min-h-screen w-full relative overflow-x-hidden bg-black/50"
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundAttachment: "fixed",
+        backgroundBlendMode:"darken",
       }}
     >
       {/* Background Pattern Overlay */}
@@ -151,10 +152,10 @@ const State: React.FC = () => {
       <div className="relative z-20 min-h-screen flex flex-col justify-center items-center px-4 py-8">
         {/* Header Section */}
         <header className="text-center mb-12 md:mb-16">
-          <h1 className="text-6xl md:text-8xl font-black text-white mb-4 tracking-tight">
+          <h1 className="font-fraunces text-6xl md:text-8xl font-semibold text-white mb-4 tracking-tight">
             STATE
           </h1>
-          <p className="text-lg md:text-xl text-blue-100 max-w-md mx-auto leading-relaxed">
+          <p className="font-futura text-lg md:text-xl text-blue-100 max-w-md mx-auto leading-relaxed">
             Daftar STATE yang telah kamu pilih
           </p>
         </header>
