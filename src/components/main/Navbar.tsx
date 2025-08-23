@@ -20,6 +20,7 @@ import {
   TicketIcon,
   TreeDeciduousIcon,
   UserIcon,
+  VenetianMaskIcon,
 } from "lucide-react";
 import logo from "/favicon.png";
 import { useToggle } from "@/contexts/ToggleContext";
@@ -37,6 +38,7 @@ const Navbar = () => {
   const nav = useNavigate();
   const target = toggleAcara?.find((t) => t.nama === "Station");
   const targetMaxlearn = toggleAcara?.find((t) => t.nama === "Maxlearn");
+  const targetState = toggleAcara?.find((t) => t.nama === "State");
   const mutation = useMutation({
     mutationFn: async () => {
       const res = await api.post("/auth/logout");
@@ -92,6 +94,14 @@ const Navbar = () => {
                   <Link to={"/challenges"} className="flex flex-row gap-2">
                     <Gamepad className="size-5 object-contain" />
                     CHALLENGES
+                  </Link>
+                </MenubarItem>
+              )}
+            {(targetState?.isOn && authUser.user?.role === "mahasiswa") && (
+                <MenubarItem>
+                  <Link to={"/challenges"} className="flex flex-row gap-2">
+                    <VenetianMaskIcon className="size-5 object-contain" />
+                    STATE
                   </Link>
                 </MenubarItem>
               )}
