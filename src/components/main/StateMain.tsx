@@ -13,18 +13,15 @@ import backgroundImage from "@/assets/images/background_state.webp";
 import artis from "@/assets/images/main/Poster.webp";
 import StationCollage from "@/assets/images/main/carousel/StationCollage.webp";
 import StateLogo from "@/assets/images/state.webp";
-import useAuth from "@/hooks/useAuth";
-import Loading from "../loading";
 
 const StateMain = () => {
   const nav = useNavigate();
-  const auth = useAuth();
 
   const handleState = () => {
     nav("/state");
   };
 
-  return !auth.isLoading ? (
+  return (
     // State Content
     <section
       className="min-h-lvh w-full flex flex-col items-center gap-4 justify-center px-2 py-32 sm:px-4 md:px-8 bg-cover bg-center"
@@ -56,7 +53,8 @@ const StateMain = () => {
                   STATE
                 </CardTitle>
                 <CardDescription className="text-[#2B2B2B] text-sm sm:text-base lg:text-lg leading-relaxed">
-                  Kenalan, eksplorasi, dan pilih organisasi/UKM yang paling cocok buat kamu!
+                  Kenalan, eksplorasi, dan pilih organisasi/UKM yang paling
+                  cocok buat kamu!
                 </CardDescription>
               </div>
             </CardHeader>
@@ -80,35 +78,24 @@ const StateMain = () => {
                   </span>
                 </div>
               </div>
-              {auth.user?.role === "eksternal" ? (
-                <div></div>
-              ) : (
-                <div className="flex flex-col sm:flex-row gap-2 lg:gap-2">
-                  <Button variant="clay" onClick={handleState}>
-                    Pilih State Kamu
-                    <ArrowRight
-                      size={14}
-                      className="sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform"
-                    />
-                  </Button>
-                </div>
-              )}
+              <div className="flex flex-col sm:flex-row gap-2 lg:gap-2">
+                <Button variant="clay" onClick={handleState}>
+                  Pilih State Kamu
+                  <ArrowRight
+                    size={14}
+                    className="sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform"
+                  />
+                </Button>
+              </div>
             </CardContent>
           </div>
           {/* Right Image Section */}
           <div className="relative flex p-6 md:pl-0 h-full justify-center items-center">
-            <img
-              className="cursor-pointer absolute h-40 sm:h-60 rounded-md border-3 md:rounded-xl rotate-2 hover:rotate-1 transition-transform border-white shadow-2xl"
-              src={artis}
-              alt="Guest Star"
-            />
-            <img className="aspect-auto md:h-78" src={StationCollage} />
+            
           </div>
         </div>
       </Card>
     </section>
-  ) : (
-    <Loading />
   );
 };
 
