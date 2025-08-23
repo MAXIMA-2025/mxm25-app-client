@@ -43,7 +43,7 @@ interface RegisteredState {
     gallery: {
       id: number;
       url: string;
-    };
+    }[];
   };
   mahasiswaUUID: string;
 }
@@ -53,7 +53,7 @@ const State: React.FC = () => {
   const auth = useAuth();
 
   const {
-    data: States,
+    data: stateRenders,
     isLoading,
     isError,
     error,
@@ -61,12 +61,31 @@ const State: React.FC = () => {
     queryKey: ["states"],
     queryFn: async () => {
       if (!auth.user) throw new Error("User not authenticated");
+
       const response = await api.get<ApiResponse<RegisteredState[]>>(
         "/state/peserta/state/registration"
       );
+
       return response.data;
     },
+    select: (data) => {
+      return Array.from({ length: 3 }, (_, index) => {
+        const state = data.data[index];
 
+        return {
+          cardSlot: index + 1,
+          stateName: state?.state.nama || "",
+          stateLocation: state?.state.location || "",
+          stateDate: state
+            ? format(parseISO(state.state.day.date), "EEEE dd MMMM yyyy", {
+                locale: localeId,
+              })
+            : "",
+          ukmLogo: state?.state.logo !== null ? state?.state.logo : stateLogo,
+          stateGallery: state?.state.gallery,
+        };
+      });
+    },
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
@@ -88,21 +107,23 @@ const State: React.FC = () => {
       </p>
     );
 
-  const stateRenders = Array.from({ length: 3 }, (_, index) => {
-    const state = States?.data[index];
-    return {
-      cardSlot: index + 1,
-      stateName: state?.state.nama || "",
-      stateLocation: state?.state.location || "",
-      stateDate: state
-        ? format(parseISO(state.state.day.date), "EEEE dd MMMM yyyy", {
-            locale: localeId,
-          })
-        : "",
-      ukmLogo: state?.state.logo || stateLogo,
-      stateGallery: state?.state.gallery,
-    };
-  });
+  // const stateRenders = Array.from({ length: 3 }, (_, index) => {
+  //   const state = States?.data[index];
+  //   console.log("state: ", state);
+
+  //   return {
+  //     cardSlot: index + 1,
+  //     stateName: state?.state.nama || "",
+  //     stateLocation: state?.state.location || "",
+  //     stateDate: state
+  //       ? format(parseISO(state.state.day.date), "EEEE dd MMMM yyyy", {
+  //           locale: localeId,
+  //         })
+  //       : "",
+  //     ukmLogo: state?.state.logo !== null ? state?.state.logo : stateLogo,
+  //     stateGallery: state?.state.gallery,
+  //   };
+  // });
 
   return (
     <div
@@ -140,7 +161,7 @@ const State: React.FC = () => {
 
         {/* Cards Section */}
         <div className="entrance grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 max-w-7xl w-full">
-          {stateRenders.map((state) =>
+          {stateRenders?.map((state) =>
             state.stateName ? (
               <FilledCard
                 key={state.cardSlot}

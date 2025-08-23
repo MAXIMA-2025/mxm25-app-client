@@ -3,24 +3,20 @@ import React from "react";
 //Import Components
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-  type CarouselApi,
 } from "@/components/ui/carousel";
 
 interface FilledStateProps {
@@ -30,7 +26,7 @@ interface FilledStateProps {
   stateDate?: string;
   ukmLogo?: string;
   stateDescription?: string | null;
-  stateGallery: (string | undefined)[];
+  stateGallery: { id: number; url: string }[] | undefined;
 }
 
 const FilledState: React.FC<FilledStateProps> = ({
@@ -43,6 +39,7 @@ const FilledState: React.FC<FilledStateProps> = ({
   stateGallery,
 }) => {
   console.log(stateGallery);
+  console.log(stateName + " " + ukmLogo);
 
   return (
     <div className="card-hover bg-white rounded-2xl p-6 md:p-8 shadow-2xl border-4 border-[#A01C1C] md:col-span-2 xl:col-span-1">
@@ -53,7 +50,11 @@ const FilledState: React.FC<FilledStateProps> = ({
           {/* ACES Logo */}
           <div className="w-40 h-40 mx-auto mb-6 flex items-center justify-center">
             <img
-              src={`${import.meta.env.VITE_R2_URL}/${ukmLogo}`}
+              src={
+                ukmLogo?.startsWith("/src/")
+                  ? ukmLogo
+                  : `${import.meta.env.VITE_R2_URL}/${ukmLogo}`
+              }
               alt={`${stateName} Logo`}
               className="object-contain"
             />
