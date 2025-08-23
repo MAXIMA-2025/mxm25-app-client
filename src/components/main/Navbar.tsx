@@ -89,7 +89,7 @@ const Navbar = () => {
           </MenubarMenu>
         )}
         <MenubarMenu>
-          <MenubarTrigger className="shadow-2xl bg-black hover:cursor-pointer">
+          <MenubarTrigger className="shadow-2xl bg-black hover:cursor-pointer focus:bg-primary">
             <div
               onClick={() => mutation.mutate()}
               className="flex gap-1 items-center justify-center invert-100"
