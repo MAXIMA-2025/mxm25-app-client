@@ -390,34 +390,36 @@ const GamePage: React.FC = () => {
 
       {/* Background Container */}
       <div
-        className="fixed inset-0 overflow-auto"
+        className="fixed inset-0 overflow-auto bg-slate-600/50"
         style={{
           backgroundImage: `url(${bgImage})`,
-          backgroundSize: "100% 100%",
+          backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat ",
+          backgroundBlendMode: "darken",
         }}
       >
         {/* Minimal overlay untuk readability */}
-        <div className="absolute inset-0 bg-black/10 pointer-events-none"></div>
+        {/* <div className="absolute inset-0 bg-black/10 pointer-events-none"></div> */}
 
         {/* Content Wrapper */}
         <div className="relative z-10 min-h-screen">
           {!selectedCategory ? (
             /* ===== CATEGORY SELECTION VIEW ===== */
             <>
-              <div className="flex flex-col min-h-screen p-2 sm:p-6">
+              <div className="flex flex-col  min-h-screen p-2 sm:p-6">
                 {/* Header Section */}
-                <div className="text-center py-6 mb-4">
-                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-white drop-shadow-2xl animate-in slide-in-from-top duration-300">
+                <div className="text-center pb-0 pt-6 mb-4">
+                  <h1 className="text-3xl sm:text-4xl font-fraunces lg:text-5xl font-bold mb-4 text-white drop-shadow-2xl animate-in slide-in-from-top duration-300">
                     Pilih Kategori
                   </h1>
                   <div className="w-16 h-1 bg-white/80 mx-auto rounded-full shadow-lg"></div>
                 </div>
 
                 <div className="grid grid-cols-1 gap-2 ">
+                  <div className="flex gap-2 flex-row items-center justify-center w-full mb-4">
                   {/* Back Button */}
-                  <div className="mx-auto animate-in slide-in-from-left duration-300">
+                  <div className="animate-in slide-in-from-left duration-300">
                     <Button
                       variant="default"
                       size="lg"
@@ -432,10 +434,11 @@ const GamePage: React.FC = () => {
                   </div>
 
                   {!finished && (
-                    <div className="mx-auto animate-in slide-in-from-left duration-300">
+                    <div className="animate-in slide-in-from-left duration-300">
                       <TutorialDialog />
                     </div>
                   )}
+                  </div>
 
                   <Dialog.Root
                     open={showWinModal}
@@ -568,7 +571,7 @@ const GamePage: React.FC = () => {
                 </div>
 
                 {/* Categories Grid */}
-                <div className="flex-1 flex items-center justify-center px-4">
+                <div className="flex-1 flex items-center justify-center px-4 pb-48">
                   <div className="w-full max-w-6xl mx-auto">
                     {/* Main 3x3 Grid - UPDATED */}
                     <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-4 justify-items-center">
@@ -583,7 +586,7 @@ const GamePage: React.FC = () => {
                           >
                             <button
                               onClick={() => setSelectedCategory(cat.id)}
-                              className={`group relative overflow-hidden w-full min-h-16 sm:min-h-18 lg:min-h-20 rounded-xl backdrop-blur-lg border shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] cursor-pointer ${
+                              className={`group relative overflow-hidden w-full h-full py-2 rounded-xl backdrop-blur-lg border shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] cursor-pointer ${
                                 isCompleted
                                   ? "bg-emerald-500/20 hover:bg-emerald-500/30 border-emerald-400/50"
                                   : "bg-white/15 hover:bg-white/25 border-white/30"

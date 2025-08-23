@@ -36,7 +36,7 @@ const Main = () => {
           </>
         ) : null}
 
-        {target?.isOn && (
+        {auth.user?.role === "mahasiswa" && (
           <>
             <div className="relative z-1">
               <img
