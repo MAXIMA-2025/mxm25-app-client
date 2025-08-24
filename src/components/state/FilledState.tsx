@@ -1,23 +1,24 @@
 import React from "react";
+import Yakin from "@/assets/images/yakin.gif";
 
 //Import Components
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import { Button } from "../ui/button";
+import { Trash2 } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import useApi from "@/hooks/useApi";
+import { toast } from "sonner";
 
 interface FilledStateProps {
   cardSlot?: number;
@@ -27,20 +28,34 @@ interface FilledStateProps {
   ukmLogo?: string;
   stateDescription?: string | null;
   stateGallery: { id: number; url: string }[] | undefined;
+  stateRegistration?: number | null;
 }
 
 const FilledState: React.FC<FilledStateProps> = ({
-  cardSlot,
   stateName,
   stateLocation,
   stateDate,
   ukmLogo,
   stateDescription,
   stateGallery,
+  stateRegistration,
 }) => {
   console.log(stateGallery);
   console.log(stateName + " " + ukmLogo);
 
+  const api = useApi();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async (stateRegistration: number | null) => {
+      const resp = await api.delete(`/state/drop/${stateRegistration}`);
+      return resp.data.data;
+    },
+    onSuccess: () => {
+      toast.success("Berhasil drop STATE!");
+      queryClient.invalidateQueries({ queryKey: ["states"] });
+    },
+  });
   return (
     <div className="card-hover bg-white rounded-2xl p-6 md:p-8 shadow-2xl border-4 border-[#A01C1C] md:col-span-2 xl:col-span-1">
       <div className="text-center">
@@ -70,10 +85,10 @@ const FilledState: React.FC<FilledStateProps> = ({
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-row gap-2 items-center">
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <button className="cursor-pointer flex-1 bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2">
+              <Button variant="clay" className="flex w-5/6">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="w-5 h-5"
@@ -100,7 +115,10 @@ const FilledState: React.FC<FilledStateProps> = ({
                   />
                 </svg>
                 <span>Info</span>
-              </button>
+              </Button>
+              {/* <button className="cursor-pointer flex-1 bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2">
+
+              </button> */}
             </AlertDialogTrigger>
             <AlertDialogContent
               className="max-w-lg w-full p-6 rounded-xl"
@@ -126,7 +144,12 @@ const FilledState: React.FC<FilledStateProps> = ({
                       Tentang {stateName}
                     </AlertDialogTitle>
                   </div>
-                  <div className="flex text-gray-700 text-sm">
+                  <div
+                    className="flex text-gray-700 text-sm"
+                    dangerouslySetInnerHTML={{
+                      __html: stateDescription!,
+                    }}
+                  >
                     {stateDescription ? (
                       <p>{stateDescription}</p>
                     ) : (
@@ -157,7 +180,7 @@ const FilledState: React.FC<FilledStateProps> = ({
                   </div>
                   <div className="flex flex-wrap gap-2 justify-center pl-9 pr-9">
                     {/* Contoh gambar, ganti dengan data dinamis jika ada */}
-                    <Carousel>
+                    {/* <Carousel>
                       <CarouselContent>
                         <CarouselItem>
                           <img
@@ -183,7 +206,7 @@ const FilledState: React.FC<FilledStateProps> = ({
                       </CarouselContent>
                       <CarouselPrevious />
                       <CarouselNext />
-                    </Carousel>
+                    </Carousel> */}
                   </div>
                 </div>
               </AlertDialogHeader>
@@ -191,6 +214,43 @@ const FilledState: React.FC<FilledStateProps> = ({
                 <AlertDialogCancel className="absolute top-2 right-2">
                   X
                 </AlertDialogCancel>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="outline" className="w-1/6">
+                <Trash2 className="size-5" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Yakin anda ingin drop state ini?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  <img
+                    src={Yakin}
+                    alt="Are you sure emoji GIF"
+                    loading="lazy"
+                    className="w-32 h-32 object-contain mx-auto mb-4"
+                  />
+                  Jika kuota nantinya penuh, Anda tidak bisa mendaftar STATE ini
+                  lagi.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction asChild>
+                  <Button
+                    variant="clay"
+                    onClick={() => {
+                      mutation.mutate(stateRegistration);
+                    }}
+                  >
+                    HAPUS
+                  </Button>
+                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>

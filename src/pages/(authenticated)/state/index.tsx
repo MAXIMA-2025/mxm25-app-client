@@ -74,6 +74,7 @@ const State: React.FC = () => {
 
         return {
           cardSlot: index + 1,
+          stateRegistrationId: state?.id,
           stateName: state?.state.nama || "",
           stateLocation: state?.state.location || "",
           stateDate: state
@@ -134,7 +135,7 @@ const State: React.FC = () => {
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundAttachment: "fixed",
-        backgroundBlendMode:"darken",
+        backgroundBlendMode: "darken",
       }}
     >
       {/* Background Pattern Overlay */}
@@ -164,11 +165,14 @@ const State: React.FC = () => {
         <div className="entrance grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 max-w-7xl w-full">
           {stateRenders?.map((state) =>
             state.stateName ? (
-              <FilledCard
-                key={state.cardSlot}
-                {...state}
-                stateGallery={state.stateGallery}
-              />
+              <>
+                <FilledCard
+                  key={state.cardSlot}
+                  {...state}
+                  stateGallery={state.stateGallery}
+                  stateRegistration={state.stateRegistrationId}
+                />
+              </>
             ) : (
               <EmptyCard
                 key={state.cardSlot}
