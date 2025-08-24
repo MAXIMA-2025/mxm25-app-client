@@ -1,4 +1,5 @@
 import Background from "@/assets/asset_maxlearn/BG MAXLEARN-02.webp";
+import {Button} from "@/components/ui/button";
 
 const Maxsnap = () => {
   return (
@@ -28,12 +29,25 @@ const Maxsnap = () => {
         />
       </div>
 
+      <Button
+        className="mt-7 p-7 cursor-pointer"
+        onClick={() =>
+          window.open(
+            "https://drive.google.com/file/d/1Zq-I3txJ98CuyI7elFdS04j59Abj_hFH/view?usp=drivesdk",
+            "_blank"
+          )
+        }
+      >
+        Akses Google Drive
+      </Button>
+
       {/* PDF di atas kertas */}
       <div className="relative w-[95%] max-w-6xl mx-auto">
         {/* Kertas Background */}
         {/* <img src={Kertas} alt="Kertas" className="w-full h-auto relative z-0" /> */}
 
         {/* PDF Embed - ukurannya stabil */}
+        
       </div>
 
     </div>

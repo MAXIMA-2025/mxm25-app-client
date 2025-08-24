@@ -1,4 +1,5 @@
 import Background from "@/assets/asset_maxlearn/BG MAXLEARN-02.webp";
+import { Button } from "@/components/ui/button";
 
 const Photobooth = () => {
   return (
@@ -27,6 +28,18 @@ const Photobooth = () => {
           title="PDF Viewer"
         />
       </div>
+
+      <Button
+        className="mt-7 p-7 cursor-pointer"
+        onClick={() =>
+          window.open(
+            "https://drive.google.com/file/d/1ZrpFSF8mRHG0lXiqA2K_ODuXtIBODQ3u/view?usp=drivesdk",
+            "_blank"
+          )
+        }
+      >
+        Akses Google Drive
+      </Button>
 
       {/* PDF di atas kertas */}
       <div className="relative w-[95%] max-w-6xl mx-auto">
