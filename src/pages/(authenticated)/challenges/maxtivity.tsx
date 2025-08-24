@@ -1,4 +1,5 @@
 import Background from "@/assets/asset_maxlearn/BG MAXLEARN-02.webp";
+import { Button } from "@/components/ui/button";
 
 const Maxtivity = () => {
   return (
@@ -27,6 +28,18 @@ const Maxtivity = () => {
           title="PDF Viewer"
         />
       </div>
+
+      <Button
+        className="mt-7 p-7 cursor-pointer"
+        onClick={() =>
+          window.open(
+            "https://drive.google.com/file/d/1Zs-0vwuYDPAH0um6D4_h-Pqfmiluh1Wp/view?usp=drivesdk",
+            "_blank"
+          )
+        }
+      >
+        Akses Google Drive
+      </Button>
 
       {/* PDF di atas kertas */}
       <div className="relative w-[95%] max-w-6xl mx-auto">
