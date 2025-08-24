@@ -107,7 +107,7 @@ const State: React.FC = () => {
         Gagal memuat state. {(error as Error).message}
       </p>
     );
-    
+
   // const stateRenders = Array.from({ length: 3 }, (_, index) => {
   //   const state = States?.data[index];
   //   console.log("state: ", state);
@@ -135,7 +135,7 @@ const State: React.FC = () => {
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundAttachment: "fixed",
-        backgroundBlendMode:"darken",
+        backgroundBlendMode: "darken",
       }}
     >
       {/* Background Pattern Overlay */}
@@ -166,12 +166,12 @@ const State: React.FC = () => {
           {stateRenders?.map((state) =>
             state.stateName ? (
               <>
-              <FilledCard
-                key={state.cardSlot}
-                {...state}
-                stateGallery={state.stateGallery}
-                stateRegistration={state.stateRegistrationId}
-              />
+                <FilledCard
+                  key={state.cardSlot}
+                  {...state}
+                  stateGallery={state.stateGallery}
+                  stateRegistration={state.stateRegistrationId}
+                />
               </>
             ) : (
               <EmptyCard

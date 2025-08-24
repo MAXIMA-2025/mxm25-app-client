@@ -14,14 +14,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-
 import { Button } from "../ui/button";
 import { Trash2 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -40,7 +32,6 @@ interface FilledStateProps {
 }
 
 const FilledState: React.FC<FilledStateProps> = ({
-  cardSlot,
   stateName,
   stateLocation,
   stateDate,
@@ -53,6 +44,7 @@ const FilledState: React.FC<FilledStateProps> = ({
   console.log(stateName + " " + ukmLogo);
 
   const api = useApi();
+  const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: async (stateRegistration: number | null) => {
@@ -60,10 +52,9 @@ const FilledState: React.FC<FilledStateProps> = ({
       return resp.data.data;
     },
     onSuccess: () => {
-      const queryClient = useQueryClient();
-      queryClient.invalidateQueries({queryKey: ["states"]})
       toast.success("Berhasil drop STATE!");
-    }
+      queryClient.invalidateQueries({ queryKey: ["states"] });
+    },
   });
   return (
     <div className="card-hover bg-white rounded-2xl p-6 md:p-8 shadow-2xl border-4 border-[#A01C1C] md:col-span-2 xl:col-span-1">
