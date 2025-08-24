@@ -222,7 +222,9 @@ const UkmCard: React.FC<UkmCardProps> = ({
                       Tentang {stateName}
                     </AlertDialogTitle>
                   </div>
-                  <div className="flex text-gray-700 text-sm">
+                  <div className="flex text-gray-700 text-sm" dangerouslySetInnerHTML={{
+                    __html: stateDescription!,
+                  }}>
                     {stateDescription ? (
                       <p>{stateDescription}</p>
                     ) : (
