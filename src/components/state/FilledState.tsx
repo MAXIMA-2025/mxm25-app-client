@@ -24,6 +24,9 @@ import {
 
 import { Button } from "../ui/button";
 import { Trash2 } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import useApi from "@/hooks/useApi";
+import { toast } from "sonner";
 
 interface FilledStateProps {
   cardSlot?: number;
@@ -33,6 +36,7 @@ interface FilledStateProps {
   ukmLogo?: string;
   stateDescription?: string | null;
   stateGallery: { id: number; url: string }[] | undefined;
+  stateRegistration?: number | null;
 }
 
 const FilledState: React.FC<FilledStateProps> = ({
@@ -43,10 +47,24 @@ const FilledState: React.FC<FilledStateProps> = ({
   ukmLogo,
   stateDescription,
   stateGallery,
+  stateRegistration,
 }) => {
   console.log(stateGallery);
   console.log(stateName + " " + ukmLogo);
 
+  const api = useApi();
+
+  const mutation = useMutation({
+    mutationFn: async (stateRegistration: number | null) => {
+      const resp = await api.delete(`/state/drop/${stateRegistration}`);
+      return resp.data.data;
+    },
+    onSuccess: () => {
+      const queryClient = useQueryClient();
+      queryClient.invalidateQueries({queryKey: ["states"]})
+      toast.success("Berhasil drop STATE!");
+    }
+  });
   return (
     <div className="card-hover bg-white rounded-2xl p-6 md:p-8 shadow-2xl border-4 border-[#A01C1C] md:col-span-2 xl:col-span-1">
       <div className="text-center">
@@ -135,9 +153,12 @@ const FilledState: React.FC<FilledStateProps> = ({
                       Tentang {stateName}
                     </AlertDialogTitle>
                   </div>
-                  <div className="flex text-gray-700 text-sm" dangerouslySetInnerHTML={{
-                    __html: stateDescription!,
-                  }}>
+                  <div
+                    className="flex text-gray-700 text-sm"
+                    dangerouslySetInnerHTML={{
+                      __html: stateDescription!,
+                    }}
+                  >
                     {stateDescription ? (
                       <p>{stateDescription}</p>
                     ) : (
@@ -168,7 +189,7 @@ const FilledState: React.FC<FilledStateProps> = ({
                   </div>
                   <div className="flex flex-wrap gap-2 justify-center pl-9 pr-9">
                     {/* Contoh gambar, ganti dengan data dinamis jika ada */}
-                    <Carousel>
+                    {/* <Carousel>
                       <CarouselContent>
                         <CarouselItem>
                           <img
@@ -194,7 +215,7 @@ const FilledState: React.FC<FilledStateProps> = ({
                       </CarouselContent>
                       <CarouselPrevious />
                       <CarouselNext />
-                    </Carousel>
+                    </Carousel> */}
                   </div>
                 </div>
               </AlertDialogHeader>
@@ -208,7 +229,7 @@ const FilledState: React.FC<FilledStateProps> = ({
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="outline" className="w-1/6">
-                <Trash2 className="size-5"/>
+                <Trash2 className="size-5" />
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -223,12 +244,22 @@ const FilledState: React.FC<FilledStateProps> = ({
                     loading="lazy"
                     className="w-32 h-32 object-contain mx-auto mb-4"
                   />
-                  Jika kuota nantinya penuh, Anda tidak bisa mendaftar STATE ini lagi.
+                  Jika kuota nantinya penuh, Anda tidak bisa mendaftar STATE ini
+                  lagi.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction asChild><Button variant="clay">HAPUS</Button></AlertDialogAction>
+                <AlertDialogAction asChild>
+                  <Button
+                    variant="clay"
+                    onClick={() => {
+                      mutation.mutate(stateRegistration);
+                    }}
+                  >
+                    HAPUS
+                  </Button>
+                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
