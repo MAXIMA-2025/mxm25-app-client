@@ -1,7 +1,5 @@
 import React from "react";
 import RegisterButton from "./RegisterButton";
-import useApi, { type ApiResponse } from "@/hooks/useApi";
-import { useQuery } from "@tanstack/react-query";
 
 interface UkmCardProps {
   stateId: number;
@@ -20,10 +18,8 @@ interface UkmCardProps {
 //Import Components
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -36,7 +32,6 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-  type CarouselApi,
 } from "@/components/ui/carousel";
 
 const UkmCard: React.FC<UkmCardProps> = ({
@@ -222,9 +217,12 @@ const UkmCard: React.FC<UkmCardProps> = ({
                       Tentang {stateName}
                     </AlertDialogTitle>
                   </div>
-                  <div className="flex text-gray-700 text-sm" dangerouslySetInnerHTML={{
-                    __html: stateDescription!,
-                  }}>
+                  {/* <div
+                    className="flex text-gray-700 text-sm"
+                    dangerouslySetInnerHTML={{
+                      __html: stateDescription!,
+                    }}
+                  >
                     {stateDescription ? (
                       <p>{stateDescription}</p>
                     ) : (
@@ -232,7 +230,19 @@ const UkmCard: React.FC<UkmCardProps> = ({
                         Tidak ada deskripsi.
                       </p>
                     )}
-                  </div>
+                  </div> */}
+                  {stateDescription && stateDescription?.trim().length > 0 ? (
+                    <div
+                      className="flex text-gray-700 text-sm"
+                      dangerouslySetInnerHTML={{ __html: stateDescription }}
+                    />
+                  ) : (
+                    <div className="flex text-gray-700 text-sm">
+                      <p className="italic text-gray-400">
+                        Tidak ada deskripsi.
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 {/* Section 2: Jadwal & Lokasi */}

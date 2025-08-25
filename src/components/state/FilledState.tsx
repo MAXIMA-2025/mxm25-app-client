@@ -42,6 +42,7 @@ const FilledState: React.FC<FilledStateProps> = ({
 }) => {
   console.log(stateGallery);
   console.log(stateName + " " + ukmLogo);
+  console.log("Description: ", stateDescription);
 
   const api = useApi();
   const queryClient = useQueryClient();
@@ -144,20 +145,18 @@ const FilledState: React.FC<FilledStateProps> = ({
                       Tentang {stateName}
                     </AlertDialogTitle>
                   </div>
-                  <div
-                    className="flex text-gray-700 text-sm"
-                    dangerouslySetInnerHTML={{
-                      __html: stateDescription!,
-                    }}
-                  >
-                    {stateDescription ? (
-                      <p>{stateDescription}</p>
-                    ) : (
+                  {stateDescription && stateDescription?.trim().length > 0 ? (
+                    <div
+                      className="flex text-gray-700 text-sm"
+                      dangerouslySetInnerHTML={{ __html: stateDescription }}
+                    />
+                  ) : (
+                    <div className="flex text-gray-700 text-sm">
                       <p className="italic text-gray-400">
                         Tidak ada deskripsi.
                       </p>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Section 2: Jadwal & Lokasi */}
@@ -174,13 +173,13 @@ const FilledState: React.FC<FilledStateProps> = ({
                 </div>
 
                 {/* Section 3: Galeri State */}
-                <div>
+                {/* <div>
                   <div className="flex items-center gap-3 mb-5">
                     <h5 className="text-lg font-bold">Galeri State</h5>
                   </div>
                   <div className="flex flex-wrap gap-2 justify-center pl-9 pr-9">
-                    {/* Contoh gambar, ganti dengan data dinamis jika ada */}
-                    {/* <Carousel>
+                    Contoh gambar, ganti dengan data dinamis jika ada
+                    <Carousel>
                       <CarouselContent>
                         <CarouselItem>
                           <img
@@ -206,9 +205,9 @@ const FilledState: React.FC<FilledStateProps> = ({
                       </CarouselContent>
                       <CarouselPrevious />
                       <CarouselNext />
-                    </Carousel> */}
+                    </Carousel>
                   </div>
-                </div>
+                </div> */}
               </AlertDialogHeader>
               <AlertDialogFooter className="mt-6">
                 <AlertDialogCancel className="absolute top-2 right-2">
@@ -245,7 +244,7 @@ const FilledState: React.FC<FilledStateProps> = ({
                   <Button
                     variant="clay"
                     onClick={() => {
-                      mutation.mutate(stateRegistration);
+                      mutation.mutate(stateRegistration!);
                     }}
                   >
                     HAPUS

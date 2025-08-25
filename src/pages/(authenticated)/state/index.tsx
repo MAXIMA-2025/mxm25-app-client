@@ -1,7 +1,6 @@
 import React from "react";
 import useApi, { type ApiResponse } from "@/hooks/useApi";
 import { useQuery } from "@tanstack/react-query";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useAuth from "@/hooks/useAuth";
 import { format, parseISO } from "date-fns";
 import { id as localeId } from "date-fns/locale";
@@ -30,7 +29,7 @@ interface RegisteredState {
     id: number;
     nama: string;
     logo: string | null;
-    deskripsi: string | null;
+    description: string | null;
     quota: number;
     location: string;
     createdAt: string;
@@ -74,6 +73,7 @@ const State: React.FC = () => {
 
         return {
           cardSlot: index + 1,
+          stateDescription: state?.state.description,
           stateRegistrationId: state?.id,
           stateName: state?.state.nama || "",
           stateLocation: state?.state.location || "",
@@ -169,6 +169,7 @@ const State: React.FC = () => {
                 <FilledCard
                   key={state.cardSlot}
                   {...state}
+                  stateDescription={state.stateDescription}
                   stateGallery={state.stateGallery}
                   stateRegistration={state.stateRegistrationId}
                 />
