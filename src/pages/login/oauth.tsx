@@ -13,7 +13,7 @@ const Oauth = () => {
     const handleGoogleCallback = async () => {
       const params = new URLSearchParams(window.location.search);
       const code = params.get("code");
-      const role = localStorage.getItem("google-login-role");
+      const role = localStorage.getItem("google-login-role") || "mahasiswa";
       const nim = localStorage.getItem("nim-maba");
       if (!code) {
         toast.error("Authorization code not found.");
