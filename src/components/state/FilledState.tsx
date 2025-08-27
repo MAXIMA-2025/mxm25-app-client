@@ -228,7 +228,7 @@ const FilledState: React.FC<FilledStateProps> = ({
           </AlertDialog>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="outline" className="w-1/6" disabled={isDisabled}>
+              <Button variant="outline" className="w-1/6" >
                 <Trash2 className="size-5" />
               </Button>
             </AlertDialogTrigger>

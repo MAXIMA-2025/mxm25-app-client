@@ -2,7 +2,7 @@ import React from "react";
 import stateLogoImage from "@/assets/images/state.webp";
 import { useNavigate } from "react-router";
 import { Routes, Route } from "react-router";
-import Select from "@/pages/(authenticated)/state/select";
+import Select from "@/pages/(authenticated)/state/_select";
 import { Button } from "../ui/button";
 
 interface EmptyStateProps {
