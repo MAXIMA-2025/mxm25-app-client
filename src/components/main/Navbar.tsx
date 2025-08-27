@@ -19,6 +19,7 @@ import {
   TicketCheck,
   TicketIcon,
   TreeDeciduousIcon,
+  User,
   UserIcon,
   VenetianMaskIcon,
 } from "lucide-react";
@@ -62,14 +63,28 @@ const Navbar = () => {
             </Link>
           </MenubarTrigger>
         </MenubarMenu>
-        <MenubarMenu>
-          <Link to="/tickets">
-            <MenubarTrigger className="shadow-2xl bg-slate-50 hover:cursor-pointer">
-              <TicketCheck className="size-5 mr-1" />
-              TIKET
-            </MenubarTrigger>
-          </Link>
-        </MenubarMenu>
+        {authUser.user?.role === "eksternal" && (
+          <MenubarMenu>
+            <Link to="/tickets">
+              <MenubarTrigger className="shadow-2xl bg-slate-50 hover:cursor-pointer">
+                <TicketCheck className="size-5 mr-1" />
+                TIKET
+              </MenubarTrigger>
+            </Link>
+          </MenubarMenu>
+        )}
+
+        {authUser.user?.role === "mahasiswa" && (
+          <MenubarMenu>
+            <Link to="/profile">
+              <MenubarTrigger className="shadow-2xl bg-slate-50 hover:cursor-pointer">
+                <User className="size-5 mr-1" />
+                ABSEN
+              </MenubarTrigger>
+            </Link>
+          </MenubarMenu>
+        )}
+
         {target?.isOn && (
           <>
             <MenubarMenu>
@@ -89,22 +104,22 @@ const Navbar = () => {
             Menu
           </MenubarTrigger>
           <MenubarContent>
-            {(targetMaxlearn?.isOn && authUser.user?.role === "mahasiswa") && (
-                <MenubarItem>
-                  <Link to={"/challenges"} className="flex flex-row gap-2">
-                    <Gamepad className="size-5 object-contain" />
-                    CHALLENGES
-                  </Link>
-                </MenubarItem>
-              )}
-            {(targetState?.isOn && authUser.user?.role === "mahasiswa") && (
-                <MenubarItem>
-                  <Link to={"/state"} className="flex flex-row gap-2">
-                    <VenetianMaskIcon className="size-5 object-contain" />
-                    STATE
-                  </Link>
-                </MenubarItem>
-              )}
+            {targetMaxlearn?.isOn && authUser.user?.role === "mahasiswa" && (
+              <MenubarItem>
+                <Link to={"/challenges"} className="flex flex-row gap-2">
+                  <Gamepad className="size-5 object-contain" />
+                  CHALLENGES
+                </Link>
+              </MenubarItem>
+            )}
+            {targetState?.isOn && authUser.user?.role === "mahasiswa" && (
+              <MenubarItem>
+                <Link to={"/state"} className="flex flex-row gap-2">
+                  <VenetianMaskIcon className="size-5 object-contain" />
+                  STATE
+                </Link>
+              </MenubarItem>
+            )}
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu>

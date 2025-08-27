@@ -183,7 +183,7 @@ const State: React.FC = () => {
       {/* Main Container */}
       <div className="relative z-20 min-h-screen flex flex-col justify-center items-center px-4 py-8">
         {/* Header Section */}
-        <header className="text-center mb-12 md:mb-16">
+        <header className="text-center mb-6">
           <h1 className="font-fraunces text-6xl md:text-8xl font-semibold text-white mb-4 tracking-tight">
             STATE
           </h1>
@@ -229,6 +229,7 @@ const State: React.FC = () => {
               />
             )
           )}
+          
         </div>
       </div>
     </div>
