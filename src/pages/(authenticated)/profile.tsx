@@ -1,4 +1,3 @@
-import React from "react";
 import useAuth, { type Auth, type UserMahasiswa } from "@/hooks/useAuth";
 import BackgroundProfile from "@/assets/asset_profile/BACKGROUND PROFILE.png";
 import Line from "@/assets/asset_profile/Line.png";
@@ -100,7 +99,7 @@ const Profile = () => {
             <h1 className="text-3xl font-semibold mb-3 font-fraunces">
               Profile
             </h1>
-
+            
             <div className="flex flex-col md:flex-row gap-6">
               <div className="backdrop-blur-lg p-8 border-3 border-slate-300 rounded-2xl bg-gradient-to-b from-transparent to-90% to-primary/30">
                 {/* Nama + NIM */}
@@ -200,7 +199,7 @@ const Profile = () => {
                       </>
                     )
                 )}
-              </div>
+              </div> */}
             </div>
           </>
         )}
