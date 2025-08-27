@@ -91,6 +91,7 @@ const State: React.FC = () => {
           cardSlot: index + 1,
           stateDescription: state?.state.description,
           stateRegistrationId: state?.id,
+          mahasiswaStatus: state?.status || "",
           stateName: state?.state.nama || "",
           stateLocation: state?.state.location || "",
           stateDate: state
@@ -105,7 +106,7 @@ const State: React.FC = () => {
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
-  
+
   // ✅ Detect date conflicts when stateRenders changes
   useEffect(() => {
     if (stateRenders) {
@@ -219,6 +220,7 @@ const State: React.FC = () => {
                   stateDescription={state.stateDescription}
                   stateGallery={state.stateGallery}
                   stateRegistration={state.stateRegistrationId}
+                  mahasiswaStatus={state.mahasiswaStatus}
                 />
               </>
             ) : (
@@ -229,7 +231,6 @@ const State: React.FC = () => {
               />
             )
           )}
-          
         </div>
       </div>
     </div>
