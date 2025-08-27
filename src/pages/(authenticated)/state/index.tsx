@@ -198,6 +198,19 @@ const State: React.FC = () => {
               <img src={sad} alt="sedih" className="size-50" />
               <AlertDialogTitle>Terdapat STATE yang menabrak!</AlertDialogTitle>
               <AlertDialogDescription>
+                {stateRenders
+                  ?.filter(
+                    (val, _, arr) =>
+                      arr.filter((v) => v.stateDate === val.stateDate).length >
+                      1
+                  )
+                  .map((val, index) => (
+                    <span key={val.cardSlot ?? index} className="font-bold">
+                      {index + 1}. {val.stateName} ({val.stateDate})
+                      <br />
+                    </span>
+                  ))}
+                <br />
                 Drop salah satu STATE sehingga jadwal Anda tidak berhalangan!
               </AlertDialogDescription>
             </AlertDialogHeader>

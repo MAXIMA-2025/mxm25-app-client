@@ -1,10 +1,9 @@
 import useAuth, { type Auth, type UserMahasiswa } from "@/hooks/useAuth";
 import BackgroundProfile from "@/assets/asset_profile/BACKGROUND PROFILE.png";
-import Line from "@/assets/asset_profile/Line.png";
 import { format, parseISO } from "date-fns";
 import { id as localeId } from "date-fns/locale";
 import QRCode from "react-qr-code";
-import { Calendar, NotebookPen, PhoneIcon } from "lucide-react";
+import { Calendar, NotebookPen } from "lucide-react";
 import useApi, { type ApiResponse } from "@/hooks/useApi";
 import { useQuery } from "@tanstack/react-query";
 import stateLogo from "@/assets/images/state.webp";
@@ -205,7 +204,12 @@ const Profile = () => {
                     state.stateName && (
                       <>
                         <div className="flex md:flex-row items-center border-2 border-primary bg-amber-50 rounded-2xl p-4 flex-col">
-                          <img src={state.ukmLogo} className="size-16" />
+                          <img
+                            src={`${import.meta.env.VITE_R2_URL}/${
+                              state.ukmLogo
+                            }`}
+                            className="size-16"
+                          />
                           <div className="flex flex-col items-center md:items-start md:text-start">
                             <h1 className="text-black font-medium text-lg font-futura">
                               {state.stateName}
@@ -246,6 +250,19 @@ const Profile = () => {
               <img src={sad} alt="sedih" className="size-50" />
               <AlertDialogTitle>Terdapat STATE yang menabrak!</AlertDialogTitle>
               <AlertDialogDescription>
+                {stateRenders
+                  ?.filter(
+                    (val, _, arr) =>
+                      arr.filter((v) => v.stateDate === val.stateDate).length >
+                      1
+                  )
+                  .map((val, index) => (
+                    <span key={val.cardSlot ?? index} className="font-bold">
+                      {index + 1}. {val.stateName} ({val.stateDate})
+                      <br />
+                    </span>
+                  ))}
+                <br />
                 Drop salah satu STATE sehingga jadwal Anda tidak berhalangan!
               </AlertDialogDescription>
             </AlertDialogHeader>
