@@ -17,6 +17,7 @@ export type Path =
   | `/login/onboarding`
   | `/login/sso`
   | `/main`
+  | `/profile`
   | `/state`
   | `/state/select`
   | `/station`

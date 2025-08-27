@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useApi, { type ApiResponse } from "@/hooks/useApi";
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "@/hooks/useAuth";
 import { format, parseISO } from "date-fns";
 import { id as localeId } from "date-fns/locale";
 import "./state.css";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import sad from "@/assets/asset_station/sad.gif";
 
 // Asset imports
 import backgroundImage from "@/assets/images/background_state.webp";
@@ -50,7 +60,13 @@ interface RegisteredState {
 const State: React.FC = () => {
   const api = useApi();
   const auth = useAuth();
-
+  const [conflict, setConflict] = useState(false);
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (conflict) {
+      setOpen(true);
+    }
+  }, [conflict]);
   const {
     data: stateRenders,
     isLoading,
@@ -89,6 +105,21 @@ const State: React.FC = () => {
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
+  
+  // ✅ Detect date conflicts when stateRenders changes
+  useEffect(() => {
+    if (stateRenders) {
+      const dates = stateRenders
+        .map((s) => s.stateDate)
+        .filter((date) => date !== ""); // ignore empty slots
+
+      const hasDuplicate = dates.some(
+        (date, index) => dates.indexOf(date) !== index
+      );
+
+      setConflict(hasDuplicate);
+    }
+  }, [stateRenders]);
 
   if (isLoading) {
     return (
@@ -152,7 +183,7 @@ const State: React.FC = () => {
       {/* Main Container */}
       <div className="relative z-20 min-h-screen flex flex-col justify-center items-center px-4 py-8">
         {/* Header Section */}
-        <header className="text-center mb-12 md:mb-16">
+        <header className="text-center mb-6">
           <h1 className="font-fraunces text-6xl md:text-8xl font-semibold text-white mb-4 tracking-tight">
             STATE
           </h1>
@@ -160,6 +191,22 @@ const State: React.FC = () => {
             Daftar STATE yang telah kamu pilih
           </p>
         </header>
+        <AlertDialog open={open} onOpenChange={setOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader className="flex items-center">
+              <img src={sad} alt="sedih" className="size-50" />
+              <AlertDialogTitle>Terdapat STATE yang menabrak!</AlertDialogTitle>
+              <AlertDialogDescription>
+                Drop salah satu STATE sehingga jadwal Anda tidak berhalangan!
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogAction onClick={() => console.log("Confirmed!")}>
+                Lanjut
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         {/* Cards Section */}
         <div className="entrance grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 max-w-7xl w-full">
@@ -182,6 +229,7 @@ const State: React.FC = () => {
               />
             )
           )}
+          
         </div>
       </div>
     </div>
