@@ -1,8 +1,6 @@
-import React from "react";
 import useAuth, { type Auth, type UserMahasiswa } from "@/hooks/useAuth";
 import BackgroundProfile from "@/assets/asset_profile/BACKGROUND PROFILE.png";
 import Line from "@/assets/asset_profile/Line.png";
-import Whatsapp from "@/assets/asset_profile/Whatsapp.png";
 import QRCode from "react-qr-code";
 import { PhoneIcon } from "lucide-react";
 
@@ -41,8 +39,13 @@ const Profile = () => {
                 {user.email ?? "—"}
               </p>
 
+              {/* PRODI */}
+              <p className="text-base text-white/80 mb-5 font-futura">
+                {user.prodi ?? "—"}
+              </p>
+
               {/* QR dari UUID */}
-              <h2 className="text-xl font-bold mb-3 font-futura">SCAN ME</h2>
+              <h2 className="text-xl font-bold mb-3 font-futura">QR Absensi</h2>
               {user.uuid && (
                 <div className="bg-white p-4 rounded-lg inline-block mb-6 shadow-lg">
                   <QRCode
@@ -56,7 +59,7 @@ const Profile = () => {
               )}
 
               {/* Line + WhatsApp sejajar */}
-              <div className="flex justify-center items-center gap-4 mt-2 text-base">
+              {/* <div className="flex justify-center items-center gap-4 mt-2 text-base">
                 {user.lineId && (
                   <div className="flex justify-center items-center gap-2">
                     <img
@@ -68,14 +71,14 @@ const Profile = () => {
                   </div>
                 )}
 
-                {/* Separator | */}
+
                 {user.lineId && user.whatsapp && (
                   <span className="text-white/70 text-lg font-futura">|</span>
                 )}
 
                 {user.whatsapp && (
                   <div className="flex justify-center items-center gap-2">
-                    <PhoneIcon className="size-5"/>
+                    <PhoneIcon className="size-5" />
                     <a
                       className="underline font-futura"
                       href={`https://wa.me/${user.whatsapp.replace(/\D/g, "")}`}
@@ -86,7 +89,7 @@ const Profile = () => {
                     </a>
                   </div>
                 )}
-              </div>
+              </div> */}
             </div>
           </>
         )}

@@ -231,18 +231,20 @@ const UkmCard: React.FC<UkmCardProps> = ({
                       </p>
                     )}
                   </div> */}
-                  {stateDescription && stateDescription?.trim().length > 0 ? (
-                    <div
-                      className="flex text-gray-700 text-sm"
-                      dangerouslySetInnerHTML={{ __html: stateDescription }}
-                    />
-                  ) : (
-                    <div className="flex text-gray-700 text-sm">
-                      <p className="italic text-gray-400">
-                        Tidak ada deskripsi.
-                      </p>
-                    </div>
-                  )}
+                  <div className="overflow-y-auto max-h-64">
+                    {stateDescription && stateDescription?.trim().length > 0 ? (
+                      <div
+                        className="overflow-y-auto text-gray-700 text-sm "
+                        dangerouslySetInnerHTML={{ __html: stateDescription }}
+                      />
+                    ) : (
+                      <div className="flex text-gray-700 text-sm">
+                        <p className="italic text-gray-400">
+                          Tidak ada deskripsi.
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Section 2: Jadwal & Lokasi */}
