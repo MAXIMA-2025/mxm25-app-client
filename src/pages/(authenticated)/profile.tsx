@@ -99,7 +99,7 @@ const Profile = () => {
             <h1 className="text-3xl font-semibold mb-3 font-fraunces">
               Profile
             </h1>
-            
+
             <div className="flex flex-col md:flex-row gap-6">
               <div className="backdrop-blur-lg p-8 border-3 border-slate-300 rounded-2xl bg-gradient-to-b from-transparent to-90% to-primary/30">
                 {/* Nama + NIM */}
@@ -108,7 +108,7 @@ const Profile = () => {
                 </p>
 
                 {/* Email */}
-{/*                 <p className="text-base text-white/80 mb-5 font-futura">
+                {/*                 <p className="text-base text-white/80 mb-5 font-futura">
                   {user.email ?? "—"}
                 </p> */}
 
@@ -164,42 +164,46 @@ const Profile = () => {
                 </div>
               </div>
               */}
-              <div className="w-full flex flex-col gap-4">
-                {stateRenders?.map(
-                  (state) =>
-                    state.stateName && (
-                      <>
-                        <div className="flex md:flex-row items-center border-2 border-primary bg-amber-50 rounded-2xl p-4 flex-col">
-                          <img src={state.ukmLogo} className="size-16" />
-                          <div className="flex flex-col items-center md:items-start md:text-start">
-                            <h1 className="text-black font-medium text-lg font-futura">
-                              {state.stateName}
-                            </h1>
-                            <p className="text-slate-800 flex flex-row gap-2 items-center">
-                              <Calendar className="size-5 text-black" /> {state.stateDate}
-                            </p>
-                            <p className="text-slate-800 flex flex-row gap-2 items-center">
-                              <NotebookPen className="size-5 text-black" />
-                              {(() => {
-                                const now = new Date();
-                                const eventDate = parseISO(state.rawStateDate);
-                                let displayStatus = state.mahasiswaStatus;
+                <div className="w-full flex flex-col gap-4">
+                  {stateRenders?.map(
+                    (state) =>
+                      state.stateName && (
+                        <>
+                          <div className="flex md:flex-row items-center border-2 border-primary bg-amber-50 rounded-2xl p-4 flex-col">
+                            <img src={state.ukmLogo} className="size-16" />
+                            <div className="flex flex-col items-center md:items-start md:text-start">
+                              <h1 className="text-black font-medium text-lg font-futura">
+                                {state.stateName}
+                              </h1>
+                              <p className="text-slate-800 flex flex-row gap-2 items-center">
+                                <Calendar className="size-5 text-black" />{" "}
+                                {state.stateDate}
+                              </p>
+                              <p className="text-slate-800 flex flex-row gap-2 items-center">
+                                <NotebookPen className="size-5 text-black" />
+                                {(() => {
+                                  const now = new Date();
+                                  const eventDate = parseISO(
+                                    state.rawStateDate
+                                  );
+                                  let displayStatus = state.mahasiswaStatus;
 
-                                if (
-                                  state.mahasiswaStatus === "Tidak Datang" &&
-                                  now < eventDate
-                                ) {
-                                  displayStatus = "Belum Datang";
-                                }
+                                  if (
+                                    state.mahasiswaStatus === "Tidak Datang" &&
+                                    now < eventDate
+                                  ) {
+                                    displayStatus = "Belum Datang";
+                                  }
 
-                                return displayStatus;
-                              })()}
-                            </p>
+                                  return displayStatus;
+                                })()}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      </>
-                    )
-                )}
+                        </>
+                      )
+                  )}
+                </div>
               </div>
             </div>
           </>
