@@ -3,6 +3,7 @@ import stateLogoImage from "@/assets/images/state.webp";
 import { useNavigate } from "react-router";
 import { Routes, Route } from "react-router";
 import Select from "@/pages/(authenticated)/state/select";
+import { Button } from "../ui/button";
 
 interface EmptyStateProps {
   cardSlot?: number;
@@ -14,7 +15,9 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   stateDateSelected,
 }) => {
   const nav = useNavigate();
-
+  const now = new Date();
+  const deadline = new Date("2025-08-27T23:59:59+07:00"); // 28 August 2025 WIB
+  const isDisabled = now > deadline;
   return (
     <div className="card-hover bg-white rounded-2xl p-6 md:p-8 shadow-2xl border-4 border-[#A01C1C] relative overflow-hidden flex flex-col justify-center items-center">
       {/* Empty State Pattern */}
@@ -37,12 +40,13 @@ const EmptyState: React.FC<EmptyStateProps> = ({
           Silahkan Pilih STATE 
         </p>
 
-        <button
-          className="cursor-pointer w-full bg-gray-300 hover:bg-gray-400 text-gray-600 hover:text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105"
+        <Button
+          className="cursor-pointer w-full bg-gray-300 hover:bg-gray-400 text-gray-600 hover:text-white py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105"
           onClick={() => nav("select", { state: { state: stateDateSelected, slotState: cardSlot } })}
+          disabled={isDisabled}
         >
           + Pilih STATE
-        </button>
+        </Button>
 
         <Routes>
           <Route
