@@ -108,9 +108,9 @@ const Profile = () => {
                 </p>
 
                 {/* Email */}
-                <p className="text-base text-white/80 mb-5 font-futura">
+{/*                 <p className="text-base text-white/80 mb-5 font-futura">
                   {user.email ?? "—"}
-                </p>
+                </p> */}
 
                 {/* QR dari UUID */}
                 <h2 className="text-xl font-bold mb-3 font-futura">SCAN ME</h2>
@@ -127,6 +127,7 @@ const Profile = () => {
                 )}
 
                 {/* Line + WhatsApp sejajar */}
+                {/*
                 <div className="flex justify-center items-center gap-4 mt-2 text-base">
                   {user.lineId && (
                     <div className="flex justify-center items-center gap-2">
@@ -139,7 +140,7 @@ const Profile = () => {
                     </div>
                   )}
 
-                  {/* Separator | */}
+                
                   {user.lineId && user.whatsapp && (
                     <span className="text-white/70 text-lg font-futura">|</span>
                   )}
@@ -162,7 +163,7 @@ const Profile = () => {
                   )}
                 </div>
               </div>
-
+              */}
               <div className="w-full flex flex-col gap-4">
                 {stateRenders?.map(
                   (state) =>
@@ -199,7 +200,7 @@ const Profile = () => {
                       </>
                     )
                 )}
-              </div> */}
+              </div>
             </div>
           </>
         )}
