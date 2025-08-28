@@ -24,6 +24,7 @@ import stateLogo from "@/assets/images/state.webp";
 import EmptyCard from "@/components/state/EmptyState";
 import FilledCard from "@/components/state/FilledState";
 
+
 //Dummy State
 
 //Get Registered State
@@ -99,6 +100,7 @@ const State: React.FC = () => {
                 locale: localeId,
               })
             : "",
+          rawStateDate: state?.state.day.date || "", // ✅ Add this line
           stateTime: state
             ? format(parseISO(state.state.day.date), "HH:mm", {
                 locale: localeId,
@@ -239,6 +241,7 @@ const State: React.FC = () => {
                   stateGallery={state.stateGallery}
                   stateRegistration={state.stateRegistrationId}
                   mahasiswaStatus={state.mahasiswaStatus}
+                  rawStateDate={state.rawStateDate}
                 />
               </>
             ) : (
