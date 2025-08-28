@@ -1,13 +1,24 @@
 import useAuth, { type Auth, type UserMahasiswa } from "@/hooks/useAuth";
 import BackgroundProfile from "@/assets/asset_profile/BACKGROUND PROFILE.png";
-import Line from "@/assets/asset_profile/Line.png";
 import { format, parseISO } from "date-fns";
 import { id as localeId } from "date-fns/locale";
 import QRCode from "react-qr-code";
-import { Calendar, NotebookPen, PhoneIcon } from "lucide-react";
+import { Calendar, NotebookPen } from "lucide-react";
 import useApi, { type ApiResponse } from "@/hooks/useApi";
 import { useQuery } from "@tanstack/react-query";
 import stateLogo from "@/assets/images/state.webp";
+import { useEffect, useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import sad from "@/assets/asset_station/sad.gif";
+import { useNavigate } from "react-router";
 
 //Get Registered State
 interface RegisteredState {
@@ -44,6 +55,14 @@ const Profile = () => {
   const auth = useAuth() as Auth<UserMahasiswa>;
   const user = auth.user;
   const api = useApi();
+  const nav = useNavigate();
+  const [conflict, setConflict] = useState(false);
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (conflict) {
+      setOpen(true);
+    }
+  }, [conflict]);
   const { data: stateRenders } = useQuery({
     queryKey: ["states"],
     queryFn: async () => {
@@ -79,6 +98,20 @@ const Profile = () => {
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
+  // ✅ Detect date conflicts when stateRenders changes
+  useEffect(() => {
+    if (stateRenders) {
+      const dates = stateRenders
+        .map((s) => s.stateDate)
+        .filter((date) => date !== ""); // ignore empty slots
+
+      const hasDuplicate = dates.some(
+        (date, index) => dates.indexOf(date) !== index
+      );
+
+      setConflict(hasDuplicate);
+    }
+  }, [stateRenders]);
 
   return (
     <div
@@ -99,7 +132,7 @@ const Profile = () => {
             <h1 className="text-3xl font-semibold mb-3 font-fraunces">
               Profile
             </h1>
-            
+
             <div className="flex flex-col md:flex-row gap-6">
               <div className="backdrop-blur-lg p-8 border-3 border-slate-300 rounded-2xl bg-gradient-to-b from-transparent to-90% to-primary/30">
                 {/* Nama + NIM */}
@@ -108,14 +141,14 @@ const Profile = () => {
                 </p>
 
                 {/* Email */}
-                <p className="text-base text-white/80 mb-5 font-futura">
+                {/*                 <p className="text-base text-white/80 mb-5 font-futura">
                   {user.email ?? "—"}
-                </p>
+                </p> */}
 
                 {/* QR dari UUID */}
                 <h2 className="text-xl font-bold mb-3 font-futura">SCAN ME</h2>
                 {user.uuid && (
-                  <div className="bg-white p-4 rounded-lg inline-block mb-6 shadow-lg">
+                  <div className="bg-white p-4 rounded-lg inline-block shadow-lg">
                     <QRCode
                       value={user.uuid}
                       size={196} // ukuran QR lebih proporsional
@@ -127,6 +160,7 @@ const Profile = () => {
                 )}
 
                 {/* Line + WhatsApp sejajar */}
+                {/*
                 <div className="flex justify-center items-center gap-4 mt-2 text-base">
                   {user.lineId && (
                     <div className="flex justify-center items-center gap-2">
@@ -139,7 +173,7 @@ const Profile = () => {
                     </div>
                   )}
 
-                  {/* Separator | */}
+                
                   {user.lineId && user.whatsapp && (
                     <span className="text-white/70 text-lg font-futura">|</span>
                   )}
@@ -162,20 +196,27 @@ const Profile = () => {
                   )}
                 </div>
               </div>
-
-              <div className="w-full flex flex-col gap-4">
+              */}
+              </div>
+              <div className="w-full h-full flex flex-col gap-4">
                 {stateRenders?.map(
                   (state) =>
                     state.stateName && (
                       <>
                         <div className="flex md:flex-row items-center border-2 border-primary bg-amber-50 rounded-2xl p-4 flex-col">
-                          <img src={state.ukmLogo} className="size-16" />
+                          <img
+                            src={`${import.meta.env.VITE_R2_URL}/${
+                              state.ukmLogo
+                            }`}
+                            className="size-16"
+                          />
                           <div className="flex flex-col items-center md:items-start md:text-start">
                             <h1 className="text-black font-medium text-lg font-futura">
                               {state.stateName}
                             </h1>
                             <p className="text-slate-800 flex flex-row gap-2 items-center">
-                              <Calendar className="size-5 text-black" /> {state.stateDate}
+                              <Calendar className="size-5 text-black" />{" "}
+                              {state.stateDate}
                             </p>
                             <p className="text-slate-800 flex flex-row gap-2 items-center">
                               <NotebookPen className="size-5 text-black" />
@@ -199,10 +240,39 @@ const Profile = () => {
                       </>
                     )
                 )}
-              </div> */}
+              </div>
             </div>
           </>
         )}
+        <AlertDialog open={open} onOpenChange={setOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader className="flex items-center">
+              <img src={sad} alt="sedih" className="size-50" />
+              <AlertDialogTitle>Terdapat STATE yang menabrak!</AlertDialogTitle>
+              <AlertDialogDescription>
+                {stateRenders
+                  ?.filter(
+                    (val, _, arr) =>
+                      arr.filter((v) => v.stateDate === val.stateDate).length >
+                      1
+                  )
+                  .map((val, index) => (
+                    <span key={val.cardSlot ?? index} className="font-bold">
+                      {index + 1}. {val.stateName} ({val.stateDate})
+                      <br />
+                    </span>
+                  ))}
+                <br />
+                Drop salah satu STATE sehingga jadwal Anda tidak berhalangan!
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogAction onClick={() => nav("/state")}>
+                Lanjut
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );

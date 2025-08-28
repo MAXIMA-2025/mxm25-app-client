@@ -8,7 +8,6 @@ import {
   MenubarShortcut,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import { Button } from "../ui/button";
 import { Link, useNavigate } from "react-router";
 import {
   Gamepad,
@@ -123,13 +122,13 @@ const Navbar = () => {
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu>
-          <MenubarTrigger className="shadow-2xl bg-black hover:cursor-pointer focus:bg-primary">
+          <MenubarTrigger className="shadow-2xl bg-black hover:cursor-pointer data-[state=open]:bg-primary">
             <div
               onClick={() => mutation.mutate()}
               className="flex gap-1 items-center justify-center invert-100"
             >
               <LogOutIcon className="size-5" />
-              Log Out
+              Logout
             </div>
           </MenubarTrigger>
         </MenubarMenu>
