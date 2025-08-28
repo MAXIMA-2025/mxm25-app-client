@@ -19,6 +19,7 @@ import { Trash2 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useApi from "@/hooks/useApi";
 import { toast } from "sonner";
+import { parseISO } from "date-fns";
 
 interface FilledStateProps {
   cardSlot?: number;
@@ -30,8 +31,7 @@ interface FilledStateProps {
   stateGallery: { id: number; url: string }[] | undefined;
   stateRegistration?: number | null;
   mahasiswaStatus?: string | null;
-  mahasiswaAkhir?: boolean | null;
-  mahasiswaAwal?: boolean | null;
+  rawStateDate?: string | null;
 }
 
 const FilledState: React.FC<FilledStateProps> = ({
@@ -43,6 +43,7 @@ const FilledState: React.FC<FilledStateProps> = ({
   stateGallery,
   stateRegistration,
   mahasiswaStatus,
+  rawStateDate,
 }) => {
   console.log(stateGallery);
   console.log(stateName + " " + ukmLogo);
@@ -61,9 +62,19 @@ const FilledState: React.FC<FilledStateProps> = ({
       queryClient.invalidateQueries({ queryKey: ["states"] });
     },
   });
+  // inside your component
+  // parse date safely
+  const eventDate = stateDate ? new Date(stateDate) : null;
+
+  // current time
   const now = new Date();
-  const deadline = new Date("2025-08-27T23:59:59+07:00"); // 28 August 2025 WIB
-  const isDisabled = now > deadline;
+
+  // status logic
+  let displayStatus = mahasiswaStatus;
+  if (mahasiswaStatus === "Tidak Datang" && eventDate && now < eventDate) {
+    displayStatus = "Belum Datang";
+  }
+
   return (
     <div className="card-hover bg-white rounded-2xl p-6 md:p-8 shadow-2xl border-4 border-[#A01C1C] md:col-span-2 xl:col-span-1">
       <div className="text-center">
@@ -92,7 +103,18 @@ const FilledState: React.FC<FilledStateProps> = ({
             <span className="font-semibold">Tempat:</span> {stateLocation}
           </p>
           <p className="text-sm text-gray-700">
-            <span className="font-semibold">Kehadiran:</span> {mahasiswaStatus}
+            <span className="font-semibold">Kehadiran:</span>{" "}
+            {(() => {
+              const now = new Date();
+              const eventDate = parseISO(rawStateDate ?? "");
+              let displayStatus = mahasiswaStatus;
+
+              if (mahasiswaStatus === "Tidak Datang" && now < eventDate) {
+                displayStatus = "Belum Datang";
+              }
+
+              return displayStatus;
+            })()}
           </p>
         </div>
 
@@ -228,7 +250,7 @@ const FilledState: React.FC<FilledStateProps> = ({
           </AlertDialog>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="outline" className="w-1/6" >
+              <Button variant="outline" className="w-1/6">
                 <Trash2 className="size-5" />
               </Button>
             </AlertDialogTrigger>
