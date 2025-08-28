@@ -6,6 +6,7 @@ interface UkmCardProps {
   stateName: string;
   stateDate: string;
   stateLocation: string;
+  stateTime: string;
   stateQuota: number;
   registrationCount: number;
   ukmLogo: string | null;
@@ -40,6 +41,7 @@ const UkmCard: React.FC<UkmCardProps> = ({
   stateDate,
   stateLocation,
   stateQuota,
+  stateTime,
   registrationCount,
   ukmLogo,
   stateDescription,
