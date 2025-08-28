@@ -101,6 +101,11 @@ const State: React.FC = () => {
               })
             : "",
           rawStateDate: state?.state.day.date || "", // ✅ Add this line
+          stateTime: state
+            ? format(parseISO(state.state.day.date), "HH:mm", {
+                locale: localeId,
+              })
+            : "",
           ukmLogo: state?.state.logo !== null ? state?.state.logo : stateLogo,
           stateGallery: state?.state.gallery,
         };

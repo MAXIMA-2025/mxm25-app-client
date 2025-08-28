@@ -26,6 +26,7 @@ interface FilledStateProps {
   stateName?: string;
   stateLocation?: string;
   stateDate?: string;
+  stateTime?: string;
   ukmLogo?: string;
   stateDescription?: string | null;
   stateGallery: { id: number; url: string }[] | undefined;
@@ -38,6 +39,7 @@ const FilledState: React.FC<FilledStateProps> = ({
   stateName,
   stateLocation,
   stateDate,
+  stateTime,
   ukmLogo,
   stateDescription,
   stateGallery,
@@ -98,6 +100,9 @@ const FilledState: React.FC<FilledStateProps> = ({
         <div className="space-y-1 mb-6">
           <p className="text-sm text-gray-700">
             <span className="font-semibold">Tanggal:</span> {stateDate}
+          </p>
+          <p className="text-sm text-gray-700">
+            <span className="font-semibold">Waktu:</span> {stateTime} WIB
           </p>
           <p className="text-sm text-gray-700">
             <span className="font-semibold">Tempat:</span> {stateLocation}
@@ -198,7 +203,11 @@ const FilledState: React.FC<FilledStateProps> = ({
                   </div>
                   <div className="flex sm:flex-col gap-1 text-sm text-gray-700">
                     <div>
-                      <span className="font-semibold"></span> {stateDate},{" "}
+                      <span className="font-semibold">Tanggal: </span>
+                      {stateDate}, <br />
+                      <span className="font-semibold">Waktu: </span>
+                      {stateTime} <br />
+                      <span className="font-semibold">Lokasi: </span>
                       {stateLocation}
                     </div>
                   </div>
