@@ -6,11 +6,18 @@ import HeroForegroundLeft from "../../assets/images/hero/FOREGROUND1.webp";
 import HeroForegroundRight from "../../assets/images/hero/FOREGROUND2.webp";
 import { Link } from "react-router";
 import { useNavigate } from "react-router";
+import useAuth from "@/hooks/useAuth";
+import useAuthContext from "@/hooks/useAuthContext";
 
 const HeroSection = () => {
+  const auth = useAuthContext();
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate("/login");
+    if(auth.isLoggedOut) {
+      navigate("/login");
+    } else{
+      navigate("/main");
+    }
   };
   return (
     <section className="w-dvw h-[130dvh] flex justify-center items-center overflow-hidden relative z-0">
