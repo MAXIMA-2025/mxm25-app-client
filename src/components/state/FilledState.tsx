@@ -32,6 +32,7 @@ interface FilledStateProps {
   absenAkhir: string | null;
   isAbsenOpen: boolean;
   isAbsenAkhirOpen: boolean;
+  isStateBerlangsung: boolean;
   stateDate?: string;
   stateTime?: string;
   ukmLogo?: string;
@@ -54,12 +55,14 @@ const FilledState: React.FC<FilledStateProps> = ({
   absenAwal,
   isAbsenOpen,
   isAbsenAkhirOpen,
+  isStateBerlangsung,
   stateGallery,
   stateRegistration,
   mahasiswaStatus,
   rawStateDate,
 }) => {
   console.log("raw date: ", rawStateDate);
+  console.log("day id: ", dayId);
 
   const auth = useAuth() as Auth<UserMahasiswa>;
   const api = useApi();
@@ -81,7 +84,7 @@ const FilledState: React.FC<FilledStateProps> = ({
       linkZoom = `https://zoom.us`;
       break;
     default:
-      linkZoom = "-";
+      linkZoom = "";
       break;
   }
 
@@ -104,8 +107,6 @@ const FilledState: React.FC<FilledStateProps> = ({
       // tujuannya biar absen akhir ga ke-trigger
       if (!hasAbsen && (!absenAwal || (!absenAkhir && isAbsenAkhirOpen)))
         await api.post(`/state/absen/${auth.user?.uuid}`);
-
-      return;
     },
     onSuccess: () => {
       toast.success("Berhasil !", { id: "absenBerhasil" });
@@ -129,7 +130,9 @@ const FilledState: React.FC<FilledStateProps> = ({
 
   const hasAbsen = !!(absenAwal && absenAkhir);
 
-  const stateHasPassed = eventDate && now < eventDate;
+  console.log("Event date: ", eventDate);
+  console.log("hasAbsne: ", hasAbsen);
+  console.log("stateHasPassed: ", isStateBerlangsung);
   return (
     <div className="card-hover bg-white rounded-2xl p-6 md:p-8 shadow-2xl border-4 border-[#A01C1C] md:col-span-2 xl:col-span-1">
       <div className="text-center">
@@ -164,7 +167,7 @@ const FilledState: React.FC<FilledStateProps> = ({
             <span className="font-semibold">Kehadiran:</span>{" "}
             {(() => {
               const now = new Date();
-              const eventDate = parseISO(rawStateDate ?? "");
+              const eventDate = rawStateDate ? parseISO(rawStateDate) : "";
               let displayStatus = mahasiswaStatus;
 
               if (mahasiswaStatus === "Tidak Datang" && now < eventDate) {
@@ -334,7 +337,7 @@ const FilledState: React.FC<FilledStateProps> = ({
                 absen();
               }}
               disabled={
-                stateHasPassed || hasAbsen || absenPending || !isAbsenOpen
+                !isStateBerlangsung || hasAbsen || absenPending || !linkZoom
               }
             >
               {absenPending ? (
@@ -354,7 +357,9 @@ const FilledState: React.FC<FilledStateProps> = ({
                 onClick={() => {
                   absen();
                 }}
-                disabled={stateHasPassed || absenPending || !isAbsenAkhirOpen}
+                disabled={
+                  !isStateBerlangsung || absenPending || !isAbsenAkhirOpen
+                }
               >
                 {absenPending ? (
                   "Mengabsen ..."

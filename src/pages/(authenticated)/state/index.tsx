@@ -33,6 +33,7 @@ interface RegisteredState {
   absenAkhir: string | null;
   isAbsenOpen: boolean;
   isAbsenAkhirOpen: boolean;
+  isStateBerlangsung: boolean;
   status: string;
   createdAt: string;
   updatedAt: string;
@@ -98,6 +99,7 @@ const State: React.FC = () => {
           absenAkhir: state?.absenAkhir,
           isAbsenOpen: state?.isAbsenOpen,
           isAbsenAkhirOpen: state?.isAbsenAkhirOpen,
+          isStateBerlangsung: state?.isStateBerlangsung,
           mahasiswaStatus: state?.status || "",
           stateName: state?.state.nama || "",
           stateLocation: state?.state.location || "",
