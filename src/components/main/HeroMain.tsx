@@ -1,9 +1,10 @@
 import React from "react";
 import backgroundImg from "../../assets/images/main/WELCOME-01.webp";
 import { Button } from "../ui/button";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, VideoIcon } from "lucide-react";
 import StationCollage from "@/assets/images/main/carousel/StationCollage.webp";
 import useAuth from "@/hooks/useAuth";
+import { Link } from "react-router";
 
 interface HeroMainProps {
   scrollToRef: React.RefObject<HTMLElement>;
@@ -32,10 +33,10 @@ const HeroMain: React.FC<HeroMainProps> = ({ scrollToRef }) => {
             {auth.user?.role === "mahasiswa" ? (
               <>
                 <h1 className="font-fraunces font-semibold text-2xl md:text-4xl">
-                  Daftar diri Anda di STATE
+                  Hadiri STATE yang telah
                 </h1>
                 <h2 className="font-fraunces font-semibold text-2xl md:text-4xl">
-                  sekarang juga!
+                  dipilih sekarang juga!
                 </h2>
               </>
             ) : (
@@ -53,19 +54,29 @@ const HeroMain: React.FC<HeroMainProps> = ({ scrollToRef }) => {
             <>
               <div className="font-futura font-medium text-lg z-50">
                 <p className="text-center md:text-start">
-                  Amankan kesempatan untuk daftar STATE
+                  Hadiri STATE dari berbagai organisasi
                 </p>
                 <p className="text-center md:text-start">
                   di MAXIMA 2025!
                 </p>
               </div>
+              <div className="w-full flex gap-2">
               <Button
                 className="mt-2 z-50"
                 variant="clay"
+              >
+                <Link to="/state">
+                Link ZOOM <VideoIcon/>
+                </Link>
+              </Button>
+              <Button
+                className="mt-2 z-50"
+                variant="outline"
                 onClick={handleClick}
               >
                 Cek STATE <ArrowDown />
               </Button>
+              </div>
             </>
           ) : (
             <>
