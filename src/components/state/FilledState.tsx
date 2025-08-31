@@ -15,23 +15,30 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { Button } from "../ui/button";
-import { Trash2 } from "lucide-react";
+import { CheckCheck, Trash2, Video } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useApi from "@/hooks/useApi";
 import { toast } from "sonner";
 import { parseISO } from "date-fns";
+import useAuth, { type Auth, type UserMahasiswa } from "@/hooks/useAuth";
+import { beTarask } from "date-fns/locale";
 
 interface FilledStateProps {
   cardSlot?: number;
   stateName?: string;
   stateLocation?: string;
+  dayId: number;
+  absenAwal: string | null;
+  absenAkhir: string | null;
+  isAbsenOpen: boolean;
+  isAbsenAkhirOpen: boolean;
   stateDate?: string;
   stateTime?: string;
   ukmLogo?: string;
   stateDescription?: string | null;
   stateGallery: { id: number; url: string }[] | undefined;
   stateRegistration?: number | null;
-  mahasiswaStatus?: string | null;
+  mahasiswaStatus: string;
   rawStateDate?: string | null;
 }
 
@@ -39,20 +46,44 @@ const FilledState: React.FC<FilledStateProps> = ({
   stateName,
   stateLocation,
   stateDate,
+  dayId,
   stateTime,
   ukmLogo,
   stateDescription,
+  absenAkhir,
+  absenAwal,
+  isAbsenOpen,
+  isAbsenAkhirOpen,
   stateGallery,
   stateRegistration,
   mahasiswaStatus,
   rawStateDate,
 }) => {
-  console.log(stateGallery);
-  console.log(stateName + " " + ukmLogo);
-  console.log("Description: ", stateDescription);
+  console.log("raw date: ", rawStateDate);
 
+  const auth = useAuth() as Auth<UserMahasiswa>;
   const api = useApi();
   const queryClient = useQueryClient();
+
+  // link berganti sesuai dayId (nnti disesuaiin lagi)
+  let linkZoom: string;
+  switch (dayId) {
+    case 3:
+      linkZoom = `https://zoom.us`;
+      break;
+    case 4:
+      linkZoom = `https://zoom.us`;
+      break;
+    case 5:
+      linkZoom = `https://zoom.us`;
+      break;
+    case 6:
+      linkZoom = `https://zoom.us`;
+      break;
+    default:
+      linkZoom = "-";
+      break;
+  }
 
   const mutation = useMutation({
     mutationFn: async (stateRegistration: number | null) => {
@@ -62,6 +93,25 @@ const FilledState: React.FC<FilledStateProps> = ({
     onSuccess: () => {
       toast.success("Berhasil drop STATE!");
       queryClient.invalidateQueries({ queryKey: ["states"] });
+    },
+  });
+
+  const { mutate: absen, isPending: absenPending } = useMutation({
+    mutationFn: async () => {
+      console.log("Mengabsen ...");
+
+      // dia hanya absen kalo blm absen awal aja, kalo blm lgsg redirect ke link zoom
+      // tujuannya biar absen akhir ga ke-trigger
+      if (!hasAbsen && (!absenAwal || (!absenAkhir && isAbsenAkhirOpen)))
+        await api.post(`/state/absen/${auth.user?.uuid}`);
+
+      return;
+    },
+    onSuccess: () => {
+      toast.success("Berhasil !", { id: "absenBerhasil" });
+      queryClient.invalidateQueries({ queryKey: ["states"] });
+
+      if (!absenAwal) window.location.href = linkZoom;
     },
   });
   // inside your component
@@ -77,6 +127,9 @@ const FilledState: React.FC<FilledStateProps> = ({
     displayStatus = "Belum Datang";
   }
 
+  const hasAbsen = !!(absenAwal && absenAkhir);
+
+  const stateHasPassed = eventDate && now < eventDate;
   return (
     <div className="card-hover bg-white rounded-2xl p-6 md:p-8 shadow-2xl border-4 border-[#A01C1C] md:col-span-2 xl:col-span-1">
       <div className="text-center">
@@ -123,10 +176,10 @@ const FilledState: React.FC<FilledStateProps> = ({
           </p>
         </div>
 
-        <div className="flex flex-row gap-2 items-center">
+        <div className="flex flex-col gap-2 items-center">
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="clay" className="flex w-5/6">
+              <Button variant="clay" className="flex w-full">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="w-5 h-5"
@@ -154,13 +207,16 @@ const FilledState: React.FC<FilledStateProps> = ({
                 </svg>
                 <span>Info</span>
               </Button>
-              {/* <button className="cursor-pointer flex-1 bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2">
-
-              </button> */}
             </AlertDialogTrigger>
             <AlertDialogContent
               className="max-w-lg w-full p-6 rounded-xl"
-              style={{ width: "90vw", maxWidth: "600px" }}
+              style={{
+                width: "90vw",
+                maxWidth: "600px",
+                maxHeight: "80vh",
+                overflowY: "revert",
+                overflowX: "hidden",
+              }}
             >
               <AlertDialogHeader>
                 {/* Section 1: Tentang State */}
@@ -182,26 +238,28 @@ const FilledState: React.FC<FilledStateProps> = ({
                       Tentang {stateName}
                     </AlertDialogTitle>
                   </div>
-                  {stateDescription && stateDescription?.trim().length > 0 ? (
-                    <div
-                      className="flex text-gray-700 text-sm"
-                      dangerouslySetInnerHTML={{ __html: stateDescription }}
-                    />
-                  ) : (
-                    <div className="flex text-gray-700 text-sm">
-                      <p className="italic text-gray-400">
-                        Tidak ada deskripsi.
-                      </p>
-                    </div>
-                  )}
+                  <div className="overflow-y-auto max-h-64">
+                    {stateDescription && stateDescription?.trim().length > 0 ? (
+                      <div
+                        className="overflow-y-auto text-gray-700 text-sm "
+                        dangerouslySetInnerHTML={{ __html: stateDescription }}
+                      />
+                    ) : (
+                      <div className="flex text-gray-700 text-sm">
+                        <p className="italic text-gray-400">
+                          Tidak ada deskripsi.
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Section 2: Jadwal & Lokasi */}
-                <div className="mb-6">
+                <div className="mb-6 flex flex-col items-start text-left">
                   <div className="flex items-center gap-3 mb-2">
                     <h5 className="text-lg font-bold">Jadwal & Lokasi</h5>
                   </div>
-                  <div className="flex sm:flex-col gap-1 text-sm text-gray-700">
+                  <div className="flex flex-col gap-1 text-sm text-gray-700">
                     <div>
                       <span className="font-semibold">Tanggal: </span>
                       {stateDate}, <br />
@@ -212,43 +270,6 @@ const FilledState: React.FC<FilledStateProps> = ({
                     </div>
                   </div>
                 </div>
-
-                {/* Section 3: Galeri State */}
-                {/* <div>
-                  <div className="flex items-center gap-3 mb-5">
-                    <h5 className="text-lg font-bold">Galeri State</h5>
-                  </div>
-                  <div className="flex flex-wrap gap-2 justify-center pl-9 pr-9">
-                    Contoh gambar, ganti dengan data dinamis jika ada
-                    <Carousel>
-                      <CarouselContent>
-                        <CarouselItem>
-                          <img
-                            src={stateGallery[0]?.url}
-                            alt={`Gallery image ${0}`}
-                            className="object-cover w-full h-48 rounded-lg"
-                          />
-                        </CarouselItem>
-                        <CarouselItem>
-                          <img
-                            src={stateGallery[1]?.url}
-                            alt={`Gallery image ${1}`}
-                            className="object-cover w-full h-48 rounded-lg"
-                          />
-                        </CarouselItem>
-                        <CarouselItem>
-                          <img
-                            src={stateGallery[2]?.url}
-                            alt={`Gallery image ${2}`}
-                            className="object-cover w-full h-48 rounded-lg"
-                          />
-                        </CarouselItem>
-                      </CarouselContent>
-                      <CarouselPrevious />
-                      <CarouselNext />
-                    </Carousel>
-                  </div>
-                </div> */}
               </AlertDialogHeader>
               <AlertDialogFooter className="mt-6">
                 <AlertDialogCancel className="absolute top-2 right-2">
@@ -257,7 +278,7 @@ const FilledState: React.FC<FilledStateProps> = ({
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-          <AlertDialog>
+          {/* <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="outline" className="w-1/6">
                 <Trash2 className="size-5" />
@@ -293,8 +314,60 @@ const FilledState: React.FC<FilledStateProps> = ({
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
-          </AlertDialog>
+          </AlertDialog> */}
         </div>
+        {stateLocation?.toLowerCase().includes("zoom") && (
+          <div
+            className={
+              absenAwal && !absenAkhir
+                ? "mt-2 grid grid-cols-2 gap-2"
+                : "mt-2 grid grid-cols gap-2"
+            }
+          >
+            <Button
+              variant="outline"
+              className="flex flex-row w-full sm:p-2"
+              onClick={async () => {
+                if (absenAwal) {
+                  window.location.href = linkZoom;
+                }
+                absen();
+              }}
+              disabled={
+                stateHasPassed || hasAbsen || absenPending || !isAbsenOpen
+              }
+            >
+              {absenPending ? (
+                "Bergabung ..."
+              ) : (
+                <>
+                  <Video />
+                  Join ZOOM!
+                </>
+              )}
+            </Button>
+
+            {absenAwal && !absenAkhir && (
+              <Button
+                variant="outline"
+                className="flex w-full"
+                onClick={() => {
+                  absen();
+                }}
+                disabled={stateHasPassed || absenPending || !isAbsenAkhirOpen}
+              >
+                {absenPending ? (
+                  "Mengabsen ..."
+                ) : (
+                  <>
+                    <CheckCheck />
+                    Absen Akhir
+                  </>
+                )}
+              </Button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
