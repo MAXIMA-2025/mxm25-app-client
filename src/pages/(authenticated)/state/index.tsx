@@ -24,14 +24,15 @@ import stateLogo from "@/assets/images/state.webp";
 import EmptyCard from "@/components/state/EmptyState";
 import FilledCard from "@/components/state/FilledState";
 
-
 //Dummy State
 
 //Get Registered State
 interface RegisteredState {
   id: number;
-  absenAwal: string;
-  absenAkhir: string;
+  absenAwal: string | null;
+  absenAkhir: string | null;
+  isAbsenOpen: boolean;
+  isAbsenAkhirOpen: boolean;
   status: string;
   createdAt: string;
   updatedAt: string;
@@ -91,7 +92,12 @@ const State: React.FC = () => {
         return {
           cardSlot: index + 1,
           stateDescription: state?.state.description,
+          dayId: state?.state?.dayId,
           stateRegistrationId: state?.id,
+          absenAwal: state?.absenAwal,
+          absenAkhir: state?.absenAkhir,
+          isAbsenOpen: state?.isAbsenOpen,
+          isAbsenAkhirOpen: state?.isAbsenAkhirOpen,
           mahasiswaStatus: state?.status || "",
           stateName: state?.state.nama || "",
           stateLocation: state?.state.location || "",

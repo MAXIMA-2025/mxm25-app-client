@@ -19,6 +19,7 @@ export type Path =
   | `/main`
   | `/profile`
   | `/state`
+  | `/state/select`
   | `/station`
   | `/ticket`
   | `/tickets`
