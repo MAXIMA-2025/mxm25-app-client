@@ -63,6 +63,7 @@ const FilledState: React.FC<FilledStateProps> = ({
 }) => {
   console.log("raw date: ", rawStateDate);
   console.log("day id: ", dayId);
+  console.log("Is state berlangsugng", isStateBerlangsung);
 
   const auth = useAuth() as Auth<UserMahasiswa>;
   const api = useApi();
@@ -337,9 +338,9 @@ const FilledState: React.FC<FilledStateProps> = ({
                 }
                 absen();
               }}
-              // disabled={
-              //   !isStateBerlangsung || hasAbsen || absenPending || !linkZoom
-              // }
+              disabled={
+                !isStateBerlangsung || hasAbsen || absenPending || !linkZoom
+              }
             >
               {absenPending ? (
                 "Bergabung ..."
