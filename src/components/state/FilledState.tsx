@@ -72,7 +72,8 @@ const FilledState: React.FC<FilledStateProps> = ({
   let linkZoom: string;
   switch (dayId) {
     case 3:
-      linkZoom = `https://zoom.us`;
+      linkZoom =
+        "https://us06web.zoom.us/j/89520021775?pwd=muX6kBmHOgRSS2aYLQe8DKiZ2oUmf7.1";
       break;
     case 4:
       linkZoom = `https://zoom.us`;
