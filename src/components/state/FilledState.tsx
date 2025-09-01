@@ -337,9 +337,9 @@ const FilledState: React.FC<FilledStateProps> = ({
                 }
                 absen();
               }}
-              disabled={
-                !isStateBerlangsung || hasAbsen || absenPending || !linkZoom
-              }
+              // disabled={
+              //   !isStateBerlangsung || hasAbsen || absenPending || !linkZoom
+              // }
             >
               {absenPending ? (
                 "Bergabung ..."
