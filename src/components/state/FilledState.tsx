@@ -77,7 +77,8 @@ const FilledState: React.FC<FilledStateProps> = ({
         "https://us06web.zoom.us/j/89520021775?pwd=muX6kBmHOgRSS2aYLQe8DKiZ2oUmf7.1";
       break;
     case 4:
-      linkZoom = `https://zoom.us`;
+      linkZoom =
+        "https://us06web.zoom.us/j/82796953234?pwd=V75D27o2prDVafKxYx8PZXaGRWLX8f.1";
       break;
     case 5:
       linkZoom = `https://zoom.us`;
@@ -121,8 +122,11 @@ const FilledState: React.FC<FilledStateProps> = ({
   // parse date safely
   const eventDate = stateDate ? new Date(stateDate) : null;
 
+  const stateDateObj = new Date(stateDate!);
+  console.log(stateDateObj);
   // current time
   const now = new Date();
+  console.log(now);
 
   // status logic
   let displayStatus = mahasiswaStatus;
@@ -131,10 +135,12 @@ const FilledState: React.FC<FilledStateProps> = ({
   }
 
   const hasAbsen = !!(absenAwal && absenAkhir);
+  const stateHasPassed = now.getDay() > stateDateObj.getDay();
 
   console.log("Event date: ", eventDate);
   console.log("hasAbsne: ", hasAbsen);
-  console.log("stateHasPassed: ", isStateBerlangsung);
+  console.log("state berlangsung: ", isStateBerlangsung);
+  console.log("stateHasPassed: ", stateHasPassed);
   return (
     <div className="card-hover bg-white rounded-2xl p-6 md:p-8 shadow-2xl border-4 border-[#A01C1C] md:col-span-2 xl:col-span-1">
       <div className="text-center">
@@ -339,7 +345,11 @@ const FilledState: React.FC<FilledStateProps> = ({
                 absen();
               }}
               disabled={
-                !isStateBerlangsung || hasAbsen || absenPending || !linkZoom
+                !isStateBerlangsung ||
+                stateHasPassed ||
+                hasAbsen ||
+                absenPending ||
+                !linkZoom
               }
             >
               {absenPending ? (
