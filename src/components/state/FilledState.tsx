@@ -81,7 +81,8 @@ const FilledState: React.FC<FilledStateProps> = ({
         "https://us06web.zoom.us/j/82796953234?pwd=V75D27o2prDVafKxYx8PZXaGRWLX8f.1";
       break;
     case 5:
-      linkZoom = `https://zoom.us`;
+      linkZoom =
+        "https://us06web.zoom.us/j/87880182631?pwd=oN77Opc2w0ai2KghJLScRaru9ob9Ai.1";
       break;
     case 6:
       linkZoom = `https://zoom.us`;
@@ -103,15 +104,19 @@ const FilledState: React.FC<FilledStateProps> = ({
   });
 
   const { mutate: absen, isPending: absenPending } = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (absenAkhirTrigger: boolean = false) => {
       console.log("Mengabsen ...");
 
       // dia hanya absen kalo blm absen awal aja, kalo blm lgsg redirect ke link zoom
       // tujuannya biar absen akhir ga ke-trigger
-      if (!hasAbsen && (!absenAwal || (!absenAkhir && isAbsenAkhirOpen)))
+      if (!hasAbsen && (!absenAwal || absenAkhirTrigger)) {
         await api.post(`/state/absen/${auth.user?.uuid}`);
+        return true;
+      }
+      return false;
     },
-    onSuccess: () => {
+    onSuccess: (isAbsenTriggered: boolean) => {
+      if (!isAbsenTriggered) return;
       toast.success("Berhasil !", { id: "absenBerhasil" });
       queryClient.invalidateQueries({ queryKey: ["states"] });
 
@@ -342,7 +347,7 @@ const FilledState: React.FC<FilledStateProps> = ({
                 if (absenAwal) {
                   window.location.href = linkZoom;
                 }
-                absen();
+                absen(false);
               }}
               disabled={
                 !isStateBerlangsung ||
@@ -367,7 +372,7 @@ const FilledState: React.FC<FilledStateProps> = ({
                 variant="outline"
                 className="flex w-full"
                 onClick={() => {
-                  absen();
+                  absen(true);
                 }}
                 disabled={
                   !isStateBerlangsung || absenPending || !isAbsenAkhirOpen
