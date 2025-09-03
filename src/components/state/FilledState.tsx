@@ -81,7 +81,8 @@ const FilledState: React.FC<FilledStateProps> = ({
         "https://us06web.zoom.us/j/82796953234?pwd=V75D27o2prDVafKxYx8PZXaGRWLX8f.1";
       break;
     case 5:
-      linkZoom = "";
+      linkZoom =
+        "https://us06web.zoom.us/j/87880182631?pwd=oN77Opc2w0ai2KghJLScRaru9ob9Ai.1";
       break;
     case 6:
       linkZoom = `https://zoom.us`;
