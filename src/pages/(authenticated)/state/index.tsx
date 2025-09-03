@@ -70,6 +70,7 @@ const State: React.FC = () => {
       setOpen(true);
     }
   }, [conflict]);
+
   const {
     data: stateRenders,
     isLoading,
@@ -103,17 +104,25 @@ const State: React.FC = () => {
           mahasiswaStatus: state?.status || "",
           stateName: state?.state.nama || "",
           stateLocation: state?.state.location || "",
-          stateDate: state
-            ? format(parseISO(state.state.day.date), "EEEE dd MMMM yyyy", {
-                locale: localeId,
-              })
-            : "",
+          stateDate:
+            state &&
+            !["ditiadakan", "menyusul"].includes(
+              state.state.location.toLowerCase()
+            )
+              ? format(parseISO(state.state.day.date), "EEEE dd MMMM yyyy", {
+                  locale: localeId,
+                })
+              : state?.state.location,
           rawStateDate: state?.state.day.date || "", // ✅ Add this line
-          stateTime: state
-            ? format(parseISO(state.state.day.date), "HH:mm", {
-                locale: localeId,
-              })
-            : "",
+          stateTime:
+            state &&
+            !["ditiadakan", "menyusul"].includes(
+              state.state.location.toLowerCase()
+            )
+              ? format(parseISO(state.state.day.date), "HH:mm", {
+                  locale: localeId,
+                })
+              : state?.state.location,
           ukmLogo: state?.state.logo !== null ? state?.state.logo : stateLogo,
           stateGallery: state?.state.gallery,
         };
@@ -207,7 +216,7 @@ const State: React.FC = () => {
             Daftar STATE yang telah kamu pilih
           </p>
         </header>
-        <AlertDialog open={open} onOpenChange={setOpen}>
+        {/* <AlertDialog open={open} onOpenChange={setOpen}>
           <AlertDialogContent>
             <AlertDialogHeader className="flex items-center">
               <img src={sad} alt="sedih" className="size-50" />
@@ -235,7 +244,7 @@ const State: React.FC = () => {
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
-        </AlertDialog>
+        </AlertDialog> */}
 
         {/* Cards Section */}
         <div className="entrance grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 max-w-7xl w-full">

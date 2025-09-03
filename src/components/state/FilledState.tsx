@@ -171,7 +171,10 @@ const FilledState: React.FC<FilledStateProps> = ({
             <span className="font-semibold">Tanggal:</span> {stateDate}
           </p>
           <p className="text-sm text-gray-700">
-            <span className="font-semibold">Waktu:</span> {stateTime} WIB
+            <span className="font-semibold">Waktu:</span> {stateTime}
+            {!["ditiadakan", "menyusul"].includes(
+              stateLocation!.toLowerCase()
+            ) && " WIB"}
           </p>
           <p className="text-sm text-gray-700">
             <span className="font-semibold">Tempat:</span> {stateLocation}
@@ -271,21 +274,24 @@ const FilledState: React.FC<FilledStateProps> = ({
                 </div>
 
                 {/* Section 2: Jadwal & Lokasi */}
-                <div className="mb-6 flex flex-col items-start text-left">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h5 className="text-lg font-bold">Jadwal & Lokasi</h5>
-                  </div>
-                  <div className="flex flex-col gap-1 text-sm text-gray-700">
-                    <div>
-                      <span className="font-semibold">Tanggal: </span>
-                      {stateDate}, <br />
-                      <span className="font-semibold">Waktu: </span>
-                      {stateTime} <br />
-                      <span className="font-semibold">Lokasi: </span>
-                      {stateLocation}
+                {stateLocation &&
+                  !stateLocation.toLowerCase().includes("ditiadakan") && (
+                    <div className="mb-6 flex flex-col items-start text-left">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h5 className="text-lg font-bold">Jadwal & Lokasi</h5>
+                      </div>
+                      <div className="flex flex-col gap-1 text-sm text-gray-700">
+                        <div>
+                          <span className="font-semibold">Tanggal: </span>
+                          {stateDate}, <br />
+                          <span className="font-semibold">Waktu: </span>
+                          {stateTime} <br />
+                          <span className="font-semibold">Lokasi: </span>
+                          {stateLocation}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  )}
               </AlertDialogHeader>
               <AlertDialogFooter className="mt-6">
                 <AlertDialogCancel className="absolute top-2 right-2">
