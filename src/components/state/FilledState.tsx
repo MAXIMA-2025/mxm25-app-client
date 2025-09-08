@@ -32,6 +32,7 @@ interface FilledStateProps {
   absenAkhir: string | null;
   isAbsenOpen: boolean;
   isAbsenAkhirOpen: boolean;
+  isStateBerlangsung: boolean;
   stateDate?: string;
   stateTime?: string;
   ukmLogo?: string;
@@ -54,12 +55,15 @@ const FilledState: React.FC<FilledStateProps> = ({
   absenAwal,
   isAbsenOpen,
   isAbsenAkhirOpen,
+  isStateBerlangsung,
   stateGallery,
   stateRegistration,
   mahasiswaStatus,
   rawStateDate,
 }) => {
   console.log("raw date: ", rawStateDate);
+  console.log("day id: ", dayId);
+  console.log("Is state berlangsugng", isStateBerlangsung);
 
   const auth = useAuth() as Auth<UserMahasiswa>;
   const api = useApi();
@@ -69,19 +73,23 @@ const FilledState: React.FC<FilledStateProps> = ({
   let linkZoom: string;
   switch (dayId) {
     case 3:
-      linkZoom = `https://zoom.us`;
+      linkZoom =
+        "https://us06web.zoom.us/j/89520021775?pwd=muX6kBmHOgRSS2aYLQe8DKiZ2oUmf7.1";
       break;
     case 4:
-      linkZoom = `https://zoom.us`;
+      linkZoom =
+        "https://us06web.zoom.us/j/82796953234?pwd=V75D27o2prDVafKxYx8PZXaGRWLX8f.1";
       break;
     case 5:
-      linkZoom = `https://zoom.us`;
+      linkZoom =
+        "https://us06web.zoom.us/j/87880182631?pwd=oN77Opc2w0ai2KghJLScRaru9ob9Ai.1";
       break;
     case 6:
-      linkZoom = `https://zoom.us`;
+      linkZoom =
+        " https://us06web.zoom.us/j/81902248659?pwd=j6Km4f6ba8vkmLbXyixysb8bOlppSs.1";
       break;
     default:
-      linkZoom = "-";
+      linkZoom = "";
       break;
   }
 
@@ -97,17 +105,19 @@ const FilledState: React.FC<FilledStateProps> = ({
   });
 
   const { mutate: absen, isPending: absenPending } = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (absenAkhirTrigger: boolean = false) => {
       console.log("Mengabsen ...");
 
       // dia hanya absen kalo blm absen awal aja, kalo blm lgsg redirect ke link zoom
       // tujuannya biar absen akhir ga ke-trigger
-      if (!hasAbsen && (!absenAwal || (!absenAkhir && isAbsenAkhirOpen)))
+      if (!hasAbsen && (!absenAwal || absenAkhirTrigger)) {
         await api.post(`/state/absen/${auth.user?.uuid}`);
-
-      return;
+        return true;
+      }
+      return false;
     },
-    onSuccess: () => {
+    onSuccess: (isAbsenTriggered: boolean) => {
+      if (!isAbsenTriggered) return;
       toast.success("Berhasil !", { id: "absenBerhasil" });
       queryClient.invalidateQueries({ queryKey: ["states"] });
 
@@ -118,8 +128,11 @@ const FilledState: React.FC<FilledStateProps> = ({
   // parse date safely
   const eventDate = stateDate ? new Date(stateDate) : null;
 
+  const stateDateObj = new Date(stateDate!);
+  console.log(stateDateObj);
   // current time
   const now = new Date();
+  console.log(now);
 
   // status logic
   let displayStatus = mahasiswaStatus;
@@ -128,8 +141,12 @@ const FilledState: React.FC<FilledStateProps> = ({
   }
 
   const hasAbsen = !!(absenAwal && absenAkhir);
+  const stateHasPassed = now.getDay() > stateDateObj.getDay();
 
-  const stateHasPassed = eventDate && now < eventDate;
+  console.log("Event date: ", eventDate);
+  console.log("hasAbsne: ", hasAbsen);
+  console.log("state berlangsung: ", isStateBerlangsung);
+  console.log("stateHasPassed: ", stateHasPassed);
   return (
     <div className="card-hover bg-white rounded-2xl p-6 md:p-8 shadow-2xl border-4 border-[#A01C1C] md:col-span-2 xl:col-span-1">
       <div className="text-center">
@@ -155,7 +172,10 @@ const FilledState: React.FC<FilledStateProps> = ({
             <span className="font-semibold">Tanggal:</span> {stateDate}
           </p>
           <p className="text-sm text-gray-700">
-            <span className="font-semibold">Waktu:</span> {stateTime} WIB
+            <span className="font-semibold">Waktu:</span> {stateTime}
+            {!["ditiadakan", "menyusul"].includes(
+              stateLocation!.toLowerCase()
+            ) && " WIB"}
           </p>
           <p className="text-sm text-gray-700">
             <span className="font-semibold">Tempat:</span> {stateLocation}
@@ -164,7 +184,7 @@ const FilledState: React.FC<FilledStateProps> = ({
             <span className="font-semibold">Kehadiran:</span>{" "}
             {(() => {
               const now = new Date();
-              const eventDate = parseISO(rawStateDate ?? "");
+              const eventDate = rawStateDate ? parseISO(rawStateDate) : "";
               let displayStatus = mahasiswaStatus;
 
               if (mahasiswaStatus === "Tidak Datang" && now < eventDate) {
@@ -255,21 +275,24 @@ const FilledState: React.FC<FilledStateProps> = ({
                 </div>
 
                 {/* Section 2: Jadwal & Lokasi */}
-                <div className="mb-6 flex flex-col items-start text-left">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h5 className="text-lg font-bold">Jadwal & Lokasi</h5>
-                  </div>
-                  <div className="flex flex-col gap-1 text-sm text-gray-700">
-                    <div>
-                      <span className="font-semibold">Tanggal: </span>
-                      {stateDate}, <br />
-                      <span className="font-semibold">Waktu: </span>
-                      {stateTime} <br />
-                      <span className="font-semibold">Lokasi: </span>
-                      {stateLocation}
+                {stateLocation &&
+                  !stateLocation.toLowerCase().includes("ditiadakan") && (
+                    <div className="mb-6 flex flex-col items-start text-left">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h5 className="text-lg font-bold">Jadwal & Lokasi</h5>
+                      </div>
+                      <div className="flex flex-col gap-1 text-sm text-gray-700">
+                        <div>
+                          <span className="font-semibold">Tanggal: </span>
+                          {stateDate}, <br />
+                          <span className="font-semibold">Waktu: </span>
+                          {stateTime} <br />
+                          <span className="font-semibold">Lokasi: </span>
+                          {stateLocation}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  )}
               </AlertDialogHeader>
               <AlertDialogFooter className="mt-6">
                 <AlertDialogCancel className="absolute top-2 right-2">
@@ -331,10 +354,14 @@ const FilledState: React.FC<FilledStateProps> = ({
                 if (absenAwal) {
                   window.location.href = linkZoom;
                 }
-                absen();
+                absen(false);
               }}
               disabled={
-                stateHasPassed || hasAbsen || absenPending || !isAbsenOpen
+                !isStateBerlangsung ||
+                stateHasPassed ||
+                hasAbsen ||
+                absenPending ||
+                !linkZoom
               }
             >
               {absenPending ? (
@@ -352,9 +379,11 @@ const FilledState: React.FC<FilledStateProps> = ({
                 variant="outline"
                 className="flex w-full"
                 onClick={() => {
-                  absen();
+                  absen(true);
                 }}
-                disabled={stateHasPassed || absenPending || !isAbsenAkhirOpen}
+                disabled={
+                  !isStateBerlangsung || absenPending || !isAbsenAkhirOpen
+                }
               >
                 {absenPending ? (
                   "Mengabsen ..."

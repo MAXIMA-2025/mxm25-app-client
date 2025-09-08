@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import { ArrowDown, QrCodeIcon, VideoIcon } from "lucide-react";
 import StationCollage from "@/assets/images/main/carousel/StationCollage.webp";
 import useAuth from "@/hooks/useAuth";
-import { Link } from "react-router";
+import { useNavigate } from "@/router";
 
 interface HeroMainProps {
   scrollToRef: React.RefObject<HTMLElement>;
@@ -15,6 +15,7 @@ const HeroMain: React.FC<HeroMainProps> = ({ scrollToRef }) => {
     scrollToRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   const auth = useAuth();
+  const nav = useNavigate();
   return (
     <section
       className="min-h-screen w-full bg-white flex flex-col gap-4 items-center justify-center px-4"
@@ -56,9 +57,7 @@ const HeroMain: React.FC<HeroMainProps> = ({ scrollToRef }) => {
                 <p className="text-center md:text-start">
                   Hadiri STATE dari berbagai organisasi
                 </p>
-                <p className="text-center md:text-start">
-                  di MAXIMA 2025!
-                </p>
+                <p className="text-center md:text-start">di MAXIMA 2025!</p>
               </div>
               <div className="w-full flex gap-2">
               <Button

@@ -2,7 +2,7 @@ import React from "react";
 import stateLogoImage from "@/assets/images/state.webp";
 import { useNavigate } from "react-router";
 import { Routes, Route } from "react-router";
-import Select from "@/pages/(authenticated)/state/select";
+import Select from "@/pages/(authenticated)/state/_select";
 import { Button } from "../ui/button";
 
 interface EmptyStateProps {
@@ -17,7 +17,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   const nav = useNavigate();
   const now = new Date();
   const deadline = new Date("2025-08-27T23:59:59+07:00"); // 28 August 2025 WIB
-  const isDisabled = false;
+  const isDisabled = now > deadline;
   return (
     <div className="card-hover bg-white rounded-2xl p-6 md:p-8 shadow-2xl border-4 border-[#A01C1C] relative overflow-hidden flex flex-col justify-center items-center">
       {/* Empty State Pattern */}

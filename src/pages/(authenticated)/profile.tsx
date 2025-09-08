@@ -244,7 +244,7 @@ const Profile = () => {
             </div>
           </>
         )}
-        <AlertDialog open={open} onOpenChange={setOpen}>
+        {/* <AlertDialog open={open} onOpenChange={setOpen}>
           <AlertDialogContent>
             <AlertDialogHeader className="flex items-center">
               <img src={sad} alt="sedih" className="size-50" />
@@ -272,7 +272,7 @@ const Profile = () => {
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
-        </AlertDialog>
+        </AlertDialog> */}
       </div>
     </div>
   );
