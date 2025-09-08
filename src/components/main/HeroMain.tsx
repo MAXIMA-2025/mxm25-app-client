@@ -1,7 +1,7 @@
 import React from "react";
 import backgroundImg from "../../assets/images/main/WELCOME-01.webp";
 import { Button } from "../ui/button";
-import { ArrowDown, Video } from "lucide-react";
+import { ArrowDown, QrCodeIcon, VideoIcon } from "lucide-react";
 import StationCollage from "@/assets/images/main/carousel/StationCollage.webp";
 import useAuth from "@/hooks/useAuth";
 import { useNavigate } from "@/router";
@@ -60,20 +60,21 @@ const HeroMain: React.FC<HeroMainProps> = ({ scrollToRef }) => {
                 <p className="text-center md:text-start">di MAXIMA 2025!</p>
               </div>
               <div className="w-full flex gap-2">
-                <Button
-                  className="mt-2 z-50"
-                  variant="clay"
-                  onClick={() => nav("/state")}
-                >
-                  <Video /> Link Zoom
-                </Button>
-                <Button
-                  className="mt-2 z-50"
-                  variant="outline"
-                  onClick={handleClick}
-                >
-                  Cek STATE <ArrowDown />
-                </Button>
+              <Button
+                className="mt-2 z-50"
+                variant="clay"
+              >
+                <Link to="/profile" className="flex flex-row gap-2 items-center justify-center">
+                ABSEN DISINI! <QrCodeIcon className="size-5"/>
+                </Link>
+              </Button>
+              <Button
+                className="mt-2 z-50"
+                variant="outline"
+                onClick={handleClick}
+              >
+                Cek STATE <ArrowDown />
+              </Button>
               </div>
             </>
           ) : (
