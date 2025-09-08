@@ -1,7 +1,7 @@
 import React from "react";
 import backgroundImg from "../../assets/images/main/WELCOME-01.webp";
 import { Button } from "../ui/button";
-import { ArrowDown, VideoIcon } from "lucide-react";
+import { ArrowDown, QrCodeIcon, VideoIcon } from "lucide-react";
 import StationCollage from "@/assets/images/main/carousel/StationCollage.webp";
 import useAuth from "@/hooks/useAuth";
 import { Link } from "react-router";
@@ -65,8 +65,8 @@ const HeroMain: React.FC<HeroMainProps> = ({ scrollToRef }) => {
                 className="mt-2 z-50"
                 variant="clay"
               >
-                <Link to="/state">
-                Link ZOOM <VideoIcon/>
+                <Link to="/profile" className="flex flex-row gap-2 items-center justify-center">
+                ABSEN DISINI! <QrCodeIcon className="size-5"/>
                 </Link>
               </Button>
               <Button
