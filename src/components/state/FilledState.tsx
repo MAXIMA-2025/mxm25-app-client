@@ -301,7 +301,7 @@ const FilledState: React.FC<FilledStateProps> = ({
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-          <AlertDialog>
+          {/* <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="outline" className="w-1/6">
                 <Trash2 className="size-5" />
@@ -337,7 +337,7 @@ const FilledState: React.FC<FilledStateProps> = ({
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
-          </AlertDialog>
+          </AlertDialog> */}
         </div>
         {stateLocation?.toLowerCase().includes("zoom") && (
           <div
