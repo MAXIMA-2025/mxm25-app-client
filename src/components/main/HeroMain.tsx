@@ -5,6 +5,7 @@ import { ArrowDown, QrCodeIcon, VideoIcon } from "lucide-react";
 import StationCollage from "@/assets/images/main/carousel/StationCollage.webp";
 import useAuth from "@/hooks/useAuth";
 import { useNavigate } from "@/router";
+import { Link } from "react-router-dom";
 
 interface HeroMainProps {
   scrollToRef: React.RefObject<HTMLElement>;
